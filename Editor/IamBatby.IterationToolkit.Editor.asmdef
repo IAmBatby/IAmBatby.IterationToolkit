@@ -1,0 +1,14 @@
+{
+    "name": "IAmBatby.IterationToolkit.Editor",
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "noEngineReferences": false,
+    "references": [
+        "UnityEngine.UI"
+]
+}
