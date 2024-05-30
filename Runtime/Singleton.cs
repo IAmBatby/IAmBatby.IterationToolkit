@@ -9,7 +9,7 @@ public static class Singleton<T> where T : Manager
     public static T GetInstance(ref Manager manager)
     {
         if (manager == null)
-            manager = (Manager)(Object.FindAnyObjectByType(typeof(T)));
+            manager = (Manager)(UnityEngine.Object.FindAnyObjectByType(typeof(T)));
 
         return ((T)manager);
     }

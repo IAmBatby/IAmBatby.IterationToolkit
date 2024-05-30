@@ -16,7 +16,7 @@ public class SelectableCollection<T>
     {
         get
         {
-            if (allObjects != null || allObjects.Count != 0)
+            if (allObjects != null || allObjects.Count != 0 && selectionIndex >= allObjects.Count - 1)
                 return (allObjects[selectionIndex]);
             else
                 return (default);
