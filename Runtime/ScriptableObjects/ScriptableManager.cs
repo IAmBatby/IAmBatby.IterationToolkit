@@ -10,7 +10,7 @@ public static class ScriptableManager
 
     public static T Copy<T>(this T sourceObject) where T : ScriptableObject
     {
-        T instancedScriptableObject = ScriptableObject.CreateInstance<T>();
+        T instancedScriptableObject = ScriptableObject.Instantiate(sourceObject);
         runtimeScriptableObjects.Add(instancedScriptableObject);
         return (instancedScriptableObject);
     }
