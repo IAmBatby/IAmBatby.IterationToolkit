@@ -12,7 +12,7 @@ public class RandomManager : MonoBehaviour
         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
     };
 
-    public Random random;
+    public System.Random random;
 
 
     public T GetRandomWeightedSelection<T>(T[] values, int[] weights)
