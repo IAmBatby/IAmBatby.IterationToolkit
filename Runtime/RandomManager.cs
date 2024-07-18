@@ -40,6 +40,11 @@ public class RandomManager : Manager
         return (values[random.Next(0, values.Length)]);
     }
 
+    public T GetRandomSelection<T>(List<T> values)
+    {
+        return (GetRandomSelection<T>(values.ToArray()));
+    }
+
     public T GetRandomSelection<T>(T[] values)
     {
         int[] weights = new int[values.Length];
