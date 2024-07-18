@@ -73,8 +73,16 @@ public class RandomManager : Manager
     {
         string newSeedCode = string.Empty;
 
+        if (string.IsNullOrEmpty(stringCode))
+        {
+            Debug.LogWarning("String Based Seed Was Null Or Empty! Returning Random Seed.");
+            return (Random.Range(0, 10000));
+        }
+
         foreach (char letter in stringCode)
-            newSeedCode += alphabet.IndexOf(letter.ToString()).ToString();
+            newSeedCode += alphabet.IndexOf(char.ToString(letter)).ToString();
+
+        
 
         return (int.Parse(newSeedCode));
     }
