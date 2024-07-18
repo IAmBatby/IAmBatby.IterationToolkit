@@ -7,9 +7,9 @@ public class RandomManager : Manager
 {
     public static RandomManager Instance => Singleton<RandomManager>.GetInstance(ref _manager);
 
-    public static List<string> alphabet = new List<string>
+    public static List<char> alphabet = new List<char>
     {
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
 
     public System.Random random;
@@ -79,8 +79,10 @@ public class RandomManager : Manager
             return (Random.Range(0, 10000));
         }
 
-        foreach (char letter in stringCode)
-            newSeedCode += alphabet.IndexOf(char.ToString(letter)).ToString();
+        foreach (char letter in stringCode.ToLowerInvariant().ToCharArray())
+        {
+            newSeedCode += alphabet.IndexOf(letter).ToString();
+        }
 
         if (int.TryParse(newSeedCode, out int newSeed))
             return (newSeed);
