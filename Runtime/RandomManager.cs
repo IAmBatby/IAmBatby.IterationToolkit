@@ -82,8 +82,12 @@ public class RandomManager : Manager
         foreach (char letter in stringCode)
             newSeedCode += alphabet.IndexOf(char.ToString(letter)).ToString();
 
-        
-
-        return (int.Parse(newSeedCode));
+        if (int.TryParse(newSeedCode, out int newSeed))
+            return (newSeed);
+        else
+        {
+            Debug.LogWarning("String Based Seed: " + newSeedCode + " Was Invalid! Returning Random Seed.");
+            return (Random.Range(0, 10000));
+        }
     }
 }
