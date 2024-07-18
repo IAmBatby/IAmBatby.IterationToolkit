@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
 
-public class RandomManager : MonoBehaviour
+public class RandomManager : Manager
 {
     public static RandomManager Instance => Singleton<RandomManager>.GetInstance(ref _manager);
 
-    public static List<char> alphabet = new List<char>
+    public static List<string> alphabet = new List<string>
     {
         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
     };
@@ -69,7 +69,7 @@ public class RandomManager : MonoBehaviour
         string newSeedCode = string.Empty;
 
         foreach (char letter in stringCode)
-            newSeedCode += alphabet.IndexOf(letter).ToString();
+            newSeedCode += alphabet.IndexOf(letter.ToString()).ToString();
 
         return (int.Parse(newSeedCode));
     }
