@@ -49,7 +49,7 @@ public class GlobalManager : Manager
 
     private void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == LoadingLevel.name)
+        if (scene.name == LoadingLevel.defaultSceneName)
         {
             SceneManager.sceneLoaded -= OnNewLevelLoaded;
             ActiveLevel = LoadingLevel;
