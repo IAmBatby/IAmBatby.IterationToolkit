@@ -9,6 +9,15 @@ public static class Utilities
 {
     public static bool InEditor => IsInEditorCheck();
 
+    static bool IsInEditorCheck()
+    {
+        bool returnBool = false;
+#if (UNITY_EDITOR)
+        returnBool = true;
+#endif
+        return (returnBool);
+    }
+
     public static IEnumerable<Type> GetTypes(Type filterType)
     {
         List<Type> moveTypes = new List<Type>();
@@ -46,14 +55,5 @@ public static class Utilities
         }
         else
             return (null);
-    }
-
-    static bool IsInEditorCheck()
-    {
-        bool returnBool = false;
-#if (UNITY_EDITOR)
-        returnBool = true;
-#endif
-        return (returnBool);
     }
 }

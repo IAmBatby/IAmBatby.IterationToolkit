@@ -1,14 +1,18 @@
 {
     "name": "IAmBatby.IterationToolkit.Editor",
-    "includePlatforms": [],
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "noEngineReferences": false,
-    "references": [
-        "UnityEngine.UI"
-]
+    "versionDefines": [],
+    "noEngineReferences": false
 }
