@@ -5,11 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class DynamicConsole
 {
-    public Logger mainLogger;
-    public Logger activePlayerInfo;
-    public Logger allPlayerInfo;
-    public Logger projectInfo;
-
     public ExtendedEvent onLoggerModified = new ExtendedEvent();
 
     public SelectableCollection<Logger> selectableLogger;
@@ -21,12 +16,7 @@ public class DynamicConsole
 
     public virtual List<Logger> GetLoggers(int maxLines)
     {
-        mainLogger = new Logger("Main", maxLines);
-        activePlayerInfo = new Logger("Active Player", maxLines);
-        allPlayerInfo = new Logger("All Players", maxLines);
-        projectInfo = new Logger("Project Information", maxLines);
-
-        return (new List<Logger>() { mainLogger, activePlayerInfo, allPlayerInfo, projectInfo });
+        return (new List<Logger>());
     }
 
     public void InitializeLoggers(List<Logger> loggers)
