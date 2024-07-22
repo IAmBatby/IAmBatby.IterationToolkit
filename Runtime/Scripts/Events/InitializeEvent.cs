@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class InitializeEvent : MonoBehaviour
+namespace IterationToolkit
 {
-    public UnityEvent onAwakeEvent;
-    public UnityEvent onStartEvent;
-    public UnityEvent onGlobalManagerInitalizedEvent;
-
-    public void Awake()
+    public class InitializeEvent : MonoBehaviour
     {
-        onAwakeEvent.Invoke();
-    }
+        public UnityEvent onAwakeEvent;
+        public UnityEvent onStartEvent;
+        public UnityEvent onGlobalManagerInitalizedEvent;
 
-    public void Start()
-    {
-        onStartEvent.Invoke();
+        public void Awake()
+        {
+            onAwakeEvent.Invoke();
+        }
+
+        public void Start()
+        {
+            onStartEvent.Invoke();
+        }
     }
 }

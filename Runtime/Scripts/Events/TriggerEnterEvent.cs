@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerEnterEvent : MonoBehaviour
+namespace IterationToolkit
 {
-    [HideInInspector] public TriggerEvent triggerEvent;
-
-    public void OnTriggerEnter(Collider other)
+    public class TriggerEnterEvent : MonoBehaviour
     {
-        triggerEvent.onTriggerEnter.Invoke(other);
-        Debug.Log("freak");
+        [HideInInspector] public TriggerEvent triggerEvent;
+
+        public void OnTriggerEnter(Collider other)
+        {
+            triggerEvent.onTriggerEnter.Invoke(other);
+            Debug.Log("freak");
+        }
     }
 }

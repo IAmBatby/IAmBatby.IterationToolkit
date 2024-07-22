@@ -2,70 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ObjectiveState { Inactive, Active, Complete, Failed }
-
-[CreateAssetMenu(fileName = "Objective", menuName = "IterationToolkit/Objective", order = 1)]
-public class Objective : ScriptableObject
+namespace IterationToolkit
 {
+    public enum ObjectiveState { Inactive, Active, Complete, Failed }
 
-    public string objectiveName;
-    public string objectiveDescription;
-    public ObjectiveState CurrentObjectiveState { get; private set; } = ObjectiveState.Inactive;
-
-    public ExtendedEvent<ObjectiveState> onStateChanged = new ExtendedEvent<ObjectiveState>();
-
-    public static Objective InitializeObjective(Objective objectiveData)
+    [CreateAssetMenu(fileName = "Objective", menuName = "IterationToolkit/Objective", order = 1)]
+    public class Objective : ScriptableObject
     {
-        Objective objective = objectiveData.Copy();
 
-        return (objective);
-    }
+        public string objectiveName;
+        public string objectiveDescription;
+        public ObjectiveState CurrentObjectiveState { get; private set; } = ObjectiveState.Inactive;
 
-    public void ChangeObjectiveState(ObjectiveState newObjectiveState)
-    {
-        CurrentObjectiveState = newObjectiveState;
+        public ExtendedEvent<ObjectiveState> onStateChanged = new ExtendedEvent<ObjectiveState>();
 
-        switch (CurrentObjectiveState)
+        public static Objective InitializeObjective(Objective objectiveData)
         {
-            case ObjectiveState.Inactive:
-                OnObjectiveInactive();
-                break;
-            case ObjectiveState.Active:
-                OnObjectiveActive();
-                break;
-            case ObjectiveState.Complete:
-                OnObjectiveComplete();
-                break;
-            case ObjectiveState.Failed:
-                OnObjectiveFail();
-                break;
+            Objective objective = objectiveData.Copy();
+
+            return (objective);
         }
 
-        onStateChanged.Invoke(CurrentObjectiveState);
-    }
+        public void ChangeObjectiveState(ObjectiveState newObjectiveState)
+        {
+            CurrentObjectiveState = newObjectiveState;
 
-    protected virtual void OnObjectiveInactive()
-    {
+            switch (CurrentObjectiveState)
+            {
+                case ObjectiveState.Inactive:
+                    OnObjectiveInactive();
+                    break;
+                case ObjectiveState.Active:
+                    OnObjectiveActive();
+                    break;
+                case ObjectiveState.Complete:
+                    OnObjectiveComplete();
+                    break;
+                case ObjectiveState.Failed:
+                    OnObjectiveFail();
+                    break;
+            }
 
-    }
+            onStateChanged.Invoke(CurrentObjectiveState);
+        }
 
-    protected virtual void OnObjectiveActive()
-    {
+        protected virtual void OnObjectiveInactive()
+        {
 
-    }
+        }
 
-    protected virtual void OnObjectiveComplete()
-    {
+        protected virtual void OnObjectiveActive()
+        {
 
-    }
+        }
 
-    protected virtual void OnObjectiveFail()
-    {
+        protected virtual void OnObjectiveComplete()
+        {
 
-    }
+        }
 
-    public virtual string GetObjectiveDisplayStatus()
-    {
-        return (objectiveName + ": " + CurrentObjectiveState.ToString());
+        protected virtual void OnObjectiveFail()
+        {
+
+        }
+
+        public virtual string GetObjectiveDisplayStatus()
+        {
+            return (objectiveName + ": " + CurrentObjectiveState.ToString());
+        }
     }
 }

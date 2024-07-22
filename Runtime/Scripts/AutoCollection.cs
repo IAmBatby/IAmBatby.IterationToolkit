@@ -3,29 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoCollection : GlobalManager
+namespace IterationToolkit
 {
-    public static new AutoCollection Instance => Singleton<AutoCollection>.GetInstance(ref _manager);
-
-    private Dictionary<Type, List<MonoBehaviour>> collectionDict = new Dictionary<Type, List<MonoBehaviour>>();
-
-
-    public void Add(MonoBehaviour monoBehaviour)
+    public class AutoCollection : GlobalManager
     {
-        Type behaviourType = monoBehaviour.GetType();
-        if (collectionDict.ContainsKey(behaviourType))
-        {
-            if (!collectionDict[behaviourType].Contains(monoBehaviour))
-                collectionDict[behaviourType].Add(monoBehaviour);
-        }
-        else
-        {
-            collectionDict.Add(behaviourType, new List<MonoBehaviour>());
-        }
-    }
+        public static new AutoCollection Instance => Singleton<AutoCollection>.GetInstance(ref _manager);
 
-    public void Remove(MonoBehaviour monoBehaviour)
-    {
+        private Dictionary<Type, List<MonoBehaviour>> collectionDict = new Dictionary<Type, List<MonoBehaviour>>();
 
+
+        public void Add(MonoBehaviour monoBehaviour)
+        {
+            Type behaviourType = monoBehaviour.GetType();
+            if (collectionDict.ContainsKey(behaviourType))
+            {
+                if (!collectionDict[behaviourType].Contains(monoBehaviour))
+                    collectionDict[behaviourType].Add(monoBehaviour);
+            }
+            else
+            {
+                collectionDict.Add(behaviourType, new List<MonoBehaviour>());
+            }
+        }
+
+        public void Remove(MonoBehaviour monoBehaviour)
+        {
+
+        }
     }
 }

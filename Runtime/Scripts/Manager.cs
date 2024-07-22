@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-1)]
-public class Manager : MonoBehaviour
+namespace IterationToolkit
 {
-    protected static Manager _manager;
-
-    public ExtendedEvent OnInitalize = new ExtendedEvent();
-
-    protected virtual void Awake()
+    [DefaultExecutionOrder(-1)]
+    public class Manager : MonoBehaviour
     {
-        OnInitalize.Invoke();
-    }
+        protected static Manager _manager;
 
+        public ExtendedEvent OnInitalize = new ExtendedEvent();
+
+        protected virtual void Awake()
+        {
+            OnInitalize.Invoke();
+        }
+    }
 }

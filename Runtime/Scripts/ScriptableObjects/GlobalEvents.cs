@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GlobalEvents", menuName = "IterationToolkit/GlobalEvents", order = 1)]
-public class GlobalEvents : ScriptableObject
+namespace IterationToolkit
 {
-    public void LoadNewLevel(LevelData levelData)
+    [CreateAssetMenu(fileName = "GlobalEvents", menuName = "IterationToolkit/GlobalEvents", order = 1)]
+    public class GlobalEvents : ScriptableObject
     {
-       GlobalManager.Instance.LoadNewLevel(levelData);
+        public void LoadNewLevel(LevelData levelData)
+        {
+            GlobalManager.Instance.LoadNewLevel(levelData);
+        }
     }
 }

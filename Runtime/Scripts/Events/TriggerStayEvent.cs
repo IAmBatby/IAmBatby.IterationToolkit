@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerStayEvent : MonoBehaviour
+namespace IterationToolkit
 {
-    [HideInInspector] public TriggerEvent triggerEvent;
-
-    public void OnTriggerStay(Collider other)
+    public class TriggerStayEvent : MonoBehaviour
     {
-        triggerEvent.onTriggerStay.Invoke(other);
+        [HideInInspector] public TriggerEvent triggerEvent;
+
+        public void OnTriggerStay(Collider other)
+        {
+            triggerEvent.onTriggerStay.Invoke(other);
+        }
     }
 }

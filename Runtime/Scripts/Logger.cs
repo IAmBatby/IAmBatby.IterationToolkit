@@ -3,76 +3,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TextStyle { Default, Bold, Italic }
-[System.Serializable]
-public class Logger
+namespace IterationToolkit
 {
-    public string logName;
-    public List<string> activeLogLines = new List<string>();
-    public int maxLogLines;
-
-    public ExtendedEvent onLogAdded = new ExtendedEvent();
-
-    public Logger(string newLogName, int newMaxLogLines)
+    public enum TextStyle { Default, Bold, Italic }
+    [System.Serializable]
+    public class Logger
     {
-        logName = newLogName;
-        maxLogLines = newMaxLogLines;
-    }
+        public string logName;
+        public List<string> activeLogLines = new List<string>();
+        public int maxLogLines;
 
-    public void Clear()
-    {
-        activeLogLines.Clear();
-    }
+        public ExtendedEvent onLogAdded = new ExtendedEvent();
 
-    public void LogInfo(string messageName, string messageInfo)
-    {
-        LogInfo(messageName, messageInfo, Color.white);
-    }
+        public Logger(string newLogName, int newMaxLogLines)
+        {
+            logName = newLogName;
+            maxLogLines = newMaxLogLines;
+        }
 
-    public void LogInfo(string messageName, string messageInfo, Color infoColor)
-    {
-        string decoratedMessage = string.Empty;
-        decoratedMessage += "<size=80%>" + messageName.ToBold() + " ";
-        if (!string.IsNullOrEmpty(messageInfo))
-            decoratedMessage += "<size=70%>" + messageInfo.ToItalic().Colorize(infoColor);
+        public void Clear()
+        {
+            activeLogLines.Clear();
+        }
 
-        LogInfo(decoratedMessage);
-    }
+        public void LogInfo(string messageName, string messageInfo)
+        {
+            LogInfo(messageName, messageInfo, Color.white);
+        }
 
-    public void LogInfo(string message, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
-    {
-        LogInfo(message, Color.white, fontScale, textStyle);
-    }
+        public void LogInfo(string messageName, string messageInfo, Color infoColor)
+        {
+            string decoratedMessage = string.Empty;
+            decoratedMessage += "<size=80%>" + messageName.ToBold() + " ";
+            if (!string.IsNullOrEmpty(messageInfo))
+                decoratedMessage += "<size=70%>" + messageInfo.ToItalic().Colorize(infoColor);
 
-    public void LogInfo(string message, Color color, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
-    {
+            LogInfo(decoratedMessage);
+        }
 
-        string decoratedMessage = "<size=" + fontScale * 100 + "%>";
-        if (textStyle == TextStyle.Default)
-            decoratedMessage += message.Colorize(color);
-        else if (textStyle == TextStyle.Bold)
-            decoratedMessage += message.ToBold().Colorize(color);
-        else if (textStyle == TextStyle.Italic)
-            decoratedMessage += message.ToItalic().Colorize(color);
+        public void LogInfo(string message, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
+        {
+            LogInfo(message, Color.white, fontScale, textStyle);
+        }
 
-        LogInfo(decoratedMessage);
-    }
+        public void LogInfo(string message, Color color, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
+        {
 
-    public void LogInfo(string message)
-    {
-        activeLogLines.Add(message);
-        if (activeLogLines.Count == maxLogLines)
-            activeLogLines.RemoveAt(0);
-        onLogAdded.Invoke();
-    }
+            string decoratedMessage = "<size=" + fontScale * 100 + "%>";
+            if (textStyle == TextStyle.Default)
+                decoratedMessage += message.Colorize(color);
+            else if (textStyle == TextStyle.Bold)
+                decoratedMessage += message.ToBold().Colorize(color);
+            else if (textStyle == TextStyle.Italic)
+                decoratedMessage += message.ToItalic().Colorize(color);
 
-    public string GetLog()
-    {
-        string returnString = "<size=110%>" + logName.ToBold() + "\n" + "\n";
+            LogInfo(decoratedMessage);
+        }
 
-        foreach (string logLine in activeLogLines)
-            returnString += logLine + "\n";
+        public void LogInfo(string message)
+        {
+            activeLogLines.Add(message);
+            if (activeLogLines.Count == maxLogLines)
+                activeLogLines.RemoveAt(0);
+            onLogAdded.Invoke();
+        }
 
-        return (returnString);
+        public string GetLog()
+        {
+            string returnString = "<size=110%>" + logName.ToBold() + "\n" + "\n";
+
+            foreach (string logLine in activeLogLines)
+                returnString += logLine + "\n";
+
+            return (returnString);
+        }
     }
 }

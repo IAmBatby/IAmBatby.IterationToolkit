@@ -2,29 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScriptableSettings : ScriptableObject
+namespace IterationToolkit
 {
-    public ExtendedEvent OnSettingsApplied = new ExtendedEvent();
-
-    public void ApplySettings()
+    public class ScriptableSettings : ScriptableObject
     {
-        OnSettingApplied();
-        OnSettingsApplied.Invoke();
-    }
+        public ExtendedEvent OnSettingsApplied = new ExtendedEvent();
 
-    protected virtual void OnSettingApplied()
-    {
+        public void ApplySettings()
+        {
+            OnSettingApplied();
+            OnSettingsApplied.Invoke();
+        }
 
-    }
+        protected virtual void OnSettingApplied()
+        {
 
-    protected void UpdateSetting<T>(ref T targetValue, T newValue)
-    {
-        targetValue = newValue;
-        ApplySettings();
-    }
+        }
 
-    private void OnValidate()
-    {
-        ApplySettings();
+        protected void UpdateSetting<T>(ref T targetValue, T newValue)
+        {
+            targetValue = newValue;
+            ApplySettings();
+        }
+
+        private void OnValidate()
+        {
+            ApplySettings();
+        }
     }
 }

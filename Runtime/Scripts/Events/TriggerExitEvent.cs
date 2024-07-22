@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerExitEvent : MonoBehaviour
+namespace IterationToolkit
 {
-    [HideInInspector] public TriggerEvent triggerEvent;
-
-    public void OnTriggerExit(Collider other)
+    public class TriggerExitEvent : MonoBehaviour
     {
-        triggerEvent.onTriggerExit.Invoke(other);
+        [HideInInspector] public TriggerEvent triggerEvent;
+
+        public void OnTriggerExit(Collider other)
+        {
+            triggerEvent.onTriggerExit.Invoke(other);
+        }
     }
 }

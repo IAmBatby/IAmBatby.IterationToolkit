@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public static class Singleton<T> where T : Manager
+namespace IterationToolkit
 {
-    public static T GetInstance(ref Manager manager)
+    public static class Singleton<T> where T : Manager
     {
-        if (manager == null)
-            manager = (Manager)(UnityEngine.Object.FindAnyObjectByType(typeof(T)));
+        public static T GetInstance(ref Manager manager)
+        {
+            if (manager == null)
+                manager = (Manager)(UnityEngine.Object.FindAnyObjectByType(typeof(T)));
 
-        return ((T)manager);
+            return ((T)manager);
+        }
     }
 }

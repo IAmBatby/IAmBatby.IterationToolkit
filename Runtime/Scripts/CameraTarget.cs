@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraTarget : MonoBehaviour
+namespace IterationToolkit
 {
-    public Vector3 positionOffset;
-    public Vector3 rotationOffset;
-
-    public void ControlCamera()
+    public class CameraTarget : MonoBehaviour
     {
-        Camera.main.transform.position = Vector3.zero;
-        Camera.main.transform.parent = transform;
-        Camera.main.transform.localPosition = positionOffset;
-        Camera.main.transform.localEulerAngles = rotationOffset;
+        public Vector3 positionOffset;
+        public Vector3 rotationOffset;
+
+        public void ControlCamera()
+        {
+            Camera.main.transform.position = Vector3.zero;
+            Camera.main.transform.parent = transform;
+            Camera.main.transform.localPosition = positionOffset;
+            Camera.main.transform.localEulerAngles = rotationOffset;
+        }
     }
 }

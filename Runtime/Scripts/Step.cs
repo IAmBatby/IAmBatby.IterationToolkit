@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Step
+namespace IterationToolkit
 {
-    public int currentStep;
-    public int MaxSteps;
+    [System.Serializable]
+    public class Step
+    {
+        public int currentStep;
+        public int MaxSteps;
 
-    public ExtendedEvent onNextStep;
+        public ExtendedEvent onNextStep;
 
 
+    }
 }

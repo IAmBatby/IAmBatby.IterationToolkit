@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoCollector : MonoBehaviour
+namespace IterationToolkit
 {
-    public MonoBehaviour collectionTarget;
+    public class AutoCollector : MonoBehaviour
+    {
+        public MonoBehaviour collectionTarget;
+    }
 }

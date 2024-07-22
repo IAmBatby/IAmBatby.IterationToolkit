@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ImageFiller : MonoBehaviour
+namespace IterationToolkit
 {
-    public Image image;
-    public VerticalLayoutGroup verticalLayoutGroup;
-
-    public void Update()
+    public class ImageFiller : MonoBehaviour
     {
-        float newX = verticalLayoutGroup.preferredWidth;
-        float newY = verticalLayoutGroup.preferredHeight;
-        image.rectTransform.sizeDelta = new Vector2(newX, newY);
-        image.rectTransform.anchoredPosition = new Vector2(newX / 2, -(newY / 2));
+        public Image image;
+        public VerticalLayoutGroup verticalLayoutGroup;
+
+        public void Update()
+        {
+            float newX = verticalLayoutGroup.preferredWidth;
+            float newY = verticalLayoutGroup.preferredHeight;
+            image.rectTransform.sizeDelta = new Vector2(newX, newY);
+            image.rectTransform.anchoredPosition = new Vector2(newX / 2, -(newY / 2));
+        }
     }
 }

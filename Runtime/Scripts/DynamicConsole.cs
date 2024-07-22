@@ -2,58 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class DynamicConsole
+namespace IterationToolkit
 {
-    public ExtendedEvent onLoggerModified = new ExtendedEvent();
-
-    public SelectableCollection<Logger> selectableLogger;
-
-    public DynamicConsole(int maxLines)
+    [System.Serializable]
+    public class DynamicConsole
     {
-        InitializeLoggers(GetLoggers(maxLines));
-    }
+        public ExtendedEvent onLoggerModified = new ExtendedEvent();
 
-    public virtual List<Logger> GetLoggers(int maxLines)
-    {
-        return (new List<Logger>());
-    }
+        public SelectableCollection<Logger> selectableLogger;
 
-    public void InitializeLoggers(List<Logger> loggers)
-    {
-        selectableLogger = new SelectableCollection<Logger>(loggers);
-        selectableLogger.AssignOnSelected(InvokeLogModified);
-        foreach (Logger logger in loggers)
-            logger.onLogAdded.AddListener(InvokeLogModified);
-    }
+        public DynamicConsole(int maxLines)
+        {
+            InitializeLoggers(GetLoggers(maxLines));
+        }
 
-    public void ClearLog(Logger logger)
-    {
-        logger.activeLogLines.Clear();
-    }
+        public virtual List<Logger> GetLoggers(int maxLines)
+        {
+            return (new List<Logger>());
+        }
 
-    public void AddLog(Logger logger, string message)
-    {
-        logger.LogInfo(message);
-    }
+        public void InitializeLoggers(List<Logger> loggers)
+        {
+            selectableLogger = new SelectableCollection<Logger>(loggers);
+            selectableLogger.AssignOnSelected(InvokeLogModified);
+            foreach (Logger logger in loggers)
+                logger.onLogAdded.AddListener(InvokeLogModified);
+        }
 
-    public string GetActiveLog()
-    {
-        return (selectableLogger.ActiveSelection.GetLog());
-    }
+        public void ClearLog(Logger logger)
+        {
+            logger.activeLogLines.Clear();
+        }
 
-    public void ToggleForward()
-    {
-        selectableLogger.SelectForward();
-    }
+        public void AddLog(Logger logger, string message)
+        {
+            logger.LogInfo(message);
+        }
 
-    public void ToggleBackward()
-    {
-        selectableLogger.SelectBackward();
-    }
+        public string GetActiveLog()
+        {
+            return (selectableLogger.ActiveSelection.GetLog());
+        }
 
-    public void InvokeLogModified()
-    {
-        onLoggerModified.Invoke();
+        public void ToggleForward()
+        {
+            selectableLogger.SelectForward();
+        }
+
+        public void ToggleBackward()
+        {
+            selectableLogger.SelectBackward();
+        }
+
+        public void InvokeLogModified()
+        {
+            onLoggerModified.Invoke();
+        }
     }
 }

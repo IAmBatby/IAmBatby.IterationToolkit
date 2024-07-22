@@ -5,55 +5,58 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public static class Utilities
+namespace IterationToolkit
 {
-    public static bool InEditor => IsInEditorCheck();
-
-    static bool IsInEditorCheck()
+    public static class Utilities
     {
-        bool returnBool = false;
+        public static bool InEditor => IsInEditorCheck();
+
+        static bool IsInEditorCheck()
+        {
+            bool returnBool = false;
 #if (UNITY_EDITOR)
-        returnBool = true;
+            returnBool = true;
 #endif
-        return (returnBool);
-    }
-
-    public static IEnumerable<Type> GetTypes(Type filterType)
-    {
-        List<Type> moveTypes = new List<Type>();
-
-        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            //Debug.Log(type.ToString());
-            if (type == filterType || type.IsSubclassOf(filterType))
-                moveTypes.Add(type);
+            return (returnBool);
         }
 
-        return (moveTypes);
-    }
-
-    public static IEnumerable<ScriptableObject> GetScriptableObjects(Type type)
-    {
-        if (InEditor)
+        public static IEnumerable<Type> GetTypes(Type filterType)
         {
-            IEnumerable<ScriptableObject> allScriptableObjects;
-            List<ScriptableObject> returnScriptableObjects = new List<ScriptableObject>();
+            List<Type> moveTypes = new List<Type>();
 
-
-            allScriptableObjects = UnityEditor.AssetDatabase.FindAssets("t:ScriptableObject")
-            .Select(x => UnityEditor.AssetDatabase.GUIDToAssetPath(x))
-            .Select(x => UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(x));
-
-            foreach (ScriptableObject item in allScriptableObjects)
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (item.GetType() == type)
-                    returnScriptableObjects.Add(item);
-                else if (item.GetType().BaseType != null && item.GetType().BaseType == type)
-                    returnScriptableObjects.Add(item);
+                //Debug.Log(type.ToString());
+                if (type == filterType || type.IsSubclassOf(filterType))
+                    moveTypes.Add(type);
             }
-            return (returnScriptableObjects);
+
+            return (moveTypes);
         }
-        else
-            return (null);
+
+        public static IEnumerable<ScriptableObject> GetScriptableObjects(Type type)
+        {
+            if (InEditor)
+            {
+                IEnumerable<ScriptableObject> allScriptableObjects;
+                List<ScriptableObject> returnScriptableObjects = new List<ScriptableObject>();
+
+
+                allScriptableObjects = UnityEditor.AssetDatabase.FindAssets("t:ScriptableObject")
+                .Select(x => UnityEditor.AssetDatabase.GUIDToAssetPath(x))
+                .Select(x => UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(x));
+
+                foreach (ScriptableObject item in allScriptableObjects)
+                {
+                    if (item.GetType() == type)
+                        returnScriptableObjects.Add(item);
+                    else if (item.GetType().BaseType != null && item.GetType().BaseType == type)
+                        returnScriptableObjects.Add(item);
+                }
+                return (returnScriptableObjects);
+            }
+            else
+                return (null);
+        }
     }
 }
