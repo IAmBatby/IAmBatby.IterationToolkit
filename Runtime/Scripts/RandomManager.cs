@@ -26,7 +26,7 @@ namespace IterationToolkit
             }
 
             if (combinedWeight == 0)
-                return (values[random.Next(0, values.Length)]);
+                return (values[random.Next(0, values.Length - 1)]);
 
             float randomThreshold = (float)random.NextDouble();
             float raisingRandomValue = 0f;
@@ -39,7 +39,7 @@ namespace IterationToolkit
                         return (values[i]);
                 }
 
-            return (values[random.Next(0, values.Length)]);
+            return (values[random.Next(0, values.Length - 1)]);
         }
 
         public T GetRandomSelection<T>(List<T> values)
