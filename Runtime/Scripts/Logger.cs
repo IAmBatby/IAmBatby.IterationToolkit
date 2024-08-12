@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace IterationToolkit
@@ -40,8 +41,7 @@ namespace IterationToolkit
             if (!string.IsNullOrEmpty(messageInfo))
                 decoratedMessage += "<size=70%>" + messageInfo.ToItalic().Colorize(infoColor);
 
-            LogRawInfo(messageName + " " + messageInfo);
-            LogInfo(decoratedMessage);
+            AddLog(decoratedMessage, messageName + " " + messageInfo);
         }
 
         public void LogInfo(string message, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
@@ -60,26 +60,25 @@ namespace IterationToolkit
             else if (textStyle == TextStyle.Italic)
                 decoratedMessage += message.ToItalic().Colorize(color);
 
-            LogRawInfo(message);
-            LogInfo(decoratedMessage);
+            AddLog(decoratedMessage, message);
         }
 
         public void LogInfo(string message)
         {
-            activeLogLines.Add(message);
-            if (activeLogLines.Count == maxLogLines)
-                activeLogLines.RemoveAt(0);
-            onLogAdded.Invoke();
-
-            if (!activeRawLogLines.Contains(message))
-                LogRawInfo(message);
+            AddLog(message, message);
         }
 
-        public void LogRawInfo(string message)
+        private void AddLog(string decoratedMessage, string rawMessage)
         {
-            activeRawLogLines.Add(message);
+            activeLogLines.Add(decoratedMessage);
+            activeRawLogLines.Add(rawMessage);
+
+            if (activeLogLines.Count == maxLogLines)
+                activeLogLines.RemoveAt(0);
             if (activeRawLogLines.Count == maxLogLines)
                 activeRawLogLines.RemoveAt(0);
+
+            onLogAdded.Invoke();
         }
 
         public string GetLog()
