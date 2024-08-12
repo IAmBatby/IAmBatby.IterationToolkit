@@ -11,6 +11,7 @@ namespace IterationToolkit
     {
         public string logName;
         public List<string> activeLogLines = new List<string>();
+        public List<string> activeRawLogLines = new List<string>();
         public int maxLogLines;
 
         public ExtendedEvent onLogAdded = new ExtendedEvent();
@@ -24,6 +25,7 @@ namespace IterationToolkit
         public void Clear()
         {
             activeLogLines.Clear();
+            activeRawLogLines.Clear();
         }
 
         public void LogInfo(string messageName, string messageInfo)
@@ -38,6 +40,7 @@ namespace IterationToolkit
             if (!string.IsNullOrEmpty(messageInfo))
                 decoratedMessage += "<size=70%>" + messageInfo.ToItalic().Colorize(infoColor);
 
+            LogRawInfo(messageName + " " + messageInfo);
             LogInfo(decoratedMessage);
         }
 
@@ -57,6 +60,7 @@ namespace IterationToolkit
             else if (textStyle == TextStyle.Italic)
                 decoratedMessage += message.ToItalic().Colorize(color);
 
+            LogRawInfo(message);
             LogInfo(decoratedMessage);
         }
 
@@ -66,6 +70,16 @@ namespace IterationToolkit
             if (activeLogLines.Count == maxLogLines)
                 activeLogLines.RemoveAt(0);
             onLogAdded.Invoke();
+
+            if (!activeRawLogLines.Contains(message))
+                LogRawInfo(message);
+        }
+
+        public void LogRawInfo(string message)
+        {
+            activeRawLogLines.Add(message);
+            if (activeRawLogLines.Count == maxLogLines)
+                activeRawLogLines.RemoveAt(0);
         }
 
         public string GetLog()
