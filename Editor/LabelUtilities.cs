@@ -52,11 +52,11 @@ public static class LabelUtilities
 
     public static Rect GetMousePositionRect(float xSize, float ySize)
     {
-        return (new Rect(Input.mousePosition.x, Input.mousePosition.y, xSize, ySize));
+        return (new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, xSize, ySize));
     }
 
     public static Rect GetMousePositionRect(float xOffset, float yOffset, float xSize, float ySize)
     {
-        return (new Rect(Input.mousePosition.x + xOffset, Input.mousePosition.y + yOffset, xSize, ySize));
+        return (new Rect(Input.mousePosition.x + xOffset, (Screen.height - Input.mousePosition.y) + yOffset, xSize, ySize));
     }
 }
