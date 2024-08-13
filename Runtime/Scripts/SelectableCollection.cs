@@ -76,7 +76,7 @@ namespace IterationToolkit
         {
             if (allObjects.Contains(removalObject))
             {
-                Debug.Log("Removing Item, Index Is At: " + selectionIndex);
+                //Debug.Log("Removing Item, Index Is At: " + selectionIndex);
                 T activeSelection = default;
                 bool selectPreviousActiveObject = false;
                 if (allObjects.IndexOf(removalObject) != selectionIndex)
@@ -156,7 +156,7 @@ namespace IterationToolkit
 
             if (allObjects.Contains(gameObject))
             {
-                Debug.Log("Selecting Item " + gameObject + ", Index Is At: " + selectionIndex);
+                //Debug.Log("Selecting Item " + gameObject + ", Index Is At: " + selectionIndex);
                 selectionIndex = allObjects.IndexOf(gameObject);
 
                 if (!unselectedObjects.Contains(ActiveSelection))
