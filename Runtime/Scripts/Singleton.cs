@@ -6,13 +6,12 @@ using Object = UnityEngine.Object;
 
 namespace IterationToolkit
 {
-    public static class Singleton<T> where T : Manager
+    public static class Singleton
     {
-        public static T GetInstance(ref Manager manager)
+        public static T GetInstance<T>(ref Manager manager) where T : Manager
         {
             if (manager == null)
-                manager = (Manager)(UnityEngine.Object.FindAnyObjectByType(typeof(T)));
-
+                manager = (Manager)Object.FindFirstObjectByType(typeof(T));
             return ((T)manager);
         }
     }

@@ -7,7 +7,7 @@ namespace IterationToolkit
 {
     public class RandomManager : Manager
     {
-        public static RandomManager Instance => Singleton<RandomManager>.GetInstance(ref _manager);
+        public static RandomManager Instance => Singleton.GetInstance<RandomManager>(ref _manager);
 
         public static List<char> alphabet = new List<char>
     {
