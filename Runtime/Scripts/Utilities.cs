@@ -49,7 +49,7 @@ namespace IterationToolkit
             else
                 returnIndex = 0;
 
-            Debug.Log("Decreasing Index. Index Was: " + index + ", Index Is: " + returnIndex + ", Collection Size Is: " + collection.Count);
+            //Debug.Log("Decreasing Index. Index Was: " + index + ", Index Is: " + returnIndex + ", Collection Size Is: " + collection.Count);
             return returnIndex;
         }
     }
