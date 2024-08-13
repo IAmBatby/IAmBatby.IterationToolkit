@@ -49,4 +49,14 @@ public static class LabelUtilities
         else
             return (secondColor);
     }
+
+    public static Rect GetMousePositionRect(float xSize, float ySize)
+    {
+        return (new Rect(Input.mousePosition.x, Input.mousePosition.y, xSize, ySize));
+    }
+
+    public static Rect GetMousePositionRect(float xOffset, float yOffset, float xSize, float ySize)
+    {
+        return (new Rect(Input.mousePosition.x + xOffset, Input.mousePosition.y + yOffset, xSize, ySize));
+    }
 }
