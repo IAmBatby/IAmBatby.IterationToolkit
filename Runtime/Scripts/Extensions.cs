@@ -6,6 +6,27 @@ namespace IterationToolkit
 {
     public static class Extensions
     {
+        public static Color SetAlpha(this Color color, float newAlpha, bool scaledValues = false)
+        {
+            Color scaledColor;
+            Color nonScaledColor;
+            if (color.r > 1 || color.g > 1 || color.b > 1)
+            {
+                scaledColor = new Color(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
+                nonScaledColor = color;
+            }
+            else
+            {
+                scaledColor = color;
+                nonScaledColor = new Color(color.r * 255, color.g * 255, color.b * 255, color.a * 255);
+            }
+
+            if (scaledValues == true)
+                return (new Color(scaledColor.r, scaledColor.g, scaledColor.b, newAlpha));
+            else
+                return (new Color(nonScaledColor.r, nonScaledColor.g, nonScaledColor.b, newAlpha));
+        }
+
         public static string ToBold(this string input)
         {
             return new string("<b>" + input + "</b>");
