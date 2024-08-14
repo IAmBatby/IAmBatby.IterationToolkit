@@ -133,8 +133,8 @@ namespace IterationToolkit
 
         private void InvokeSelection(T selectedObject)
         {
-            onSelected.Invoke(selectedObject);
             onSelectionChange.Invoke();
+            onSelected.Invoke(selectedObject);
             foreach (Action action in onSelectedActionsDict[selectedObject])
                 action.Invoke();
             foreach (Action action in onSelectedActionsList)
@@ -143,8 +143,8 @@ namespace IterationToolkit
 
         private void InvokeUnselection(T unselectedObject)
         {
-            onUnselected.Invoke(unselectedObject);
             onSelectionChange?.Invoke();
+            onUnselected.Invoke(unselectedObject);
             foreach (Action aciton in onUnselectedActionsDict[unselectedObject])
                 aciton.Invoke();
         }
