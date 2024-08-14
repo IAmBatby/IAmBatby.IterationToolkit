@@ -29,6 +29,7 @@ namespace IterationToolkit
 
         public ExtendedEvent<T> onSelected = new ExtendedEvent<T>();
         public ExtendedEvent<T> onUnselected = new ExtendedEvent<T>();
+        public ExtendedEvent onSelectionChange = new ExtendedEvent();
 
         private Dictionary<T, List<Action>> onSelectedActionsDict;
         private List<Action> onSelectedActionsList;
@@ -92,6 +93,8 @@ namespace IterationToolkit
                     onUnselectedActionsDict.Remove(removalObject);
                 if (selectPreviousActiveObject == true)
                     Select(activeSelection);
+                else if (allObjects.Count == 0)
+                    onSelectionChange.Invoke();
                 else
                     SelectBackward();
             }
@@ -131,6 +134,7 @@ namespace IterationToolkit
         private void InvokeSelection(T selectedObject)
         {
             onSelected.Invoke(selectedObject);
+            onSelectionChange.Invoke();
             foreach (Action action in onSelectedActionsDict[selectedObject])
                 action.Invoke();
             foreach (Action action in onSelectedActionsList)
@@ -140,6 +144,7 @@ namespace IterationToolkit
         private void InvokeUnselection(T unselectedObject)
         {
             onUnselected.Invoke(unselectedObject);
+            onSelectionChange?.Invoke();
             foreach (Action aciton in onUnselectedActionsDict[unselectedObject])
                 aciton.Invoke();
         }
