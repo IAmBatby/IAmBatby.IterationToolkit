@@ -1,3 +1,4 @@
+using Codice.CM.Common;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -9,12 +10,25 @@ namespace IterationToolkit
     {
         public static RandomManager Instance => Singleton.GetInstance<RandomManager>(ref _manager);
 
-        public static List<char> alphabet = new List<char>
+        public static List<char> Alphbaet { get; private set; } = new List<char>
     {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
 
-        public System.Random random;
+        public System.Random Random { get; private set; }
+        public bool HasInitialized { get; private set; }
+
+        public void Initialize(int newSeed)
+        {
+            Random = new System.Random(newSeed);
+            HasInitialized = true;
+        }
+
+        public void Initialize(string newSeed)
+        {
+            Random = new System.Random(LetterCodeToSeed(newSeed));
+            HasInitialized = true;
+        }
 
 
         public T GetRandomWeightedSelection<T>(T[] values, int[] weights)
@@ -26,9 +40,9 @@ namespace IterationToolkit
             }
 
             if (combinedWeight == 0)
-                return (values[random.Next(0, values.Length - 1)]);
+                return (values[Random.Next(0, values.Length - 1)]);
 
-            float randomThreshold = (float)random.NextDouble();
+            float randomThreshold = (float)Random.NextDouble();
             float raisingRandomValue = 0f;
 
             for (int i = 0; i < weights.Length; i++)
@@ -39,7 +53,7 @@ namespace IterationToolkit
                         return (values[i]);
                 }
 
-            return (values[random.Next(0, values.Length - 1)]);
+            return (values[Random.Next(0, values.Length - 1)]);
         }
 
         public T GetRandomSelection<T>(List<T> values)
@@ -78,12 +92,12 @@ namespace IterationToolkit
             if (string.IsNullOrEmpty(stringCode))
             {
                 Debug.LogWarning("String Based Seed Was Null Or Empty! Returning Random Seed.");
-                return (Random.Range(0, 10000));
+                return (UnityEngine.Random.Range(0, 10000));
             }
 
             foreach (char letter in stringCode.ToLowerInvariant().ToCharArray())
             {
-                newSeedCode += alphabet.IndexOf(letter).ToString();
+                newSeedCode += Alphbaet.IndexOf(letter).ToString();
             }
 
             if (int.TryParse(newSeedCode, out int newSeed))
@@ -91,7 +105,7 @@ namespace IterationToolkit
             else
             {
                 Debug.LogWarning("String Based Seed: " + newSeedCode + " Was Invalid! Returning Random Seed.");
-                return (Random.Range(0, 10000));
+                return (UnityEngine.Random.Range(0, 10000));
             }
         }
     }
