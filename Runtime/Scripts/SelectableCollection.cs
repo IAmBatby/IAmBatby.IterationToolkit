@@ -130,7 +130,7 @@ namespace IterationToolkit
 
         private void InvokeSelection(T selectedObject)
         {
-            onUnselected.Invoke(selectedObject);
+            onSelected.Invoke(selectedObject);
             foreach (Action action in onSelectedActionsDict[selectedObject])
                 action.Invoke();
             foreach (Action action in onSelectedActionsList)
