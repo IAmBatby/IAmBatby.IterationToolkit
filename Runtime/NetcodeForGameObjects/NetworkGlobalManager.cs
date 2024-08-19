@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using IterationToolkit;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,3 +17,5 @@ public class NetworkGlobalManager : NetworkBehaviour
         OnInitalize.Invoke();
     }
 }
+
+#endif
