@@ -1,0 +1,17 @@
+{
+    "name": "IAmBatby.IterationToolkit.NetcodeForGameObjects",
+    "rootNamespace": "",
+    "references": [
+        "GUID:36bcc334529b5ae47bdc38272e62b4f0",
+        "GUID:1491147abca9d7d4bb7105af628b223e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
