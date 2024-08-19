@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode.Components;
@@ -11,3 +13,5 @@ public class ClientNetworkTransform : NetworkTransform
         return false;
     }
 }
+
+#endif
