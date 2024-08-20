@@ -54,6 +54,14 @@ namespace IterationToolkit.Netcode
             Components.Remove(monoBehaviour);
             mainDictionary.Remove(networkObject);
         }
+
+        public M GetComponent(NetworkObject networkObject)
+        {
+            if (mainDictionary.TryGetValue(networkObject, out M monoBehaviour))
+                return (monoBehaviour);
+            else
+                return (null);
+        }
     }
 }
 
