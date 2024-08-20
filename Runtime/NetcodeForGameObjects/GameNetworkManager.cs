@@ -39,6 +39,8 @@ namespace IterationToolkit.Netcode
 
         public NetworkComponentList<NetworkPlayer> PlayerNetworkObjects;
 
+        public NetworkPlayer LocalPlayer => PlayerNetworkObjects.GetComponent(NetworkManagerInstance.LocalClient.PlayerObject);
+
 
         protected override void Awake()
         {
