@@ -91,7 +91,17 @@ namespace IterationToolkit.Netcode
             networkObject.ChangeOwnership(clientID);
         }
 
-        public void LoadScene(LevelData levelData, bool isAdditive = false)
+        public void LoadScene(string sceneName)
+        {
+            LoadSceneServerRpc(sceneName, false);
+        }
+
+        public void LoadScene(LevelData levelData)
+        {
+            LoadSceneServerRpc(levelData.SceneName, false);
+        }
+
+        public void LoadScene(LevelData levelData, bool isAdditive)
         {
             LoadSceneServerRpc(levelData.SceneName, isAdditive);
         }
