@@ -5,12 +5,16 @@ using System.Collections.Generic;
 using Unity.Netcode.Components;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class ClientNetworkTransform : NetworkTransform
+namespace IterationToolkit.Netcode
 {
-    protected override bool OnIsServerAuthoritative()
+
+    [DisallowMultipleComponent]
+    public class ClientNetworkTransform : NetworkTransform
     {
-        return false;
+        protected override bool OnIsServerAuthoritative()
+        {
+            return false;
+        }
     }
 }
 

@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkPlayer : NetworkBehaviour
+namespace IterationToolkit.Netcode
 {
+    public class NetworkPlayer : NetworkBehaviour
+    {
 
+    }
 }
 
 #endif

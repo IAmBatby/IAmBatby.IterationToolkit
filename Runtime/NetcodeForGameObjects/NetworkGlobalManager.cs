@@ -6,15 +6,18 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkGlobalManager : NetworkBehaviour
+namespace IterationToolkit.Netcode
 {
-    protected static NetworkGlobalManager _manager;
-
-    public ExtendedEvent OnInitalize = new ExtendedEvent();
-
-    protected virtual void Awake()
+    public class NetworkGlobalManager : NetworkBehaviour
     {
-        OnInitalize.Invoke();
+        protected static NetworkGlobalManager _manager;
+
+        public ExtendedEvent OnInitalize = new ExtendedEvent();
+
+        protected virtual void Awake()
+        {
+            OnInitalize.Invoke();
+        }
     }
 }
 
