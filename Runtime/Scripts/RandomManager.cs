@@ -48,12 +48,16 @@ namespace IterationToolkit
             float raisingRandomValue = 0f;
 
             for (int i = 0; i < weights.Length; i++)
-                if ((float)weights[i] > 0f)
+            {
+                float floatWeight = (float)weights[i];
+                if (floatWeight > 0f)
                 {
-                    raisingRandomValue += weights[i] / combinedWeight;
+                    raisingRandomValue += floatWeight / combinedWeight;
                     if (raisingRandomValue > randomThreshold)
                         return (values[i]);
                 }
+            }
+
 
             Debug.LogError("RandomManager Could Not Find Seeded Result, Returning Unseeded Result! RaisingRandomValue Was: " + raisingRandomValue + ", Random Threshold Was: " + randomThreshold);
             return (values[Random.Next(0, values.Length - 1)]);
