@@ -33,7 +33,8 @@ namespace IterationToolkit.Netcode
             else if (!Contains(collectionInfo.Value) && mainDictionary.ContainsKey(collectionInfo.Value)) //If it's not new to us (being removed)
                 RemoveItem(collectionInfo.Value);
 
-            if (!Contains(collectionInfo.PreviousValue) && mainDictionary.ContainsKey(collectionInfo.PreviousValue)) // If it's not new to us (being replaced)
+            NetworkObject previousNetworkObject = collectionInfo.PreviousValue;
+            if (previousNetworkObject != null && !Contains(collectionInfo.PreviousValue) && mainDictionary.ContainsKey(collectionInfo.PreviousValue)) // If it's not new to us (being replaced)
                 RemoveItem(collectionInfo.PreviousValue);
         }
 
