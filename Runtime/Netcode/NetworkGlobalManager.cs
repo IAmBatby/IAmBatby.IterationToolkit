@@ -67,6 +67,8 @@ namespace IterationToolkit.Netcode
                 LoadingLevel = null;
                 OnLevelLoaded.Invoke(ActiveLevel);
             }
+            else
+                OnLevelLoaded.Invoke();
         }
     }
 }
