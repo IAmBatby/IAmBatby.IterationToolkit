@@ -49,7 +49,7 @@ namespace IterationToolkit
             SceneManager.LoadScene(newLevelData.SceneName);
         }
 
-        private void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
+        protected void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == LoadingLevel.defaultSceneName)
             {

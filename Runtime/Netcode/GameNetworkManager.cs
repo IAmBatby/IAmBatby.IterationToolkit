@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace IterationToolkit.Netcode
 {
@@ -115,10 +116,16 @@ namespace IterationToolkit.Netcode
         [ServerRpc(RequireOwnership = false)]
         public void LoadSceneServerRpc(string sceneName, bool isAdditive = false)
         {
+            NetworkManagerInstance.SceneManager.OnLoadComplete += OnNetworkLevelLoaded;
             if (isAdditive)
                 NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Additive);
             else
                 NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+
+        private void OnNetworkLevelLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+        {
+            OnNewLevelLoaded(SceneManager.GetSceneByName(sceneName), loadSceneMode);
         }
 
 

@@ -59,11 +59,10 @@ namespace IterationToolkit.Netcode
         }
         */
 
-        private void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
+        protected void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == LoadingLevel.defaultSceneName)
             {
-                SceneManager.sceneLoaded -= OnNewLevelLoaded;
                 ActiveLevel = LoadingLevel;
                 LoadingLevel = null;
                 OnLevelLoaded.Invoke(ActiveLevel);
