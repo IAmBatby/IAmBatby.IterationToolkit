@@ -69,7 +69,7 @@ namespace IterationToolkit
             int[] weights = new int[values.Length];
 
             for (int i = 0; i < values.Length; i++)
-                weights[i] = 1;
+                weights[i] = 100;
 
             return (GetRandomWeightedSelection<T>(values, weights));
         }
