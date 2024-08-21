@@ -10,6 +10,7 @@ namespace IterationToolkit.Netcode
 {
     public abstract class NetworkGlobalManager : NetworkBehaviour
     {
+        public static NetworkGlobalManager Instance => Singleton.GetInstance<NetworkGlobalManager>(ref _manager);
         protected static NetworkGlobalManager _manager;
 
         public ExtendedEvent OnInitalize = new ExtendedEvent();

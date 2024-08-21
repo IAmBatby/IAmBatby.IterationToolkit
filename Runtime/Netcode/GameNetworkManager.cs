@@ -22,16 +22,7 @@ namespace IterationToolkit.Netcode
             }
         }
 
-        private static GameNetworkManager _instance;
-        public static GameNetworkManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = FindObjectOfType<GameNetworkManager>();
-                return _instance;
-            }
-        }
+        new public static GameNetworkManager Instance => Singleton.GetInstance<GameNetworkManager>(ref _manager);
 
 
 
@@ -52,6 +43,14 @@ namespace IterationToolkit.Netcode
         {
             TryAddAllPlayerObjectsServerRpc();
             OnClientGameNetworkManagerSpawnServerRpc(NetworkManagerInstance.LocalClientId);
+        }
+
+        public List<T> GetNetworkPlayers<T>() where T : NetworkPlayerBase
+        {
+            List<T> returnList = new List<T>();
+            foreach (NetworkPlayerBase player in PlayerNetworkObjects.Components)
+                returnList.Add(player as T);
+            return (returnList);
         }
 
         public void StartHost()
