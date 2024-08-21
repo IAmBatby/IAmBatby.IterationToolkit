@@ -39,7 +39,10 @@ namespace IterationToolkit
             }
 
             if (combinedWeight == 0)
+            {
+                Debug.LogError("RandomManager Had 0 Weight, Returning Unseeded Result!");
                 return (values[Random.Next(0, values.Length - 1)]);
+            }
 
             float randomThreshold = (float)Random.NextDouble();
             float raisingRandomValue = 0f;
@@ -52,6 +55,7 @@ namespace IterationToolkit
                         return (values[i]);
                 }
 
+            Debug.LogError("RandomManager Could Not Find Seeded Result, Returning Unseeded Result!");
             return (values[Random.Next(0, values.Length - 1)]);
         }
 
