@@ -125,8 +125,8 @@ namespace IterationToolkit.Netcode
 
         private void OnNetworkLevelLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
         {
-            if (IsServer && NetworkManager.LocalClientId == clientId)
-                OnNewLevelLoaded(SceneManager.GetSceneByName(sceneName), loadSceneMode);
+            if (IsServer)
+                OnNewLevelLoaded(SceneManager.GetSceneByName(sceneName), loadSceneMode, clientId);
         }
 
 

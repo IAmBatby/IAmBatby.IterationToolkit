@@ -25,6 +25,7 @@ namespace IterationToolkit.Netcode
         public ExtendedEvent<GameState> OnGameStateChange = new ExtendedEvent<GameState>();
         public ExtendedEvent<LevelData> OnBeforeLevelLoaded = new ExtendedEvent<LevelData>();
         public ExtendedEvent<LevelData> OnLevelLoaded = new ExtendedEvent<LevelData>();
+        public ExtendedEvent<ulong> OnClientLevelLoaded = new ExtendedEvent<ulong>();
 
         protected virtual void Awake()
         {
@@ -59,7 +60,7 @@ namespace IterationToolkit.Netcode
         }
         */
 
-        protected void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
+        protected void OnNewLevelLoaded(Scene scene, LoadSceneMode mode, ulong clientID)
         {
             if (LoadingLevel != null && scene.name == LoadingLevel.defaultSceneName)
             {
@@ -69,6 +70,8 @@ namespace IterationToolkit.Netcode
             }
             else
                 OnLevelLoaded.Invoke();
+
+            OnClientLevelLoaded.Invoke(clientID);
         }
     }
 }
