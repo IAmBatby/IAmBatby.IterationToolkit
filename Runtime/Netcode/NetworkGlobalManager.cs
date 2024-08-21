@@ -61,7 +61,7 @@ namespace IterationToolkit.Netcode
 
         protected void OnNewLevelLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == LoadingLevel.defaultSceneName)
+            if (LoadingLevel != null && scene.name == LoadingLevel.defaultSceneName)
             {
                 ActiveLevel = LoadingLevel;
                 LoadingLevel = null;
