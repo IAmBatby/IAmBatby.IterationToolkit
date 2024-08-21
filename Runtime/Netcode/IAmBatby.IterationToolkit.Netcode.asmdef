@@ -1,5 +1,5 @@
 {
-    "name": "IAmBatby.IterationToolkit.NetcodeForGameObjects",
+    "name": "IAmBatby.IterationToolkit.Netcode",
     "rootNamespace": "",
     "references": [
         "GUID:36bcc334529b5ae47bdc38272e62b4f0",

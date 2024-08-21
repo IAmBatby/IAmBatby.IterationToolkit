@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace IterationToolkit.Netcode
 {
-    public class NetworkGlobalManager : NetworkBehaviour
+    public abstract class NetworkGlobalManager : NetworkBehaviour
     {
         protected static NetworkGlobalManager _manager;
 

@@ -37,15 +37,15 @@ namespace IterationToolkit.Netcode
 
         public int CurrentPlayerCount => PlayerNetworkObjects.Count;
 
-        public NetworkComponentList<NetworkPlayer> PlayerNetworkObjects;
+        public NetworkComponentList<NetworkPlayerBase> PlayerNetworkObjects;
 
-        public NetworkPlayer LocalPlayer => PlayerNetworkObjects.GetComponent(NetworkManagerInstance.LocalClient.PlayerObject);
+        public NetworkPlayerBase LocalPlayer => PlayerNetworkObjects.GetComponent(NetworkManagerInstance.LocalClient.PlayerObject);
 
 
         protected override void Awake()
         {
             base.Awake();
-            PlayerNetworkObjects = new NetworkComponentList<NetworkPlayer>();
+            PlayerNetworkObjects = new NetworkComponentList<NetworkPlayerBase>();
         }
 
         public override void OnNetworkSpawn()
