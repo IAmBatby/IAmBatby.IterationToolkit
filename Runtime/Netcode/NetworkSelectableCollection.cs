@@ -12,6 +12,8 @@ namespace IterationToolkit.Netcode
     {
         private bool isInitalized;
 
+        public bool IsServer => GameNetworkManager.Instance.IsServer;
+
         public List<T> Collection => allObjects;
         [SerializeField] private List<T> allObjects;
         //public List<T> AllObjects => allObjects;
@@ -20,14 +22,14 @@ namespace IterationToolkit.Netcode
         {
             get
             {
-                if (allObjects != null && allObjects.Count != 0 && selectionIndex <= allObjects.Count - 1)
-                    return (allObjects[selectionIndex]);
+                if (allObjects != null && allObjects.Count != 0 && SelectionIndex <= allObjects.Count - 1)
+                    return (allObjects[SelectionIndex]);
                 else
                     return (default);
             }
         }
 
-        private int selectionIndex;
+        private int SelectionIndex { get { return Value; } set { Value = value; } }
 
         public ExtendedEvent<T> onSelected = new ExtendedEvent<T>();
         public ExtendedEvent<T> onUnselected = new ExtendedEvent<T>();
@@ -82,7 +84,7 @@ namespace IterationToolkit.Netcode
                 //Debug.Log("Removing Item, Index Is At: " + selectionIndex);
                 T activeSelection = default;
                 bool selectPreviousActiveObject = false;
-                if (allObjects.IndexOf(removalObject) != selectionIndex)
+                if (allObjects.IndexOf(removalObject) != SelectionIndex)
                 {
                     activeSelection = ActiveSelection;
                     selectPreviousActiveObject = true;
@@ -151,6 +153,8 @@ namespace IterationToolkit.Netcode
 
         public void Select(int index)
         {
+            if (IsServer == false) return;
+
             if (allObjects.Count != 0)
                 Select(allObjects[index]);
         }
@@ -159,10 +163,12 @@ namespace IterationToolkit.Netcode
         {
             TryInitalize();
 
+            if (IsServer == false) return;
+
             if (allObjects.Contains(gameObject))
             {
                 //Debug.Log("Selecting Item " + gameObject + ", Index Is At: " + selectionIndex);
-                selectionIndex = allObjects.IndexOf(gameObject);
+                SelectionIndex = allObjects.IndexOf(gameObject);
 
                 if (!unselectedObjects.Contains(ActiveSelection))
                     unselectedObjects.Add(ActiveSelection);
@@ -183,15 +189,16 @@ namespace IterationToolkit.Netcode
         public void SelectForward()
         {
             TryInitalize();
+
             if (allObjects.Count != 0)
-                Select(allObjects[selectionIndex.Increase(allObjects)]);
+                Select(allObjects[SelectionIndex.Increase(allObjects)]);
         }
 
         public void SelectBackward()
         {
             TryInitalize();
             if (allObjects.Count != 0)
-                Select(allObjects[selectionIndex.Decrease(allObjects)]);
+                Select(allObjects[SelectionIndex.Decrease(allObjects)]);
         }
 
         public void TryInitalize()
