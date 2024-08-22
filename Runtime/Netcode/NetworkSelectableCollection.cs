@@ -1,18 +1,18 @@
+#if NETCODE_PRESENT
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace IterationToolkit
+namespace IterationToolkit.Netcode
 {
-    [System.Serializable]
-    public class SelectableCollection<T>
+    public class NetworkSelectableCollection<T> : NetworkVariable<int>
     {
         private bool isInitalized;
 
         [SerializeField] private List<T> allObjects;
-        public List<T> Collection => allObjects;
         //public List<T> AllObjects => allObjects;
         private List<T> unselectedObjects;
         public T ActiveSelection
@@ -36,10 +36,10 @@ namespace IterationToolkit
         private List<Action> onSelectedActionsList;
         private Dictionary<T, List<Action>> onUnselectedActionsDict;
 
-        public SelectableCollection(List<T> objects = null)
+        public NetworkSelectableCollection(int value = default, NetworkVariableReadPermission readPerm = DefaultReadPerm, NetworkVariableWritePermission writePerm = DefaultWritePerm) : base(value, readPerm, writePerm)
         {
             isInitalized = false;
-            Initalize(objects);
+            Initalize();
         }
 
         public void Initalize(List<T> objects = null)
@@ -205,3 +205,5 @@ namespace IterationToolkit
         }
     }
 }
+
+#endif
