@@ -12,6 +12,7 @@ namespace IterationToolkit.Netcode
     {
         private bool isInitalized;
 
+        public List<T> Collection => allObjects;
         [SerializeField] private List<T> allObjects;
         //public List<T> AllObjects => allObjects;
         private List<T> unselectedObjects;
