@@ -67,7 +67,8 @@ namespace IterationToolkit.Netcode
 
         private void OnCollectionValueChanged(int previousValue, int newValue)
         {
-            Debug.Log("Value Changed From: " + previousValue + " To: " + newValue);
+            Debug.Log("Value Changed From: " + allObjects[previousValue] + "(" + previousValue + ")" + " To: " + allObjects[newValue] + "(" + newValue + ")");
+            Debug.Log("Active Selection Is: " + ActiveSelection);
 
             if (!unselectedObjects.Contains(ActiveSelection))
                 unselectedObjects.Add(ActiveSelection);
