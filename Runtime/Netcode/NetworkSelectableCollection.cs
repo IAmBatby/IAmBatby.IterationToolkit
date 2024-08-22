@@ -43,6 +43,7 @@ namespace IterationToolkit.Netcode
         {
             isInitalized = false;
             Initalize();
+            OnValueChanged += OnCollectionValueChanged;
         }
 
         public void Initalize(List<T> objects = null)
@@ -62,6 +63,26 @@ namespace IterationToolkit.Netcode
                     AddObject(newObject);
 
             isInitalized = true;
+        }
+
+        private void OnCollectionValueChanged(int previousValue, int newValue)
+        {
+            Debug.Log("Value Changed From: " + previousValue + " To: " + newValue);
+
+            if (!unselectedObjects.Contains(ActiveSelection))
+                unselectedObjects.Add(ActiveSelection);
+
+
+            if (unselectedObjects.Contains(ActiveSelection))
+                unselectedObjects.Remove(ActiveSelection);
+
+            onSelectionChange.Invoke();
+
+            InvokeSelection(ActiveSelection);
+
+            foreach (T unselectedObject in unselectedObjects)
+                InvokeUnselection(unselectedObject);
+
         }
 
         public void AddObject(T newObject, bool selectOnAdd = false)
@@ -169,20 +190,6 @@ namespace IterationToolkit.Netcode
             {
                 //Debug.Log("Selecting Item " + gameObject + ", Index Is At: " + selectionIndex);
                 SelectionIndex = allObjects.IndexOf(gameObject);
-
-                if (!unselectedObjects.Contains(ActiveSelection))
-                    unselectedObjects.Add(ActiveSelection);
-
-
-                if (unselectedObjects.Contains(ActiveSelection))
-                    unselectedObjects.Remove(ActiveSelection);
-
-                onSelectionChange.Invoke();
-
-                InvokeSelection(ActiveSelection);
-
-                foreach (T unselectedObject in unselectedObjects)
-                    InvokeUnselection(unselectedObject);
             }
         }
 
