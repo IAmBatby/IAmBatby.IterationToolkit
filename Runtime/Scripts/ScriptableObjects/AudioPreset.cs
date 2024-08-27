@@ -8,13 +8,18 @@ namespace IterationToolkit
     [CreateAssetMenu(fileName = "AudioData", menuName = "IterationToolkit/AudioData", order = 1)]
     public class AudioPreset : ScriptableObject
     {
-        public AudioMixer audioMixer;
-        [Space(10)]
+        [Header("Audio Values")]
         public Vector2 audioRandomPitchMinMax;
         [Range(0, 1)]
         public float audioVolume;
 
+        [Header("Contextual Values")]
         [Space(10)]
+        public bool onlyPlayOnInactiveSource;
+
+        [Space(10)]
+        [Header("Audio Assets")]
         public List<AudioClip> audioRandomClipList = new List<AudioClip>();
+        public AudioMixer audioMixer;
     }
 }

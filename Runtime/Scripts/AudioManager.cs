@@ -24,6 +24,8 @@ namespace IterationToolkit
 
         public static void PlayAudio(AudioPreset data, AudioSource source)
         {
+            if (!ShouldPlay(data, source)) return;
+
             ApplyAudioData(data, source);
             source.Play();
         }
@@ -40,6 +42,14 @@ namespace IterationToolkit
             source.volume = data.audioVolume;
             source.pitch = Random.Range(data.audioRandomPitchMinMax.x, data.audioRandomPitchMinMax.y);
             source.clip = data.audioRandomClipList[Random.Range(0, data.audioRandomClipList.Count)];
+        }
+
+        private static bool ShouldPlay(AudioPreset data, AudioSource audioSource)
+        {
+            if (audioSource.isPlaying && data.onlyPlayOnInactiveSource)
+                return (false);
+            else
+                return (true);
         }
     }
 }
