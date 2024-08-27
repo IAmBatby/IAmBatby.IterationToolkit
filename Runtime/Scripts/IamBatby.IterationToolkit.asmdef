@@ -1,5 +1,10 @@
 {
     "name": "IAmBatby.IterationToolkit",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -7,8 +12,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "noEngineReferences": false,
-    "references": [
-        "UnityEngine.UI"
-]
+    "versionDefines": [],
+    "noEngineReferences": false
 }
