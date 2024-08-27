@@ -22,21 +22,21 @@ namespace IterationToolkit
         }
 
 
-        public static void PlayAudio(AudioData data, AudioSource source)
+        public static void PlayAudio(AudioPreset data, AudioSource source)
         {
             ApplyAudioData(data, source);
             source.Play();
         }
 
-        public static void PlayAudio(AudioData data, Vector3 position)
+        public static void PlayAudio(AudioPreset data, Vector3 position)
         {
             ManagerSource.transform.position = position;
             PlayAudio(data, ManagerSource);
         }
 
-        private static void ApplyAudioData(AudioData data, AudioSource source)
+        private static void ApplyAudioData(AudioPreset data, AudioSource source)
         {
-            source.outputAudioMixerGroup  = data.audioMixerGroup;
+            source.outputAudioMixerGroup  = data.audioMixer.outputAudioMixerGroup;
             source.volume = data.audioVolume;
             source.pitch = Random.Range(data.audioRandomPitchMinMax.x, data.audioRandomPitchMinMax.y);
             source.clip = data.audioRandomClipList[Random.Range(0, data.audioRandomClipList.Count)];

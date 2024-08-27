@@ -6,9 +6,9 @@ using UnityEngine.Audio;
 namespace IterationToolkit
 {
     [CreateAssetMenu(fileName = "AudioData", menuName = "IterationToolkit/AudioData", order = 1)]
-    public class AudioData : ScriptableObject
+    public class AudioPreset : ScriptableObject
     {
-        public AudioMixerGroup audioMixerGroup;
+        public AudioMixer audioMixer;
         [Space(10)]
         public Vector2 audioRandomPitchMinMax;
         [Range(0, 1)]
