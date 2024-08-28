@@ -5,15 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "InputSetting", menuName = "IterationToolkit/Settings/InputSetting", order = 1)]
 public class InputSetting : ScriptableSetting<ScriptableInputSettingValue>
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool GetInputDown()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (Input.GetKeyDown(Value.KeyCode) || (!string.IsNullOrEmpty(Value.InputAxesName) && Input.GetButtonDown(Value.InputAxesName)))
+            return (true);
+        return (false);
     }
 }

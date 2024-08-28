@@ -29,11 +29,28 @@ public class ScriptableSetting<T> : ScriptableSetting
         OnChanged.Invoke();
     }
 
+    public override ValueContainer GetValue()
+    {
+        ValueContainer returnContainer;
+        if (_settingValue is int intValue)
+            returnContainer = new ValueContainer(intValue);
+        else if (_settingValue is float floatValue)
+            returnContainer = new ValueContainer(floatValue);
+        else if (_settingValue is string stringValue)
+            returnContainer = new ValueContainer(stringValue);
+        else if (_settingValue is object objectValue)
+            returnContainer = new ValueContainer(objectValue);
+        else
+            returnContainer = new ValueContainer(ValueContainer.SettingType.None);
+
+        return (returnContainer);
+    }
+
 
     public ExtendedEvent<(T oldValue, T newValue)> OnValueChanged = new ExtendedEvent<(T oldValue, T newValue)>();
 }
 
-public class ScriptableSetting : ScriptableObject
+public abstract class ScriptableSetting : ScriptableObject
 {
     public ExtendedEvent OnChanged = new ExtendedEvent();
 
@@ -43,5 +60,7 @@ public class ScriptableSetting : ScriptableObject
     {
         runtimeSetting = Instantiate(this);
     }
+
+    public abstract ValueContainer GetValue();
 }
 
