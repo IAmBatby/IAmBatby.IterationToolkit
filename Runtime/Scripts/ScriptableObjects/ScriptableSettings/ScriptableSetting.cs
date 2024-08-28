@@ -4,30 +4,44 @@ using UnityEngine;
 [System.Serializable]
 public class ScriptableSetting<T> : ScriptableSetting
 {
-    public ExtendedEvent<(T oldValue, T newValue)> OnValueChanged = new ExtendedEvent<(T oldValue, T newValue)>();
+    protected ScriptableSetting<T> RuntimeSettings
+    {
+        get
+        {
+            if (runtimeSetting == null)
+                CreateRuntimeCopy();
+            return (runtimeSetting as ScriptableSetting<T>);
+        }
+    }
+
     [SerializeField] protected T _settingValue;
     public T Value
     {
-        get => _settingValue;
-        set => SetValue(value);
+        get => RuntimeSettings._settingValue;
+        set => RuntimeSettings.SetValue(value);
     }
 
     protected void SetValue(T newValue)
     {
-        T oldValue = _settingValue;
-        _settingValue = newValue;
+        T oldValue = RuntimeSettings._settingValue;
+        RuntimeSettings._settingValue = newValue;
         OnValueChanged.Invoke((oldValue, newValue));
         OnChanged.Invoke();
     }
+
+
+    public ExtendedEvent<(T oldValue, T newValue)> OnValueChanged = new ExtendedEvent<(T oldValue, T newValue)>();
 }
 
 public class ScriptableSetting : ScriptableObject
 {
     public ExtendedEvent OnChanged = new ExtendedEvent();
 
-    private void Awake()
+    [SerializeField] protected ScriptableSetting runtimeSetting;
+
+    protected void CreateRuntimeCopy()
     {
-        Debug.Log(name + " says hi");
+        runtimeSetting = Instantiate(this);
     }
 }
 
