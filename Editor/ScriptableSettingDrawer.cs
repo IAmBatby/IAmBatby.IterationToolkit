@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+/*
 [CustomPropertyDrawer(typeof(ValueSetting<>), true)]
 public class ScriptableSettingDrawer : PropertyDrawer
 {
@@ -37,5 +37,6 @@ public class ScriptableObjectSettingDrawer : PropertyDrawer
         return (container);
     }
 }
+*/
 
 

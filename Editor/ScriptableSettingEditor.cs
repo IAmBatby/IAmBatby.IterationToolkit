@@ -9,6 +9,7 @@ using IterationToolkit.ToolkitEditor;
 
 namespace IterationToolkit
 {
+    /*
     [CustomEditor(typeof(NewScriptableSetting), true)]
     [CanEditMultipleObjects]
     public class ScriptableSettingEditor : Editor
@@ -17,6 +18,7 @@ namespace IterationToolkit
 
         private void OnEnable()
         {
+            /*
             SerializedProperty mainProperty = serializedObject.GetIterator();
             m_Values = new List<SerializedProperty>();
 
@@ -33,6 +35,7 @@ namespace IterationToolkit
                     }
                 }
                 while (mainProperty.NextVisible(false));
+            
             }
         }
         public override void OnInspectorGUI ()
@@ -67,7 +70,7 @@ namespace IterationToolkit
             }
         }
         
-    }
+    }*/
 }
 
 #endif
