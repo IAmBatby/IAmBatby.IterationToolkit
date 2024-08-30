@@ -73,7 +73,6 @@ namespace IterationToolkit.ToolkitEditor
 
 
             BeginLayoutOption(LayoutOption.Vertical);
-            //GUILayout.FlexibleSpace();
             BeginLayoutOption(LayoutOption.Horizontal);
             foreach (string columnHeader in columnHeaders)
             {
@@ -162,9 +161,10 @@ namespace IterationToolkit.ToolkitEditor
             backgroundStyle.alignment = textAnchor;
             BeginLayoutOption(layoutOption, backgroundStyle);
 
-            GUIStyle textStyle = new GUIStyle(EditorStyles.boldLabel);
+            GUIStyle textStyle = new GUIStyle();
             textStyle.alignment = textAnchor;
             textStyle.fontSize = HeaderFontSize;
+            textStyle.normal.textColor = Color.white;
             if (layoutOption == LayoutOption.None)
                 textStyle.normal.background = backgroundStyle.normal.background;
 
