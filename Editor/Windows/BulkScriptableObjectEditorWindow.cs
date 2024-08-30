@@ -30,7 +30,7 @@ namespace IterationToolkit.ToolkitEditor
             selectedScriptableSetting = allSettings.First();
         }
 
-        protected abstract SerializedPropertyType[] GetTypeFilters();
+        protected virtual SerializedPropertyType[] GetTypeFilters() => null;
 
         protected virtual void OnGUI()
         {
