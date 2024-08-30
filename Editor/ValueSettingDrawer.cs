@@ -1,57 +1,44 @@
 using IterationToolkit;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace IterationToolkit.ToolkitEditor
 {
     [CustomPropertyDrawer(typeof(ValueSetting<>), true)]
-    public class ScriptableSettingDrawer : PropertyDrawer
+    public class ValueSettingDrawer : PropertyDrawer
     {
+        protected virtual string FindValueProperty() => "_value";
 
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            VisualElement container = new VisualElement();
+            EditorGUI.BeginProperty(position, label, property);
+            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            int indent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
 
-            PropertyField valueField = new PropertyField(property.FindPropertyRelative("_value"));
-            valueField.label = property.name;
-            container.Add(valueField);
+            Rect valueRect = new Rect(position.x, position.y, position.width, position.height);
+            SerializedProperty valueProperty = property.FindPropertyRelative(FindValueProperty());
+            EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none);
 
-            return (container);
+            EditorGUI.indentLevel = indent;
+            EditorGUI.EndProperty();
         }
     }
 
     [CustomPropertyDrawer(typeof(ObjectSetting<>), true)]
-    public class ScriptableObjectSettingDrawer : PropertyDrawer
+    public class ObjectSettingDrawer : ValueSettingDrawer
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
-        {
-            VisualElement container = new VisualElement();
-
-            PropertyField valueField = new PropertyField(property.FindPropertyRelative("_typeValue"));
-            valueField.label = property.name;
-            container.Add(valueField);
-
-            return (container);
-        }
+        protected override string FindValueProperty() => "_typeValue";
     }
 
     [CustomPropertyDrawer(typeof(EnumSetting<>), true)]
-    public class ScriptableEnumSettingDrawer : PropertyDrawer
+    public class EnumSettingDrawer : ValueSettingDrawer
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
-        {
-            VisualElement container = new VisualElement();
-
-            PropertyField valueField = new PropertyField(property.FindPropertyRelative("_typeValue"));
-            valueField.label = property.name;
-            container.Add(valueField);
-
-            return (container);
-        }
+        protected override string FindValueProperty() => "_typeValue";
     }
 }
 

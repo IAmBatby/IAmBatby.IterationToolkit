@@ -2,6 +2,7 @@ using Codice.Client.Common.GameUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -12,11 +13,12 @@ namespace IterationToolkit
     {
         public abstract void RefreshValue();
         public abstract void ResetValue();
+        public abstract BoxedValueSetting GetBoxedValue();
 
         private string _displayName;
         public string DisplayName => _displayName;
 
-        public NewScriptableSetting ScriptableSetting { get; set; }
+        public ScriptableSetting ScriptableSetting { get; set; }
         public ExtendedEvent OnValueChanged = new ExtendedEvent();
     }
 
@@ -28,6 +30,8 @@ namespace IterationToolkit
         public virtual T Value { get { return (RuntimeValue); } set { SetValue(value); } }
 
         public new ExtendedEvent<T> OnValueChanged = new ExtendedEvent<T>();
+
+        public override BoxedValueSetting GetBoxedValue() => new BoxedValueSetting((T)Value);
 
         public override void RefreshValue()
         {
@@ -72,7 +76,11 @@ namespace IterationToolkit
     public class BoolSetting : ValueSetting<bool> { public override bool Compare(bool firstValue, bool secondValue) => (firstValue == secondValue); }
 
     [System.Serializable]
-    public class FloatSetting : ValueSetting<float> { public override bool Compare(float firstValue, float secondValue) => (Mathf.Approximately(firstValue, secondValue)); }
+    public class FloatSetting : ValueSetting<float>
+    {
+        public override bool Compare(float firstValue, float secondValue) => (Mathf.Approximately(firstValue, secondValue));
+        public override BoxedValueSetting GetBoxedValue() => new BoxedValueSetting(Value);
+    }
 
     [System.Serializable]
     public class IntSetting : ValueSetting<int> { public override bool Compare(int firstValue, int secondValue) => (firstValue == secondValue); }

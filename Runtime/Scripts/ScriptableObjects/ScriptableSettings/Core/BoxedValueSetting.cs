@@ -1,9 +1,10 @@
+using IterationToolkit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct ValueContainer
+public struct BoxedValueSetting
 {
     public string ValueName { get; private set; }
     public enum SettingType { Int, Float, Bool, String, Enum, Object, None }
@@ -16,7 +17,7 @@ public struct ValueContainer
     private object objectValue;
     private Enum enumValue;
 
-    public ValueContainer(SettingType setting)
+    public BoxedValueSetting(SettingType setting)
     {
         ValueType = SettingType.None;
         ValueName = string.Empty;
@@ -29,7 +30,7 @@ public struct ValueContainer
         enumValue = null;
     }
 
-    public ValueContainer(object newObjectValue, string newValueName = "UNKNOWN")
+    public BoxedValueSetting(object newObjectValue, string newValueName = "UNKNOWN")
     {
         ValueName = newValueName;
         ValueType = SettingType.Object;
@@ -42,7 +43,7 @@ public struct ValueContainer
         enumValue = null;
     }
 
-    public ValueContainer(float newFloatValue, string newValueName = "UNKNOWN")
+    public BoxedValueSetting(float newFloatValue, string newValueName = "UNKNOWN")
     {
         ValueName = newValueName;
         ValueType = SettingType.Float;
@@ -55,7 +56,7 @@ public struct ValueContainer
         enumValue = null;
     }
 
-    public ValueContainer(string newStringValue, string newValueName = "UNKNOWN")
+    public BoxedValueSetting(string newStringValue, string newValueName = "UNKNOWN")
     {
         ValueName = newValueName;
         ValueType = SettingType.String;
@@ -68,7 +69,7 @@ public struct ValueContainer
         enumValue = null;
     }
 
-    public ValueContainer(Enum newEnumValue, string newValueName = "UNKNOWN")
+    public BoxedValueSetting(Enum newEnumValue, string newValueName = "UNKNOWN")
     {
         ValueName = newValueName;
         ValueType = SettingType.Enum;
