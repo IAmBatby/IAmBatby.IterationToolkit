@@ -76,7 +76,10 @@ namespace IterationToolkit.ToolkitEditor
 
             BeginLayoutOption(LayoutOption.Horizontal);
             foreach (string columnHeader in columnHeaders)
+            {
                 InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
+                GUILayout.FlexibleSpace();
+            }
             EndLayoutOption(LayoutOption.Horizontal);
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
