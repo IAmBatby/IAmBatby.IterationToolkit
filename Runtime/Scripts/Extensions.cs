@@ -64,5 +64,14 @@ namespace IterationToolkit
         {
             return (Utilities.DecreaseIndex(value, collection));
         }
+
+        public static GUIStyle Colorize(this GUIStyle input, Color color)
+        {
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+            input.normal.background = texture;
+            return input;
+        }
     }
 }

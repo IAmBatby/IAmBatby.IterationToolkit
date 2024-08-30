@@ -15,8 +15,8 @@ namespace IterationToolkit.ToolkitEditor
         
         public List<ScriptableSetting> allSettings;
         public Dictionary<Type, ScriptableSetting> settingsDict;
-        private int selectedSettingIndex;
-        private int selectedTypeIndex;
+        private Type selectedScriptableSettingsType;
+        private ScriptableSetting selectedScriptableSetting;
 
         [MenuItem("IterationToolkit/ScriptableSettings Manager")]
         public static void OpenWindow()
@@ -28,7 +28,7 @@ namespace IterationToolkit.ToolkitEditor
 
         private void TryPopulateData()
         {
-            if (allSettings == null || allSettings.Count == 0 || settingsDict == null || settingsDict.Count != allSettings.Count)
+            if (allSettings == null || allSettings.Count == 0 || settingsDict == null)
                 PopulateData();
         }
 
@@ -39,13 +39,15 @@ namespace IterationToolkit.ToolkitEditor
             foreach (ScriptableSetting setting in allSettings)
                 if (!settingsDict.ContainsKey(setting.GetType()))
                     settingsDict.Add(setting.GetType(), setting);
+            selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
+            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType];
         }
 
         private void OnGUI()
         {
             TryPopulateData();
 
-            GUILayout.ExpandWidth(false);
+            //GUILayout.ExpandWidth(false);
             GUI.skin.label.richText = true;
             GUI.skin.textField.richText = true;
             if (allSettings != null || allSettings.Count == 0)
@@ -53,7 +55,11 @@ namespace IterationToolkit.ToolkitEditor
                 GUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Select Setting Type: ", EditorStyles.boldLabel);
                 GUILayout.BeginVertical();
-                selectedTypeIndex = EditorGUILayout.Popup(selectedTypeIndex, settingsDict.Keys.Select(t => t.Name).ToArray());
+                List<Type> settingsKeys = settingsDict.Keys.ToList();
+                if (selectedScriptableSettingsType != null && settingsKeys.Contains(selectedScriptableSettingsType))
+                    selectedScriptableSettingsType = settingsKeys[EditorGUILayout.Popup(settingsKeys.IndexOf(selectedScriptableSettingsType), settingsKeys.Select(t => t.Name).ToArray())];
+                else
+                    selectedScriptableSettingsType = settingsKeys.First();
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
@@ -61,41 +67,63 @@ namespace IterationToolkit.ToolkitEditor
                 GUILayout.BeginVertical();
                 List<ScriptableSetting> settingList = new List<ScriptableSetting>();
                 foreach (ScriptableSetting scriptableSetting in allSettings)
-                    if (scriptableSetting.GetType() == settingsDict.Keys.ToArray()[selectedTypeIndex])
+                    if (scriptableSetting.GetType() == selectedScriptableSettingsType)
                         settingList.Add(scriptableSetting);
-                selectedSettingIndex = EditorGUILayout.Popup(selectedSettingIndex, settingList.Select(s => s.name).ToArray());
+                if (selectedScriptableSetting != null && settingList.Contains(selectedScriptableSetting))
+                    selectedScriptableSetting = settingList[EditorGUILayout.Popup(settingList.IndexOf(selectedScriptableSetting), settingList.Select(s => s.name).ToArray())];
+                else
+                    selectedScriptableSetting = settingList.First();
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
 
                 GUILayout.Space(15);
 
                 GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(settingList[selectedSettingIndex].name, EditorStyles.boldLabel);
-                if (Selection.activeObject != settingList[selectedSettingIndex])
+                EditorGUILayout.LabelField(selectedScriptableSetting.name, EditorStyles.boldLabel);
+                if (Selection.activeObject != selectedScriptableSetting)
                     if (GUILayout.Button("Click To Inspect"))
-                        Selection.activeObject = settingList[selectedSettingIndex];
+                        Selection.activeObject = selectedScriptableSetting;
                 GUILayout.EndHorizontal();
 
-                DrawSerializedScriptableSetting(settingList[selectedSettingIndex]);
+                //DrawSerializedScriptableSetting(settingList[selectedSettingIndex], LayoutOption.Vertical);
+
+                GUILayout.Space(15);
+
+                DrawSerializedScriptableSettingsList(settingList);
             }
         }
 
-        public void DrawSerializedScriptableSetting(ScriptableSetting setting)
+        public void DrawSerializedScriptableSettingsList(List<ScriptableSetting> settings)
         {
-            GUILayout.BeginVertical(GUILayout.ExpandWidth(false));
-            SerializedObject serializedSetting = new SerializedObject(setting);
-            SerializedProperty mainProperty = serializedSetting.GetIterator();
-            if (mainProperty.NextVisible(true))
+            Dictionary<string, List<SerializedProperty>> settingsWithPropertiesDict = new Dictionary<string, List<SerializedProperty>>();
+            List<string> propertyNames = new List<string>();
+            List<SerializedObject> serializedSettings = new List<SerializedObject>();
+            foreach (ScriptableSetting setting in settings)
             {
-                do
-                    if (mainProperty.propertyType == SerializedPropertyType.Generic)
-                        EditorGUILayout.PropertyField(mainProperty);
-                while (mainProperty.NextVisible(false));
+                (SerializedObject, List<SerializedProperty>) results = GetScriptableSettingValues(setting);
+                serializedSettings.Add(results.Item1);
+                settingsWithPropertiesDict.Add(setting.name, results.Item2);
+                if (propertyNames.Count == 0)
+                    foreach (SerializedProperty serializedProperty in results.Item2)
+                        propertyNames.Add(serializedProperty.displayName);
             }
-            serializedSetting.ApplyModifiedProperties();
-            GUILayout.EndVertical();
+
+            EditorLabelUtilities.InsertFieldDataTable(settingsWithPropertiesDict.Keys.ToList(), propertyNames, settingsWithPropertiesDict.Values.ToList());
+
+            foreach (SerializedObject serializedObject in serializedSettings)
+                serializedObject.ApplyModifiedProperties();
         }
-        
+
+        public (SerializedObject, List<SerializedProperty>) GetScriptableSettingValues(ScriptableSetting setting)
+        {
+            SerializedObject serializedSetting = new SerializedObject(setting);
+            List<SerializedProperty> serializedProperties = new List<SerializedProperty>();
+            foreach (SerializedProperty serializedProperty in EditorLabelUtilities.FindSerializedProperties(serializedSetting))
+                if (serializedProperty.propertyType == SerializedPropertyType.Generic)
+                    serializedProperties.Add(serializedProperty);
+            return (serializedSetting, serializedProperties);
+        }
+
     }
 }
 
