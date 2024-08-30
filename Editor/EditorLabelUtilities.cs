@@ -60,6 +60,9 @@ namespace IterationToolkit.ToolkitEditor
 
             columnHeaders.Insert(0, string.Empty);
 
+            foreach (SerializedProperty sP in dataTable[0])
+                Debug.Log(sP.displayName + " - " + sP.propertyType);
+
 
             BeginLayoutOption(LayoutOption.Horizontal);
 
