@@ -12,9 +12,10 @@ namespace IterationToolkit.ToolkitEditor
         protected T selectedScriptableSetting;
 
 
-        protected static void InitializeWindow()
+        protected void InitializeWindow()
         {
-
+            TryPopulateData();
+            Show();
         }
 
         protected void TryPopulateData()
