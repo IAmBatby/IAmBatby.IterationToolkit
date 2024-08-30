@@ -81,19 +81,19 @@ namespace IterationToolkit.ToolkitEditor
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
-                GUILayout.FlexibleSpace();
                 BeginLayoutOption(LayoutOption.Horizontal);
                 if (rowHeaders.Count > i)
                     InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
                 else
                     InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
-
+                GUILayout.FlexibleSpace();
                 foreach (List<SerializedProperty> serializedProperties in dataTable)
                 {
                     if (serializedProperties.Count > i)
                         InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
                     else
                         InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
+                    GUILayout.FlexibleSpace();
                 }
                 EndLayoutOption(LayoutOption.Horizontal);
             }
