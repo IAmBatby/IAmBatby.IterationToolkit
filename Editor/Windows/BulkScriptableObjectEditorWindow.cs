@@ -32,17 +32,19 @@ namespace IterationToolkit.ToolkitEditor
             settingsDict = new Dictionary<P, List<T>>();
             foreach (T setting in allSettings)
             {
-                P settingType = GetParentObject(setting);
-                if (!settingsDict.ContainsKey(settingType))
-                    settingsDict.Add(settingType, new List<T>() { setting });
-                else
-                    settingsDict[settingType].Add(setting);
+                foreach (P parentValue in GetParentObjects(setting))
+                {
+                    if (!settingsDict.ContainsKey(parentValue))
+                        settingsDict.Add(parentValue, new List<T>() { setting });
+                    else
+                        settingsDict[parentValue].Add(setting);
+                }
             }
             selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
             selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
         }
 
-        protected abstract P GetParentObject(T childObject);
+        protected abstract P[] GetParentObjects(T childObject);
         protected abstract SerializedPropertyType[] GetTypeFilters();
 
         private void OnGUI()
