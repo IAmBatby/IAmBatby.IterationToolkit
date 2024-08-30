@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace IterationToolkit.ToolkitEditor
 {
-    public abstract class BulkScriptableObjectEditorWindow<T> : EditorWindow where T: ScriptableObject
+    public abstract class BulkObjectEditorWindow<T> : EditorWindow where T : UnityEngine.Object
     {
         public List<T> allSettings;
         protected T selectedScriptableSetting;
@@ -31,7 +31,7 @@ namespace IterationToolkit.ToolkitEditor
         }
 
         protected virtual SerializedPropertyType[] GetTypeWhitelist() => null;
-        protected virtual SerializedPropertyType[] GetTypeBlacklist() => new[] { SerializedPropertyType.ArraySize  };
+        protected virtual SerializedPropertyType[] GetTypeBlacklist() => new[] { SerializedPropertyType.ArraySize };
 
         protected virtual void OnGUI()
         {
@@ -86,6 +86,10 @@ namespace IterationToolkit.ToolkitEditor
             }
             return (serializedSetting, serializedProperties);
         }
+    }
+    public abstract class BulkScriptableObjectEditorWindow<T> : BulkObjectEditorWindow<T> where T : ScriptableObject
+    {
+
     }
 
     public abstract class BulkScriptableObjectEditorWindow<T, P> : BulkScriptableObjectEditorWindow<T> where T: ScriptableObject
