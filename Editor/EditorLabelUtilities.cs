@@ -8,8 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using IterationToolkit;
-using Unity.Plastic.Antlr3.Runtime.Debug;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+using System.Linq;
 
 namespace IterationToolkit.ToolkitEditor
 {
@@ -33,8 +32,10 @@ namespace IterationToolkit.ToolkitEditor
         }
 
         public static Color HeaderColor = new Color(81f / 255f, 81f / 255f, 81f / 255f, 255);
-        public static Color PrimaryAlternatingColor = new Color(62f / 255f, 62f / 255f, 62f / 255f, 255);
-        public static Color SecondaryAlternatingColor = new Color(43f / 255f, 41f / 255f, 43f / 255f, 255);
+        //public static Color PrimaryAlternatingColor = new Color(62f / 255f, 62f / 255f, 62f / 255f, 255);
+        //public static Color SecondaryAlternatingColor = new Color(43f / 255f, 41f / 255f, 43f / 255f, 255);
+        public static Color PrimaryAlternatingColor = Color.red;
+        public static Color SecondaryAlternatingColor = Color.green;
 
         public static int HeaderFontSize = 16;
         public static int TextFontSize = 13;
@@ -48,16 +49,15 @@ namespace IterationToolkit.ToolkitEditor
 
             EditorGUILayout.BeginVertical();
             foreach (string columnHeader in columnHeaders)
-                InsertHeader(columnHeader, LayoutOption.None, HeaderColor);
+                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
             EditorGUILayout.EndVertical();
 
             for (int i = 0; i < rowHeaders.Count; i++)
             {
                 EditorGUILayout.BeginVertical();
-                Color color = GetAlternatingColor(i);
-                InsertHeader(rowHeaders[i], LayoutOption.None, HeaderColor);
+                InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
                 foreach (List<SerializedProperty> serializedProperties in dataTable)
-                    InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), color);
+                    InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
                 EditorGUILayout.EndVertical();
             }
 
@@ -101,14 +101,14 @@ namespace IterationToolkit.ToolkitEditor
             EndLayoutOption(layoutOption);
         }
 
-        public static void InsertHeader(string headerText, LayoutOption layoutOption, Color color, params GUILayoutOption[] options)
+        public static void InsertHeader(string headerText, LayoutOption layoutOption, TextAnchor textAnchor, Color color, params GUILayoutOption[] options)
         {
             GUIStyle backgroundStyle = GetNewStyle(color);
-            backgroundStyle.alignment = TextAnchor.MiddleCenter;
+            backgroundStyle.alignment = textAnchor;
             BeginLayoutOption(layoutOption, backgroundStyle);
 
             GUIStyle textStyle = new GUIStyle(EditorStyles.boldLabel);
-            textStyle.alignment = TextAnchor.MiddleCenter;
+            textStyle.alignment = textAnchor;
             if (layoutOption == LayoutOption.None)
                 textStyle.normal.background = backgroundStyle.normal.background;
 
@@ -120,7 +120,6 @@ namespace IterationToolkit.ToolkitEditor
         public static void InsertField(SerializedProperty value, LayoutOption layoutOption, GUIStyle style, Color color, params GUILayoutOption[] options)
         {
             GUIStyle backgroundStyle = GetNewStyle(color);
-            backgroundStyle.alignment = TextAnchor.MiddleCenter;
             BeginLayoutOption(layoutOption, backgroundStyle);
 
             EditorGUILayout.PropertyField(value, GUIContent.none, options);
@@ -131,11 +130,34 @@ namespace IterationToolkit.ToolkitEditor
         public static void InsertField<T>(T value, LayoutOption layoutOption, GUIStyle style, Color color, params GUILayoutOption[] options)
         {
             GUIStyle backgroundStyle = GetNewStyle(color);
-            backgroundStyle.alignment = TextAnchor.MiddleCenter;
             BeginLayoutOption(layoutOption, backgroundStyle);
             EditorGUILayout.LabelField(value.ToString(), style, options);
 
             EndLayoutOption(layoutOption);
+        }
+
+        public static T InsertPopup<T>(List<T> popupOptions, T currentSelection, string labelText)
+        {
+            string[] valueNames = null;
+            if (popupOptions is List<Type> typeOptions)
+                valueNames = typeOptions.Select(o => o.Name).ToArray();
+            else
+                valueNames = popupOptions.Select(o => o.ToString()).ToArray();
+            T returnValue = default;
+            int returnIndex = popupOptions.IndexOf(currentSelection);
+
+            if (!string.IsNullOrEmpty(labelText))
+            {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(labelText);
+            }
+
+            returnValue = popupOptions[EditorGUILayout.Popup(returnIndex, valueNames)];
+
+            if (!string.IsNullOrEmpty(labelText))
+                GUILayout.EndHorizontal();
+
+            return (returnValue);
         }
 
         public static List<SerializedProperty> FindSerializedProperties(Object nonSerializedObject)
@@ -164,9 +186,9 @@ namespace IterationToolkit.ToolkitEditor
         public static void BeginLayoutOption(LayoutOption layoutOption, GUIStyle style)
         {
             if (layoutOption == LayoutOption.Horizontal)
-                EditorGUILayout.BeginHorizontal(style);
+                EditorGUILayout.BeginHorizontal(style, GUILayout.ExpandWidth(false));
             else if (layoutOption == LayoutOption.Vertical)
-                EditorGUILayout.BeginVertical(style);
+                EditorGUILayout.BeginVertical(style, GUILayout.ExpandWidth(false));
         }
 
         public static void EndLayoutOption(LayoutOption layoutOption)
@@ -188,6 +210,7 @@ namespace IterationToolkit.ToolkitEditor
         {
             GUIStyle newStyle = new GUIStyle();
             newStyle.richText = enableRichText;
+            newStyle.alignment = TextAnchor.MiddleLeft;
 
             if (fontSize != -1)
                 newStyle.fontSize = fontSize;

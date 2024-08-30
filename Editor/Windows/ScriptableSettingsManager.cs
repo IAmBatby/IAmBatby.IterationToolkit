@@ -14,7 +14,7 @@ namespace IterationToolkit.ToolkitEditor
     {
         
         public List<ScriptableSetting> allSettings;
-        public Dictionary<Type, ScriptableSetting> settingsDict;
+        public Dictionary<Type, List<ScriptableSetting>> settingsDict;
         private Type selectedScriptableSettingsType;
         private ScriptableSetting selectedScriptableSetting;
 
@@ -35,61 +35,41 @@ namespace IterationToolkit.ToolkitEditor
         private void PopulateData()
         {
             allSettings = Resources.FindObjectsOfTypeAll<ScriptableSetting>().ToList();
-            settingsDict = new Dictionary<Type, ScriptableSetting>();
+            settingsDict = new Dictionary<Type, List<ScriptableSetting>>();
             foreach (ScriptableSetting setting in allSettings)
-                if (!settingsDict.ContainsKey(setting.GetType()))
-                    settingsDict.Add(setting.GetType(), setting);
+            {
+                Type settingType = setting.GetType();
+                if (!settingsDict.ContainsKey(settingType))
+                    settingsDict.Add(settingType, new List<ScriptableSetting>() { setting });
+                else
+                    settingsDict[settingType].Add(setting);
+            }
             selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
-            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType];
+            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
         }
 
         private void OnGUI()
         {
             TryPopulateData();
 
-            //GUILayout.ExpandWidth(false);
+            GUILayout.ExpandWidth(false);
             GUI.skin.label.richText = true;
             GUI.skin.textField.richText = true;
             if (allSettings != null || allSettings.Count == 0)
             {
+                /*
                 GUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Select Setting Type: ", EditorStyles.boldLabel);
                 GUILayout.BeginVertical();
                 List<Type> settingsKeys = settingsDict.Keys.ToList();
-                if (selectedScriptableSettingsType != null && settingsKeys.Contains(selectedScriptableSettingsType))
-                    selectedScriptableSettingsType = settingsKeys[EditorGUILayout.Popup(settingsKeys.IndexOf(selectedScriptableSettingsType), settingsKeys.Select(t => t.Name).ToArray())];
-                else
-                    selectedScriptableSettingsType = settingsKeys.First();
+                selectedScriptableSettingsType = settingsKeys[EditorGUILayout.Popup(settingsKeys.IndexOf(selectedScriptableSettingsType), settingsKeys.Select(t => t.Name).ToArray())];
                 GUILayout.EndVertical();
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Select Setting: ", EditorStyles.boldLabel);
-                GUILayout.BeginVertical();
-                List<ScriptableSetting> settingList = new List<ScriptableSetting>();
-                foreach (ScriptableSetting scriptableSetting in allSettings)
-                    if (scriptableSetting.GetType() == selectedScriptableSettingsType)
-                        settingList.Add(scriptableSetting);
-                if (selectedScriptableSetting != null && settingList.Contains(selectedScriptableSetting))
-                    selectedScriptableSetting = settingList[EditorGUILayout.Popup(settingList.IndexOf(selectedScriptableSetting), settingList.Select(s => s.name).ToArray())];
-                else
-                    selectedScriptableSetting = settingList.First();
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();*/
 
-                GUILayout.Space(15);
+                selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<Type>(settingsDict.Keys.ToList(), selectedScriptableSettingsType, "Select Setting Type: ");
 
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(selectedScriptableSetting.name, EditorStyles.boldLabel);
-                if (Selection.activeObject != selectedScriptableSetting)
-                    if (GUILayout.Button("Click To Inspect"))
-                        Selection.activeObject = selectedScriptableSetting;
-                GUILayout.EndHorizontal();
-
-                //DrawSerializedScriptableSetting(settingList[selectedSettingIndex], LayoutOption.Vertical);
-
-                GUILayout.Space(15);
-
-                DrawSerializedScriptableSettingsList(settingList);
+                GUILayout.Space(25);
+                DrawSerializedScriptableSettingsList(settingsDict[selectedScriptableSettingsType]);
             }
         }
 
