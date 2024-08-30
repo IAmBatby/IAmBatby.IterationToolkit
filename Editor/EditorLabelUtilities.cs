@@ -81,6 +81,7 @@ namespace IterationToolkit.ToolkitEditor
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
+                GUILayout.FlexibleSpace();
                 BeginLayoutOption(LayoutOption.Horizontal);
                 if (rowHeaders.Count > i)
                     InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
@@ -239,7 +240,6 @@ namespace IterationToolkit.ToolkitEditor
         {
             if (style != null)
             {
-                GUILayout.FlexibleSpace();
                 if (layoutOption == LayoutOption.Horizontal)
                     EditorGUILayout.BeginHorizontal(style);
                 else if (layoutOption == LayoutOption.Vertical)
@@ -247,7 +247,6 @@ namespace IterationToolkit.ToolkitEditor
             }
             else
             {
-                GUILayout.FlexibleSpace();
                 if (layoutOption == LayoutOption.Horizontal)
                     EditorGUILayout.BeginHorizontal();
                 else if (layoutOption == LayoutOption.Vertical)
