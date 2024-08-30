@@ -73,7 +73,7 @@ namespace IterationToolkit.ToolkitEditor
 
 
             BeginLayoutOption(LayoutOption.Vertical);
-            GUILayout.FlexibleSpace();
+            //GUILayout.FlexibleSpace();
             BeginLayoutOption(LayoutOption.Horizontal);
             foreach (string columnHeader in columnHeaders)
             {
@@ -83,7 +83,7 @@ namespace IterationToolkit.ToolkitEditor
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
-                GUILayout.FlexibleSpace();
+                //GUILayout.FlexibleSpace();
                 BeginLayoutOption(LayoutOption.Horizontal);
                 if (rowHeaders.Count > i)
                     InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
