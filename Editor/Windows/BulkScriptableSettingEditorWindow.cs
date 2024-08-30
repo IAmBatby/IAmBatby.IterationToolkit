@@ -18,10 +18,10 @@ namespace IterationToolkit.ToolkitEditor
             window.TryPopulateData();
             window.Show();
         }
-        protected override Type GetParentObject(ScriptableSetting childObject)
+        protected override Type[] GetParentObjects(ScriptableSetting childObject)
         {
             if (childObject != null)
-                return (childObject.GetType());
+                return (new[] { childObject.GetType() });
             return (null);
         }
 
