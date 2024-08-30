@@ -6,13 +6,10 @@ using UnityEngine;
 
 namespace IterationToolkit.ToolkitEditor
 {
-    public abstract class BulkScriptableObjectEditorWindow<T,P> : EditorWindow where T : ScriptableObject
+    public abstract class BulkScriptableObjectEditorWindow<T> : EditorWindow where T: ScriptableObject
     {
-
         public List<T> allSettings;
-        public Dictionary<P, List<T>> settingsDict;
-        private P selectedScriptableSettingsType;
-        private T selectedScriptableSetting;
+        protected T selectedScriptableSetting;
 
 
         protected static void InitializeWindow()
@@ -22,32 +19,19 @@ namespace IterationToolkit.ToolkitEditor
 
         protected void TryPopulateData()
         {
-            if (allSettings == null || allSettings.Count == 0 || settingsDict == null)
+            if (allSettings == null || allSettings.Count == 0)
                 PopulateData();
         }
 
-        private void PopulateData()
+        protected virtual void PopulateData()
         {
             allSettings = Resources.FindObjectsOfTypeAll<T>().ToList();
-            settingsDict = new Dictionary<P, List<T>>();
-            foreach (T setting in allSettings)
-            {
-                foreach (P parentValue in GetParentObjects(setting))
-                {
-                    if (!settingsDict.ContainsKey(parentValue))
-                        settingsDict.Add(parentValue, new List<T>() { setting });
-                    else
-                        settingsDict[parentValue].Add(setting);
-                }
-            }
-            selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
-            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
+            selectedScriptableSetting = allSettings.First();
         }
 
-        protected abstract P[] GetParentObjects(T childObject);
         protected abstract SerializedPropertyType[] GetTypeFilters();
 
-        private void OnGUI()
+        protected virtual void OnGUI()
         {
             TryPopulateData();
 
@@ -56,13 +40,10 @@ namespace IterationToolkit.ToolkitEditor
             GUI.skin.textField.richText = true;
             if (allSettings != null || allSettings.Count == 0)
             {
-                selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<P>(settingsDict.Keys.ToList(), selectedScriptableSettingsType, "Select Setting Type: ");
-
-                GUILayout.Space(25);
-                DrawSerializedScriptableSettingsList(settingsDict[selectedScriptableSettingsType]);
+                DrawSerializedScriptableSettingsList(allSettings);
             }
         }
-            
+
         public void DrawSerializedScriptableSettingsList(List<T> settings)
         {
             Dictionary<string, List<SerializedProperty>> settingsWithPropertiesDict = new Dictionary<string, List<SerializedProperty>>();
@@ -97,6 +78,47 @@ namespace IterationToolkit.ToolkitEditor
             }
             return (serializedSetting, serializedProperties);
         }
+    }
 
+    public abstract class BulkScriptableObjectEditorWindow<T, P> : BulkScriptableObjectEditorWindow<T> where T: ScriptableObject
+    {
+        public Dictionary<P, List<T>> settingsDict;
+        private P selectedScriptableSettingsType;
+
+        protected abstract P[] GetParentObjects(T childObject);
+
+        protected override void PopulateData()
+        {
+            allSettings = Resources.FindObjectsOfTypeAll<T>().ToList();
+            settingsDict = new Dictionary<P, List<T>>();
+            foreach (T setting in allSettings)
+            {
+                foreach (P parentValue in GetParentObjects(setting))
+                {
+                    if (!settingsDict.ContainsKey(parentValue))
+                        settingsDict.Add(parentValue, new List<T>() { setting });
+                    else
+                        settingsDict[parentValue].Add(setting);
+                }
+            }
+            selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
+            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
+        }
+
+        protected override void OnGUI()
+        {
+            TryPopulateData();
+
+            GUILayout.ExpandWidth(false);
+            GUI.skin.label.richText = true;
+            GUI.skin.textField.richText = true;
+            if (allSettings != null || allSettings.Count == 0)
+            {
+                selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<P>(settingsDict.Keys.ToList(), selectedScriptableSettingsType, "Select Setting Type: ");
+
+                GUILayout.Space(25);
+                DrawSerializedScriptableSettingsList(settingsDict[selectedScriptableSettingsType]);
+            }
+        }
     }
 }
