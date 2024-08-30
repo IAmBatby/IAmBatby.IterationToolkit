@@ -73,19 +73,18 @@ namespace IterationToolkit.ToolkitEditor
 
 
             BeginLayoutOption(LayoutOption.Vertical);
-
+            GUILayout.FlexibleSpace();
             BeginLayoutOption(LayoutOption.Horizontal);
             foreach (string columnHeader in columnHeaders)
             {
-                GUILayout.FlexibleSpace();
                 InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
             }
             EndLayoutOption(LayoutOption.Horizontal);
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
-                BeginLayoutOption(LayoutOption.Horizontal);
                 GUILayout.FlexibleSpace();
+                BeginLayoutOption(LayoutOption.Horizontal);
                 if (rowHeaders.Count > i)
                     InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
                 else
@@ -93,7 +92,6 @@ namespace IterationToolkit.ToolkitEditor
 
                 foreach (List<SerializedProperty> serializedProperties in dataTable)
                 {
-                    GUILayout.FlexibleSpace();
                     if (serializedProperties.Count > i)
                         InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
                     else
