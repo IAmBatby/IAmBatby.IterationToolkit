@@ -48,7 +48,7 @@ namespace IterationToolkit.ToolkitEditor
 
             if (flipTable == false && GUILayout.Button("Normal View"))
                 flipTable = true;
-            else if (GUILayout.Button("Reverse View"))
+            else if (flipTable == true && GUILayout.Button("Reverse View"))
                 flipTable = false;
 
             if (flipTable == true)
