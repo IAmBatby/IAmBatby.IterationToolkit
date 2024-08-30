@@ -63,8 +63,8 @@ namespace IterationToolkit
                 OnValueChanged.Invoke();
                 if (ScriptableSetting != null)
                     ScriptableSetting.ValuesChanged();
-                if (oldValue != null && newValue != null)
-                    Debug.Log("ValueSetting OnValueChanged! Old Value: " + oldValue + ", New Value: " + newValue);
+                //if (oldValue != null && newValue != null)
+                    //Debug.Log("ValueSetting OnValueChanged! Old Value: " + oldValue + ", New Value: " + newValue);
             }
 
         }

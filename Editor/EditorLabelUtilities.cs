@@ -65,6 +65,43 @@ namespace IterationToolkit.ToolkitEditor
             EditorGUILayout.EndHorizontal();
             return (returnValue);
         }
+
+        public static List<SerializedProperty> FindSerializedProperties(Object nonSerializedObject)
+        {
+            return (FindSerializedProperties(new SerializedObject(nonSerializedObject)));
+        }
+
+        public static List<SerializedProperty> FindSerializedProperties(SerializedObject serializedObject)
+        {
+            //return (FindSerializedProperties(serializedObject.GetIterator()));
+            SerializedProperty mainProperty = serializedObject.GetIterator();
+            List<SerializedProperty> returnList = new List<SerializedProperty>();
+            if (mainProperty.NextVisible(true))
+            {
+                do
+                    if (!returnList.Contains(mainProperty))
+                        returnList.Add(mainProperty);
+                while (mainProperty.NextVisible(false));
+            }
+
+            return (returnList);
+        }
+
+        public static List<SerializedProperty> FindSerializedProperties(SerializedProperty serializedProperty)
+        {
+            List<SerializedProperty> returnList = new List<SerializedProperty>();
+
+            returnList.Add(serializedProperty);
+            if (serializedProperty.NextVisible(true))
+            {
+                do
+                    if (!returnList.Contains(serializedProperty))
+                        returnList.Add(serializedProperty);
+                while (serializedProperty.NextVisible(false));
+            }
+
+            return (returnList);
+        }
     }
 }
 
