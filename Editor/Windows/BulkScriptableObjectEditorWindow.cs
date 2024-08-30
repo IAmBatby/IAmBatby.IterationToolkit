@@ -55,7 +55,7 @@ namespace IterationToolkit.ToolkitEditor
             {
                 (SerializedObject, List<SerializedProperty>) results = GetScriptableObjectSerializedValues(setting, GetTypeWhitelist(), GetTypeBlacklist());
                 serializedSettings.Add(results.Item1);
-                settingsWithPropertiesDict.Add(GetObjectName(setting), results.Item2);
+                settingsWithPropertiesDict.Add(GetDuplicateName(setting, settingsWithPropertiesDict.Keys.ToList()), results.Item2);
                 if (propertyNames.Count == 0)
                     foreach (SerializedProperty serializedProperty in results.Item2)
                         propertyNames.Add(serializedProperty.displayName);
@@ -68,6 +68,22 @@ namespace IterationToolkit.ToolkitEditor
         }
 
         protected virtual string GetObjectName(T unityObject) => unityObject.name;
+
+        protected virtual string GetDuplicateName(T unityObject, List<string> currentNames)
+        {
+            string defaultString = GetObjectName(unityObject);
+            string returnString = defaultString;
+
+            int counter = 1;
+            while (currentNames.Contains(returnString))
+            {
+                returnString = defaultString + " (#" + counter + ")";
+                counter++;
+            }
+
+            return (returnString);
+
+        }
 
         protected virtual (SerializedObject, List<SerializedProperty>) GetScriptableObjectSerializedValues(T scriptableObject, SerializedPropertyType[] whitelists, SerializedPropertyType[] blacklists)
         {
