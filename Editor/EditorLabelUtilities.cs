@@ -37,31 +37,72 @@ namespace IterationToolkit.ToolkitEditor
         public static Color PrimaryAlternatingColor = Color.red;
         public static Color SecondaryAlternatingColor = Color.green;
 
-        public static int HeaderFontSize = 16;
+        public static int HeaderFontSize = 14;
         public static int TextFontSize = 13;
+
+        public static bool flipTable;
 
         public static void InsertFieldDataTable(List<string> columnHeaders, List<string> rowHeaders, List<List<SerializedProperty>> dataTable)
         {
             if (dataTable == null || dataTable.Count == 0) return;
-            columnHeaders.Insert(0, string.Empty);
 
-            EditorGUILayout.BeginHorizontal();
+            if (flipTable == false && GUILayout.Button("Normal View"))
+                flipTable = true;
+            else if (GUILayout.Button("Reverse View"))
+                flipTable = false;
 
-            EditorGUILayout.BeginVertical();
-            foreach (string columnHeader in columnHeaders)
-                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
-            EditorGUILayout.EndVertical();
-
-            for (int i = 0; i < rowHeaders.Count; i++)
+            if (flipTable == true)
             {
-                EditorGUILayout.BeginVertical();
-                InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
-                foreach (List<SerializedProperty> serializedProperties in dataTable)
-                    InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
-                EditorGUILayout.EndVertical();
+                List<string> tempStrings = new List<string>(columnHeaders);
+                columnHeaders = new List<string>(rowHeaders);
+                rowHeaders = new List<string>(tempStrings);
             }
 
-            EditorGUILayout.EndHorizontal();
+            columnHeaders.Insert(0, string.Empty);
+
+
+            BeginLayoutOption(LayoutOption.Horizontal);
+
+            BeginLayoutOption(LayoutOption.Vertical);
+            foreach (string columnHeader in columnHeaders)
+                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
+            EndLayoutOption(LayoutOption.Vertical);
+            
+            for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
+            {
+                BeginLayoutOption(LayoutOption.Vertical);
+                if (rowHeaders.Count > i)
+                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
+                else
+                    InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
+                if (flipTable == false)
+                {
+                    foreach (List<SerializedProperty> serializedProperties in dataTable)
+                    {
+                        if (serializedProperties.Count > i)
+                            InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
+                        else
+                            InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
+                    }
+                }
+                else
+                {
+                    if (dataTable.Count > i)
+                    {
+                        for (int j = 0; j < Mathf.Max(rowHeaders.Count, columnHeaders.Count); j++)
+                        {
+                            if (dataTable[i].Count > j)
+                                InsertField(dataTable[i][j], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable[i].IndexOf(dataTable[i][j])));
+                            else
+                                InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
+                        }
+                    }
+                }
+                EndLayoutOption(LayoutOption.Vertical);
+            }
+            
+
+            EndLayoutOption(LayoutOption.Horizontal);
         }
 
         public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption)
@@ -109,6 +150,7 @@ namespace IterationToolkit.ToolkitEditor
 
             GUIStyle textStyle = new GUIStyle(EditorStyles.boldLabel);
             textStyle.alignment = textAnchor;
+            textStyle.fontSize = HeaderFontSize;
             if (layoutOption == LayoutOption.None)
                 textStyle.normal.background = backgroundStyle.normal.background;
 
@@ -183,12 +225,22 @@ namespace IterationToolkit.ToolkitEditor
             return (returnList);
         }
 
-        public static void BeginLayoutOption(LayoutOption layoutOption, GUIStyle style)
+        public static void BeginLayoutOption(LayoutOption layoutOption, GUIStyle style = null)
         {
-            if (layoutOption == LayoutOption.Horizontal)
-                EditorGUILayout.BeginHorizontal(style, GUILayout.ExpandWidth(false));
-            else if (layoutOption == LayoutOption.Vertical)
-                EditorGUILayout.BeginVertical(style, GUILayout.ExpandWidth(false));
+            if (style != null)
+            {
+                if (layoutOption == LayoutOption.Horizontal)
+                    EditorGUILayout.BeginHorizontal(style, GUILayout.ExpandWidth(false));
+                else if (layoutOption == LayoutOption.Vertical)
+                    EditorGUILayout.BeginVertical(style, GUILayout.ExpandWidth(false));
+            }
+            else
+            {
+                if (layoutOption == LayoutOption.Horizontal)
+                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
+                else if (layoutOption == LayoutOption.Vertical)
+                    EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(false));
+            }
         }
 
         public static void EndLayoutOption(LayoutOption layoutOption)

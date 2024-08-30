@@ -7,11 +7,9 @@ namespace IterationToolkit
     [CreateAssetMenu(fileName = "ScriptableColorSetting", menuName = "IterationToolkit/Settings/ScriptableColorSetting", order = 1)]
     public class ScriptableColorSetting : ScriptableSetting
     {
-        public override List<ValueSetting> GetValues()
-        {
-            return (new List<ValueSetting> { PrimaryColor });
-        }
-
+        public override List<ValueSetting> GetValues() => new() { PrimaryColor, SecondaryColor, AccessibilityTexture };
         public ColorSetting PrimaryColor;
+        public ColorSetting SecondaryColor;
+        public ObjectSetting<Texture2D> AccessibilityTexture;
     }
 }
