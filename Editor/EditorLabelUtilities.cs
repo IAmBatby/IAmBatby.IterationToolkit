@@ -239,6 +239,7 @@ namespace IterationToolkit.ToolkitEditor
         {
             if (style != null)
             {
+                GUILayout.FlexibleSpace();
                 if (layoutOption == LayoutOption.Horizontal)
                     EditorGUILayout.BeginHorizontal(style);
                 else if (layoutOption == LayoutOption.Vertical)
@@ -246,6 +247,7 @@ namespace IterationToolkit.ToolkitEditor
             }
             else
             {
+                GUILayout.FlexibleSpace();
                 if (layoutOption == LayoutOption.Horizontal)
                     EditorGUILayout.BeginHorizontal();
                 else if (layoutOption == LayoutOption.Vertical)
