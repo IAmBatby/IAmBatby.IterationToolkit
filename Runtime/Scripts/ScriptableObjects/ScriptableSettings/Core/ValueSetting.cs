@@ -98,34 +98,25 @@ namespace IterationToolkit
     public class ColorSetting : ValueSetting<Color> { public override bool Compare(Color firstValue, Color secondValue) => (firstValue == secondValue); }
 
     [System.Serializable]
-    public class ObjectSetting<M> : ValueSetting<Object> where M : Object
+    public class ObjectSetting<M> : ValueSetting<M> where M : Object
     {
         [SerializeField] private M _typeValue;
-        public override Object Value { get { return (base.RuntimeValue as M); } set { SetValue(value); } }
+        public override M Value { get { return (base.RuntimeValue as M); } set { SetValue(value); } }
 
-        protected override Object GetInternalValue() => _typeValue;
-        protected override void SetInternalValue(Object newValue) { _typeValue = newValue as M; _value = newValue; }
+        protected override M GetInternalValue() => _typeValue;
+        protected override void SetInternalValue(M newValue) { _typeValue = newValue as M; _value = newValue; }
 
-        public override bool Compare(Object firstValue, Object secondValue) => (firstValue == secondValue);
+        public override bool Compare(M firstValue, M secondValue) => (firstValue == secondValue);
     }
 
     [System.Serializable]
-    public class EnumSetting<M> : ValueSetting<Enum> where M : Enum
+    public class EnumSetting<M> : ValueSetting<M> where M : Enum
     {
         [SerializeField] private M _typeValue;
-        public override Enum Value
-        {
-            get
-            {
-                if (base.RuntimeValue != null)
-                    return (M)base.RuntimeValue;
-                else
-                    return (null);
-            }
-        }
+        public override M Value { get { return ((M)base.RuntimeValue); } set { SetValue(value); } }
 
-        protected override Enum GetInternalValue() => _typeValue;
+        protected override M GetInternalValue() => _typeValue;
 
-        public override bool Compare(Enum firstValue, Enum secondValue) => (Enum.Equals(firstValue, secondValue));
+        public override bool Compare(M firstValue, M secondValue) => (Enum.Equals(firstValue, secondValue));
     }
 }

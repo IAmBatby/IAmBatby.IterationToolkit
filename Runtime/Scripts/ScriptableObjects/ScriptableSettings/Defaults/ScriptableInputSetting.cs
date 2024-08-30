@@ -14,5 +14,10 @@ namespace IterationToolkit
 
         public EnumSetting<KeyCode> InputKeyCode;
         public StringSetting VirtualAxis;
+
+        public bool GetInputDown()
+        {
+            return (Input.GetKeyDown(InputKeyCode.Value) || (!string.IsNullOrEmpty(VirtualAxis.Value) && Input.GetButtonDown(VirtualAxis.Value)));
+        }
     }
 }
