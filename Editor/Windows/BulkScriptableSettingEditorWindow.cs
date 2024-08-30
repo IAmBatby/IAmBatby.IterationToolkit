@@ -25,7 +25,7 @@ namespace IterationToolkit.ToolkitEditor
             return (null);
         }
 
-        protected override SerializedPropertyType[] GetTypeFilters()
+        protected override SerializedPropertyType[] GetTypeWhitelist()
         {
             return (new SerializedPropertyType[] { SerializedPropertyType.Generic });
         }

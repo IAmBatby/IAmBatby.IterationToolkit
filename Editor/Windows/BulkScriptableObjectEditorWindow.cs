@@ -30,7 +30,8 @@ namespace IterationToolkit.ToolkitEditor
             selectedScriptableSetting = allSettings.First();
         }
 
-        protected virtual SerializedPropertyType[] GetTypeFilters() => null;
+        protected virtual SerializedPropertyType[] GetTypeWhitelist() => null;
+        protected virtual SerializedPropertyType[] GetTypeBlacklist() => new[] { SerializedPropertyType.ArraySize  };
 
         protected virtual void OnGUI()
         {
@@ -52,7 +53,7 @@ namespace IterationToolkit.ToolkitEditor
             List<SerializedObject> serializedSettings = new List<SerializedObject>();
             foreach (T setting in settings)
             {
-                (SerializedObject, List<SerializedProperty>) results = GetScriptableObjectSerializedValues(setting, GetTypeFilters());
+                (SerializedObject, List<SerializedProperty>) results = GetScriptableObjectSerializedValues(setting, GetTypeWhitelist(), GetTypeBlacklist());
                 serializedSettings.Add(results.Item1);
                 settingsWithPropertiesDict.Add(setting.name, results.Item2);
                 if (propertyNames.Count == 0)
@@ -66,16 +67,22 @@ namespace IterationToolkit.ToolkitEditor
                 serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual (SerializedObject, List<SerializedProperty>) GetScriptableObjectSerializedValues(T scriptableObject, params SerializedPropertyType[] filterTypes)
+        protected virtual (SerializedObject, List<SerializedProperty>) GetScriptableObjectSerializedValues(T scriptableObject, SerializedPropertyType[] whitelists, SerializedPropertyType[] blacklists)
         {
             SerializedObject serializedSetting = new SerializedObject(scriptableObject);
             List<SerializedProperty> serializedProperties = new List<SerializedProperty>();
             foreach (SerializedProperty serializedProperty in EditorLabelUtilities.FindSerializedProperties(serializedSetting))
             {
-                if (filterTypes == null || filterTypes.Length == 0)
-                    serializedProperties.Add(serializedProperty);
-                else if (filterTypes.Contains(serializedProperty.propertyType))
-                    serializedProperties.Add(serializedProperty);
+                if (whitelists == null || whitelists.Length == 0)
+                {
+                    if (blacklists == null || !blacklists.Contains(serializedProperty.propertyType))
+                        if (serializedProperty.isArray == false)
+                            serializedProperties.Add(serializedProperty);
+                }
+                else if (whitelists.Contains(serializedProperty.propertyType))
+                    if (blacklists == null || !blacklists.Contains(serializedProperty.propertyType))
+                        if (serializedProperty.isArray == false)
+                            serializedProperties.Add(serializedProperty);
             }
             return (serializedSetting, serializedProperties);
         }
