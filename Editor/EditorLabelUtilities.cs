@@ -100,13 +100,17 @@ namespace IterationToolkit.ToolkitEditor
             backgroundStyle.alignment = textAnchor;
             BeginLayoutOption(layoutOption, backgroundStyle);
 
-            textStyle.alignment = textAnchor;
-            textStyle.fontSize = HeaderFontSize;
-            textStyle.normal.textColor = Color.white;
-            if (layoutOption == LayoutOption.None)
-                textStyle.normal.background = backgroundStyle.normal.background;
+            if (headerText != "Script")
+            {
+                textStyle.alignment = textAnchor;
+                textStyle.fontSize = HeaderFontSize;
+                textStyle.normal.textColor = Color.white;
+                if (layoutOption == LayoutOption.None)
+                    textStyle.normal.background = backgroundStyle.normal.background;
 
-            EditorGUILayout.LabelField(headerText, textStyle, options);
+                EditorGUILayout.LabelField(headerText, textStyle, options);
+
+            }
 
             EndLayoutOption(layoutOption);
         }
