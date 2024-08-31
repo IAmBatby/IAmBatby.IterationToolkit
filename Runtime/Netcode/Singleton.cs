@@ -10,9 +10,14 @@ namespace IterationToolkit.Netcode
     {
         public static T GetInstance<T>(ref NetworkGlobalManager manager) where T : NetworkGlobalManager
         {
-            if (manager == null || (manager is T) == false)
-                manager = (NetworkGlobalManager)Object.FindFirstObjectByType(typeof(T));
-            return ((T)manager);
+            if (manager is T castManager)
+                return (castManager);
+            else
+            {
+                Debug.Log("Seeking Instance Of: " + typeof(T).Name);
+                manager = (NetworkGlobalManager)Object.FindObjectOfType(typeof(T));
+            }
+            return (manager as T);
         }
     }
 }
