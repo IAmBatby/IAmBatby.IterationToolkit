@@ -42,9 +42,14 @@ namespace IterationToolkit.ToolkitEditor
 
         public static bool flipTable;
 
+        public static int forcedWidth = 100;
+
         public static void InsertFieldDataTable(List<string> columnHeaders, List<string> rowHeaders, List<List<SerializedProperty>> dataTable)
         {
             if (dataTable == null || dataTable.Count == 0) return;
+
+
+            forcedWidth = EditorGUILayout.IntField(forcedWidth);
 
             if (flipTable == false && GUILayout.Button("Normal View"))
                 flipTable = true;
@@ -73,28 +78,23 @@ namespace IterationToolkit.ToolkitEditor
 
 
             BeginLayoutOption(LayoutOption.Vertical);
-            Rect columnRect = BeginLayoutOption(LayoutOption.Horizontal);
+            Rect columnRect = BeginLayoutOption(LayoutOption.Horizontal, null);
             foreach (string columnHeader in columnHeaders)
-                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
+                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.Width(forcedWidth));
             EndLayoutOption(LayoutOption.Horizontal);
-            
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
                 //GUILayout.FlexibleSpace();
-                BeginLayoutOption(LayoutOption.Horizontal, null, GUILayout.MinWidth(columnRect.xMax - columnRect.width), GUILayout.MaxWidth(columnRect.width));
+                columnRect = BeginLayoutOption(LayoutOption.Horizontal, null);
                 if (rowHeaders.Count > i)
-                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
-                else
-                    InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
+                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor, GUILayout.Width(forcedWidth));
 
                 foreach (List<SerializedProperty> serializedProperties in dataTable)
-                {
                     if (serializedProperties.Count > i)
-                        InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)));
-                    else
-                        InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
-                }
+                        InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)), GUILayout.Width(forcedWidth));
                 EndLayoutOption(LayoutOption.Horizontal);
+                columnRect = GUILayoutUtility.GetLastRect();
+                Debug.Log("Column Rect: " + columnRect.width + " - " + columnRect.size + " - " + columnRect.xMin + ", " + columnRect.xMax);
             }
             
 
