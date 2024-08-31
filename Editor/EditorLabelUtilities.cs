@@ -73,19 +73,17 @@ namespace IterationToolkit.ToolkitEditor
 
 
             BeginLayoutOption(LayoutOption.Vertical);
-            BeginLayoutOption(LayoutOption.Horizontal);
+            Rect columnRect = BeginLayoutOption(LayoutOption.Horizontal);
             foreach (string columnHeader in columnHeaders)
-            {
-                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
-            }
+                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
             EndLayoutOption(LayoutOption.Horizontal);
             
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
                 //GUILayout.FlexibleSpace();
-                BeginLayoutOption(LayoutOption.Horizontal);
+                BeginLayoutOption(LayoutOption.Horizontal, null, GUILayout.MinWidth(columnRect.xMax - columnRect.width), GUILayout.MaxWidth(columnRect.width));
                 if (rowHeaders.Count > i)
-                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor);
+                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor);
                 else
                     InsertField(string.Empty, LayoutOption.None, GetNewStyle(fontSize: TextFontSize), Color.white);
 
@@ -203,14 +201,14 @@ namespace IterationToolkit.ToolkitEditor
 
             if (!string.IsNullOrEmpty(labelText))
             {
-                GUILayout.BeginHorizontal();
+                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(labelText);
             }
 
             returnValue = popupOptions[EditorGUILayout.Popup(returnIndex, valueNames)];
 
             if (!string.IsNullOrEmpty(labelText))
-                GUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
 
             return (returnValue);
         }
@@ -238,22 +236,23 @@ namespace IterationToolkit.ToolkitEditor
             return (returnList);
         }
 
-        public static void BeginLayoutOption(LayoutOption layoutOption, GUIStyle style = null)
+        public static Rect BeginLayoutOption(LayoutOption layoutOption, GUIStyle style = null, params GUILayoutOption[] options)
         {
             if (style != null)
             {
                 if (layoutOption == LayoutOption.Horizontal)
-                    EditorGUILayout.BeginHorizontal(style);
+                    return (EditorGUILayout.BeginHorizontal(style, options));
                 else if (layoutOption == LayoutOption.Vertical)
-                    EditorGUILayout.BeginVertical(style);
+                    return (EditorGUILayout.BeginVertical(style, options));
             }
             else
             {
                 if (layoutOption == LayoutOption.Horizontal)
-                    EditorGUILayout.BeginHorizontal();
+                    return (EditorGUILayout.BeginHorizontal(options));
                 else if (layoutOption == LayoutOption.Vertical)
-                    EditorGUILayout.BeginVertical();
+                    return (EditorGUILayout.BeginVertical(options));
             }
+            return (new Rect());
         }
 
         public static void EndLayoutOption(LayoutOption layoutOption)
