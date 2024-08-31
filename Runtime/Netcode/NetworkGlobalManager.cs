@@ -11,8 +11,8 @@ namespace IterationToolkit.Netcode
 {
     public abstract class NetworkGlobalManager : NetworkBehaviour
     {
-        public static NetworkGlobalManager Instance => Singleton.GetInstance<NetworkGlobalManager>(ref _manager);
-        protected static NetworkGlobalManager _manager;
+        public static NetworkGlobalManager Instance => Singleton.GetInstance<NetworkGlobalManager>();
+        protected NetworkGlobalManager _manager;
 
 
         public GameState ActiveGameState { get; private set; }
