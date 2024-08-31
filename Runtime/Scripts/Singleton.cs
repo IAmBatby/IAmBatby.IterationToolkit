@@ -10,9 +10,11 @@ namespace IterationToolkit
     {
         public static T GetInstance<T>(ref Manager manager) where T : Manager
         {
-            if (manager == null || (manager is T) == false)
+            if (manager is T castManager)
+                return (castManager);
+            else
                 manager = (Manager)Object.FindObjectOfType(typeof(T));
-            return ((T)manager);
+            return (manager as T);
         }
     }
 }
