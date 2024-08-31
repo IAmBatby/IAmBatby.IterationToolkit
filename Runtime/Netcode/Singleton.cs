@@ -15,7 +15,7 @@ namespace IterationToolkit.Netcode
             else
             {
                 Debug.Log("Seeking Instance Of: " + typeof(T).Name);
-                manager = (NetworkGlobalManager)Object.FindObjectOfType(typeof(T));
+                manager = (T)Object.FindObjectOfType(typeof(T));
             }
             return (manager as T);
         }
