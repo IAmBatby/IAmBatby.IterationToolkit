@@ -11,6 +11,10 @@ namespace IterationToolkit.ToolkitEditor
         public List<T> allSettings;
         protected T selectedScriptableSetting;
 
+        protected DataFieldTable currentDataFieldTable;
+
+        private List<SerializedObject> serializedObjects = new List<SerializedObject>();
+
 
         protected void InitializeWindow()
         {
@@ -18,7 +22,7 @@ namespace IterationToolkit.ToolkitEditor
             Show();
         }
 
-        protected void TryPopulateData()
+        protected virtual void TryPopulateData()
         {
             if (allSettings == null || allSettings.Count == 0)
                 PopulateData();
@@ -42,29 +46,36 @@ namespace IterationToolkit.ToolkitEditor
             GUI.skin.textField.richText = true;
             if (allSettings != null || allSettings.Count == 0)
             {
-                DrawSerializedScriptableSettingsList(allSettings);
+                if (currentDataFieldTable != null)
+                    DrawDataFieldTable();
+                else
+                    InitializeDataFieldTable(allSettings);
             }
         }
 
-        public void DrawSerializedScriptableSettingsList(List<T> settings)
+        public void DrawDataFieldTable()
         {
+            currentDataFieldTable.DrawTable();
+            foreach (SerializedObject serializedObject in serializedObjects)
+                serializedObject.ApplyModifiedProperties();
+        }
+
+        public void InitializeDataFieldTable(List<T> objects)
+        {
+            Debug.Log("Initializing Data Field Table");
             Dictionary<string, List<SerializedProperty>> settingsWithPropertiesDict = new Dictionary<string, List<SerializedProperty>>();
             List<string> propertyNames = new List<string>();
-            List<SerializedObject> serializedSettings = new List<SerializedObject>();
-            foreach (T setting in settings)
+            serializedObjects = new List<SerializedObject>();
+            foreach (T genericObject in objects)
             {
-                (SerializedObject, List<SerializedProperty>) results = GetScriptableObjectSerializedValues(setting, GetTypeWhitelist(), GetTypeBlacklist());
-                serializedSettings.Add(results.Item1);
-                settingsWithPropertiesDict.Add(GetDuplicateName(setting, settingsWithPropertiesDict.Keys.ToList()), results.Item2);
+                (SerializedObject, List<SerializedProperty>) results = GetScriptableObjectSerializedValues(genericObject, GetTypeWhitelist(), GetTypeBlacklist());
+                serializedObjects.Add(results.Item1);
+                settingsWithPropertiesDict.Add(GetDuplicateName(genericObject, settingsWithPropertiesDict.Keys.ToList()), results.Item2);
                 if (propertyNames.Count == 0)
                     foreach (SerializedProperty serializedProperty in results.Item2)
                         propertyNames.Add(serializedProperty.displayName);
             }
-
-            EditorLabelUtilities.InsertFieldDataTable(settingsWithPropertiesDict.Keys.ToList(), propertyNames, settingsWithPropertiesDict.Values.ToList());
-
-            foreach (SerializedObject serializedObject in serializedSettings)
-                serializedObject.ApplyModifiedProperties();
+            currentDataFieldTable = new DataFieldTable(settingsWithPropertiesDict.Keys.ToList(), propertyNames, settingsWithPropertiesDict.Values.ToList());
         }
 
         protected virtual string GetObjectName(T unityObject) => unityObject.name;
@@ -117,6 +128,12 @@ namespace IterationToolkit.ToolkitEditor
 
         protected abstract P[] GetParentObjects(T childObject);
 
+        protected override void TryPopulateData()
+        {
+            if (allSettings == null || allSettings.Count == 0 || settingsDict == null || selectedScriptableSettingsType == null)
+                PopulateData();
+        }
+
         protected override void PopulateData()
         {
             allSettings = Resources.FindObjectsOfTypeAll<T>().ToList();
@@ -144,10 +161,17 @@ namespace IterationToolkit.ToolkitEditor
             GUI.skin.textField.richText = true;
             if (allSettings != null || allSettings.Count == 0)
             {
+                P previousParentSelection = selectedScriptableSettingsType;
                 selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<P>(settingsDict.Keys.ToList(), selectedScriptableSettingsType, "Select Setting Type: ");
 
                 GUILayout.Space(25);
-                DrawSerializedScriptableSettingsList(settingsDict[selectedScriptableSettingsType]);
+                if (allSettings != null || allSettings.Count == 0)
+                {
+                    if (currentDataFieldTable != null && previousParentSelection.Equals(selectedScriptableSettingsType))
+                        DrawDataFieldTable();
+                    else
+                        InitializeDataFieldTable(settingsDict[selectedScriptableSettingsType]);
+                }
             }
         }
     }

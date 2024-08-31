@@ -42,14 +42,13 @@ namespace IterationToolkit.ToolkitEditor
 
         public static bool flipTable;
 
-        public static int forcedWidth = 100;
+        public static int minWidth = 100;
 
         public static void InsertFieldDataTable(List<string> columnHeaders, List<string> rowHeaders, List<List<SerializedProperty>> dataTable)
         {
             if (dataTable == null || dataTable.Count == 0) return;
 
-
-            forcedWidth = EditorGUILayout.IntField(forcedWidth);
+            minWidth = EditorGUILayout.IntField(minWidth);
 
             if (flipTable == false && GUILayout.Button("Normal View"))
                 flipTable = true;
@@ -58,62 +57,57 @@ namespace IterationToolkit.ToolkitEditor
 
             if (flipTable == true)
             {
-                List<string> tempStrings = new List<string>(columnHeaders);
-                columnHeaders = new List<string>(rowHeaders);
-                rowHeaders = new List<string>(tempStrings);
-                dataTable = FlipTable(dataTable);
+                FlipHeaders(ref columnHeaders, ref rowHeaders);
+                FlipDataTable(ref dataTable);
             }
 
             columnHeaders.Insert(0, string.Empty);
 
-            foreach (string rowHeader in rowHeaders)
-                Debug.Log("RowHeader: " + rowHeader);
-
-
-            foreach (string columnHeader in columnHeaders)
-                Debug.Log("ColumnHeader: " + columnHeader);
-
-            foreach (SerializedProperty sP in dataTable[0])
-                Debug.Log(sP.displayName + " - " + sP.propertyType);
-
-
             BeginLayoutOption(LayoutOption.Vertical);
-            Rect columnRect = BeginLayoutOption(LayoutOption.Horizontal, null);
+
+            BeginLayoutOption(LayoutOption.Horizontal, null);
             foreach (string columnHeader in columnHeaders)
-                InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.Width(forcedWidth));
+            {
+                if (columnHeaders.IndexOf(columnHeader) == 0)
+                    InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+                else
+                    InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MinWidth(minWidth));
+            }
             EndLayoutOption(LayoutOption.Horizontal);
+
             for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
             {
-                //GUILayout.FlexibleSpace();
-                columnRect = BeginLayoutOption(LayoutOption.Horizontal, null);
+                BeginLayoutOption(LayoutOption.Horizontal, null);
                 if (rowHeaders.Count > i)
-                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor, GUILayout.Width(forcedWidth));
-
+                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
                 foreach (List<SerializedProperty> serializedProperties in dataTable)
                     if (serializedProperties.Count > i)
-                        InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)), GUILayout.Width(forcedWidth));
+                        InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)), GUILayout.MinWidth(minWidth));
                 EndLayoutOption(LayoutOption.Horizontal);
-                columnRect = GUILayoutUtility.GetLastRect();
-                Debug.Log("Column Rect: " + columnRect.width + " - " + columnRect.size + " - " + columnRect.xMin + ", " + columnRect.xMax);
             }
             
-
             EndLayoutOption(LayoutOption.Vertical);
         }
 
-        public static List<List<SerializedProperty>> FlipTable(List<List<SerializedProperty>> dataTable)
+        public static void FlipDataTable(ref List<List<SerializedProperty>> dataTable)
         {
-            List<List<SerializedProperty>> returnList = new List<List<SerializedProperty>>();
+            List<List<SerializedProperty>> templist = new List<List<SerializedProperty>>(dataTable);
+            dataTable.Clear();
 
-            for (int i = 0; i < dataTable[0].Count; i++)
+            for (int i = 0; i < templist[0].Count; i++)
             {
                 List<SerializedProperty> newList = new List<SerializedProperty>();
-                foreach (List<SerializedProperty> data in dataTable)
+                foreach (List<SerializedProperty> data in templist)
                     newList.Add(data[i]);
-                returnList.Add(newList);
+                dataTable.Add(newList);
             }
+        }
 
-            return (returnList);
+        public static void FlipHeaders(ref List<string> columnHeaders, ref List<string> rowHeaders)
+        {
+            List<string> tempStrings = new List<string>(columnHeaders);
+            columnHeaders = new List<string>(rowHeaders);
+            rowHeaders = new List<string>(tempStrings);
         }
 
         public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption)
