@@ -36,7 +36,7 @@ namespace IterationToolkit.ToolkitEditor
         }
 
         protected virtual SerializedPropertyType[] GetTypeWhitelist() => null;
-        protected virtual SerializedPropertyType[] GetTypeBlacklist() => new[] { SerializedPropertyType.ArraySize };
+        protected virtual SerializedPropertyType[] GetTypeBlacklist() => null;
 
         protected virtual void OnGUI()
         {
