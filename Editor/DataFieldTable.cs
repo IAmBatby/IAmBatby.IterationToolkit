@@ -66,7 +66,12 @@ namespace IterationToolkit.ToolkitEditor
                 GUILayout.Space(25);
 
                 EditorLabelUtilities.BeginLayoutOption(LayoutOption.Vertical);
-                currentScrollValue = EditorGUILayout.BeginScrollView(currentScrollValue);
+
+                ///// #1 Start
+                
+                GUIStyle scrollStyle = new GUIStyle();
+                scrollStyle.contentOffset = new Vector2(minWidth, 0);
+                currentScrollValue = EditorGUILayout.BeginScrollView(currentScrollValue, scrollStyle);
 
                 EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
 
@@ -79,20 +84,37 @@ namespace IterationToolkit.ToolkitEditor
                 }
                 EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
 
+                ///// #1 End
+
+                ///// #2 Start
+
+
+
+                ///// #2 End
+
+                ///// #3 Start
+
+
                 for (int i = 0; i < Mathf.Max(rowHeaders.Count, adjustedColumnHeaders.Count); i++)
                 {
                     GUIStyle style = EditorLabelUtilities.GetAlternatingStyle(primaryAlternatingBackgroundStyle, secondaryAlternatingBackgroundStyle, i);
                     EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, style);
+
                     if (rowHeaders.Count > i)
                         EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, style, fieldTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+
                     foreach (List<SerializedProperty> serializedProperties in dataTable)
                         if (serializedProperties.Count > i)
                             EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, null, GUILayout.MinWidth(minWidth));
+
                     EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
                 }
 
-                EditorGUILayout.EndScrollView();
+                ///// #3 End
+                
                 EditorLabelUtilities.EndLayoutOption(LayoutOption.Vertical);
+
+                EditorGUILayout.EndScrollView();
             }
             catch (Exception e)
             {
