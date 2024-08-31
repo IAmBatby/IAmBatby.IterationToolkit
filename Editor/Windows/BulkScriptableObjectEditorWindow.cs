@@ -106,12 +106,10 @@ namespace IterationToolkit.ToolkitEditor
                 if (whitelists == null || whitelists.Length == 0)
                 {
                     if (blacklists == null || !blacklists.Contains(serializedProperty.propertyType))
-                        if (serializedProperty.isArray == false)
                             serializedProperties.Add(serializedProperty);
                 }
                 else if (whitelists.Contains(serializedProperty.propertyType))
                     if (blacklists == null || !blacklists.Contains(serializedProperty.propertyType))
-                        if (serializedProperty.isArray == false)
                             serializedProperties.Add(serializedProperty);
             }
             return (serializedSetting, serializedProperties);
