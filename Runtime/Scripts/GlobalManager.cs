@@ -10,8 +10,6 @@ namespace IterationToolkit
     [DefaultExecutionOrder(-10)]
     public class GlobalManager : Manager
     {
-        public static GlobalManager Instance => Singleton.GetInstance<GlobalManager>(ref _manager);
-
         public GameState ActiveGameState { get; private set; }
 
         public LevelData ActiveLevel { get; private set; }

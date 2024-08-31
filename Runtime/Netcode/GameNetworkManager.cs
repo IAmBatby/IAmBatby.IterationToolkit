@@ -23,7 +23,8 @@ namespace IterationToolkit.Netcode
             }
         }
 
-        new public static GameNetworkManager Instance => Singleton.GetInstance<GameNetworkManager>(ref _manager);
+        private static GameNetworkManager _instance;
+        public static GameNetworkManager Instance => Singleton.GetInstance<GameNetworkManager>(ref _instance);
 
 
 

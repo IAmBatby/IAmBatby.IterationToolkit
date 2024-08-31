@@ -6,18 +6,20 @@ using Object = UnityEngine.Object;
 
 namespace IterationToolkit
 {
+    
     public static class Singleton
     {
-        public static T GetInstance<T>(ref Manager manager) where T : Manager
+        public static T GetInstance<T>(ref T manager) where T : Manager
         {
             if (manager is T castManager)
                 return (castManager);
             else
             {
                 Debug.Log("Seeking Instance Of: " + typeof(T).Name);
-                manager = (Manager)Object.FindObjectOfType(typeof(T));
+                manager = (T)Object.FindObjectOfType(typeof(T));
             }
             return (manager as T);
         }
     }
+
 }

@@ -9,7 +9,7 @@ namespace IterationToolkit
     {
         public void LoadNewLevel(LevelData levelData)
         {
-            GlobalManager.Instance.LoadNewLevel(levelData);
+            //GlobalManager.Instance.LoadNewLevel(levelData);
         }
     }
 }

@@ -11,10 +11,6 @@ namespace IterationToolkit.Netcode
 {
     public abstract class NetworkGlobalManager : NetworkBehaviour
     {
-        public static NetworkGlobalManager Instance => Singleton.GetInstance<NetworkGlobalManager>();
-        protected NetworkGlobalManager _manager;
-
-
         public GameState ActiveGameState { get; private set; }
 
         public LevelData ActiveLevel { get; private set; }
@@ -32,7 +28,6 @@ namespace IterationToolkit.Netcode
             GameObject.DontDestroyOnLoad(gameObject);
             OnInitalize.Invoke();
         }
-
 
 
         public void ChangeGameState(GameState newGameState)

@@ -8,7 +8,7 @@ namespace IterationToolkit.Netcode
 {
     public static class Singleton
     {
-        public static T GetInstance<T>(ref NetworkGlobalManager manager) where T : NetworkGlobalManager
+        public static T GetInstance<T>(ref T manager) where T : NetworkGlobalManager
         {
             if (manager is T castManager)
                 return (castManager);

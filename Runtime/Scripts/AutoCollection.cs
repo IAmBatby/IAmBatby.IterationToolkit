@@ -7,7 +7,8 @@ namespace IterationToolkit
 {
     public class AutoCollection : GlobalManager
     {
-        public static new AutoCollection Instance => Singleton.GetInstance<AutoCollection>(ref _manager);
+        private static AutoCollection _instance;
+        public static AutoCollection Instance => Singleton.GetInstance<AutoCollection>(ref _instance);
 
         private Dictionary<Type, List<MonoBehaviour>> collectionDict = new Dictionary<Type, List<MonoBehaviour>>();
 

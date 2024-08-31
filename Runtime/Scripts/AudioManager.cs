@@ -8,7 +8,8 @@ namespace IterationToolkit
     [RequireComponent(typeof(AudioSource))]
     public class AudioManager : GlobalManager
     {
-        new public static AudioManager Instance => Singleton.GetInstance<AudioManager>(ref _manager);
+        private static AudioManager _instance;
+        public static AudioManager Instance => Singleton.GetInstance<AudioManager>(ref _instance);
 
         private static AudioSource _audioSource;
         private static AudioSource ManagerSource
