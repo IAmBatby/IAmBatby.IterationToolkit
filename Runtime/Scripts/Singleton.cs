@@ -13,7 +13,10 @@ namespace IterationToolkit
             if (manager is T castManager)
                 return (castManager);
             else
+            {
+                Debug.Log("Seeking Instance Of: " + typeof(T).Name);
                 manager = (Manager)Object.FindObjectOfType(typeof(T));
+            }
             return (manager as T);
         }
     }
