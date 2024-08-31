@@ -11,7 +11,7 @@ namespace IterationToolkit
         public static T GetInstance<T>(ref Manager manager) where T : Manager
         {
             if (manager == null || (manager is T) == false)
-                manager = (Manager)Object.FindFirstObjectByType(typeof(T));
+                manager = (Manager)Object.FindObjectOfType(typeof(T));
             return ((T)manager);
         }
     }
