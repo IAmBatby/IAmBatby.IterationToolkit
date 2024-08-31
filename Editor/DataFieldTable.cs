@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -13,9 +14,15 @@ namespace IterationToolkit.ToolkitEditor
 
         public List<string> columnHeaders;
         public List<string> rowHeaders;
+        public List<string> adjustedColumnHeaders;
         public List<List<SerializedProperty>> dataTable;
 
-        private GUIStyle textStyle;
+        private GUIStyle headerBackgroundStyle;
+        private GUIStyle primaryAlternatingBackgroundStyle;
+        private GUIStyle secondaryAlternatingBackgroundStyle;
+
+        private GUIStyle fieldTextStyle;
+        private GUIStyle headerTextStyle;
         private Color HeaderColor => EditorLabelUtilities.HeaderColor;
 
         private Vector2 currentScrollValue;
@@ -26,54 +33,68 @@ namespace IterationToolkit.ToolkitEditor
             rowHeaders = newRowHeaders;
             dataTable = newDataTable;
 
-            textStyle = EditorLabelUtilities.GetNewStyle(fontSize: EditorLabelUtilities.TextFontSize);
+            adjustedColumnHeaders = new List<string>(columnHeaders);
+            adjustedColumnHeaders.Insert(0, string.Empty);
+
+            fieldTextStyle = EditorLabelUtilities.GetNewStyle(fontSize: EditorLabelUtilities.TextFontSize);
+
+            headerBackgroundStyle = EditorLabelUtilities.GetNewStyle(HeaderColor);
+            primaryAlternatingBackgroundStyle = EditorLabelUtilities.GetNewStyle(EditorLabelUtilities.PrimaryAlternatingColor);
+            secondaryAlternatingBackgroundStyle = EditorLabelUtilities.GetNewStyle(EditorLabelUtilities.SecondaryAlternatingColor);
+
+            headerTextStyle = new GUIStyle();
         }
 
         public void DrawTable()
         {
-            if (dataTable == null || dataTable.Count == 0) return;
-
-            bool cachedFlipTable = flipTable;
-
-            minWidth = EditorGUILayout.IntField(minWidth);
-
-            if (flipTable == false && GUILayout.Button("Normal View"))
-                flipTable = true;
-            else if (flipTable == true && GUILayout.Button("Reverse View"))
-                flipTable = false;
-
-            if (flipTable != cachedFlipTable)
-                FlipTable();
-
-            List<string> tempColumnHeaders = new List<string>(columnHeaders);
-            tempColumnHeaders.Insert(0, string.Empty);
-
-            EditorLabelUtilities.BeginLayoutOption(LayoutOption.Vertical);
-            currentScrollValue = EditorGUILayout.BeginScrollView(currentScrollValue);
-
-            EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
-            foreach (string columnHeader in tempColumnHeaders)
+            try
             {
-                if (tempColumnHeaders.IndexOf(columnHeader) == 0)
-                    EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
-                else
-                    EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MinWidth(minWidth));
-            }
-            EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
+                if (dataTable == null || dataTable.Count == 0) return;
 
-            for (int i = 0; i < Mathf.Max(rowHeaders.Count, tempColumnHeaders.Count); i++)
-            {
+                bool cachedFlipTable = flipTable;
+
+                minWidth = EditorGUILayout.IntField(minWidth);
+
+                if (flipTable == false && GUILayout.Button("Normal View"))
+                    flipTable = true;
+                else if (flipTable == true && GUILayout.Button("Reverse View"))
+                    flipTable = false;
+
+                if (flipTable != cachedFlipTable)
+                    FlipTable();
+
+                EditorLabelUtilities.BeginLayoutOption(LayoutOption.Vertical);
+                currentScrollValue = EditorGUILayout.BeginScrollView(currentScrollValue);
+
                 EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
-                if (rowHeaders.Count > i)
-                    EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
-                foreach (List<SerializedProperty> serializedProperties in dataTable)
-                    if (serializedProperties.Count > i)
-                        EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, textStyle, EditorLabelUtilities.GetAlternatingColor(dataTable.IndexOf(serializedProperties)), GUILayout.MinWidth(minWidth));
+                foreach (string columnHeader in adjustedColumnHeaders)
+                {
+                    if (adjustedColumnHeaders.IndexOf(columnHeader) == 0)
+                        EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+                    else
+                        EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MinWidth(minWidth));
+                }
                 EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
-            }
 
-            EditorGUILayout.EndScrollView();
-            EditorLabelUtilities.EndLayoutOption(LayoutOption.Vertical);
+                for (int i = 0; i < Mathf.Max(rowHeaders.Count, adjustedColumnHeaders.Count); i++)
+                {
+                    EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
+                    if (rowHeaders.Count > i)
+                        EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, headerBackgroundStyle, fieldTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+                    foreach (List<SerializedProperty> serializedProperties in dataTable)
+                        if (serializedProperties.Count > i)
+                            EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, EditorLabelUtilities.GetAlternatingStyle(primaryAlternatingBackgroundStyle, secondaryAlternatingBackgroundStyle, dataTable.IndexOf(serializedProperties)), GUILayout.MinWidth(minWidth));
+                    EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
+                }
+
+                EditorGUILayout.EndScrollView();
+                EditorLabelUtilities.EndLayoutOption(LayoutOption.Vertical);
+            }
+            catch (Exception e)
+            {
+                if (!e.Message.Contains("control 2's"))
+                    Debug.LogException(e);
+            }
         }
 
         public void FlipTable()
@@ -81,6 +102,8 @@ namespace IterationToolkit.ToolkitEditor
             Debug.Log("Flipping Table");
             EditorLabelUtilities.FlipHeaders(ref columnHeaders, ref rowHeaders);
             EditorLabelUtilities.FlipDataTable(ref dataTable);
+            adjustedColumnHeaders = new List<string>(columnHeaders);
+            adjustedColumnHeaders.Insert(0, string.Empty);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace IterationToolkit.ToolkitEditor
                         propertyNames.Add(serializedProperty.displayName);
             }
 
-            EditorLabelUtilities.InsertFieldDataTable(settingsWithPropertiesDict.Keys.ToList(), propertyNames, settingsWithPropertiesDict.Values.ToList());
+            //EditorLabelUtilities.InsertFieldDataTable(settingsWithPropertiesDict.Keys.ToList(), propertyNames, settingsWithPropertiesDict.Values.ToList());
 
             foreach (SerializedObject serializedObject in serializedSettings)
                 serializedObject.ApplyModifiedProperties();

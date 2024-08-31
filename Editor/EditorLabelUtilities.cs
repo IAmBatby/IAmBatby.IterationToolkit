@@ -1,14 +1,12 @@
 #if UNITY_EDITOR
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using IterationToolkit;
-using System.Linq;
 
 namespace IterationToolkit.ToolkitEditor
 {
@@ -40,55 +38,6 @@ namespace IterationToolkit.ToolkitEditor
         public static int HeaderFontSize = 14;
         public static int TextFontSize = 13;
 
-        public static bool flipTable;
-
-        public static int minWidth = 100;
-
-        public static void InsertFieldDataTable(List<string> columnHeaders, List<string> rowHeaders, List<List<SerializedProperty>> dataTable)
-        {
-            if (dataTable == null || dataTable.Count == 0) return;
-
-            minWidth = EditorGUILayout.IntField(minWidth);
-
-            if (flipTable == false && GUILayout.Button("Normal View"))
-                flipTable = true;
-            else if (flipTable == true && GUILayout.Button("Reverse View"))
-                flipTable = false;
-
-            if (flipTable == true)
-            {
-                FlipHeaders(ref columnHeaders, ref rowHeaders);
-                FlipDataTable(ref dataTable);
-            }
-
-            columnHeaders.Insert(0, string.Empty);
-
-            BeginLayoutOption(LayoutOption.Vertical);
-
-            BeginLayoutOption(LayoutOption.Horizontal, null);
-            foreach (string columnHeader in columnHeaders)
-            {
-                if (columnHeaders.IndexOf(columnHeader) == 0)
-                    InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
-                else
-                    InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, HeaderColor, GUILayout.MinWidth(minWidth));
-            }
-            EndLayoutOption(LayoutOption.Horizontal);
-
-            for (int i = 0; i < Mathf.Max(rowHeaders.Count, columnHeaders.Count); i++)
-            {
-                BeginLayoutOption(LayoutOption.Horizontal, null);
-                if (rowHeaders.Count > i)
-                    InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, HeaderColor, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
-                foreach (List<SerializedProperty> serializedProperties in dataTable)
-                    if (serializedProperties.Count > i)
-                        InsertField(serializedProperties[i], LayoutOption.None, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(dataTable.IndexOf(serializedProperties)), GUILayout.MinWidth(minWidth));
-                EndLayoutOption(LayoutOption.Horizontal);
-            }
-            
-            EndLayoutOption(LayoutOption.Vertical);
-        }
-
         public static void FlipDataTable(ref List<List<SerializedProperty>> dataTable)
         {
             List<List<SerializedProperty>> templist = new List<List<SerializedProperty>>(dataTable);
@@ -119,9 +68,9 @@ namespace IterationToolkit.ToolkitEditor
 
             BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
 
-            for (int i = 0; i < dataList.Count; i++)
-                if (dataList[i] != null)
-                    InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(i), GUILayout.ExpandWidth(false));
+            //for (int i = 0; i < dataList.Count; i++)
+                //if (dataList[i] != null)
+                    //InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(i), GUILayout.ExpandWidth(false));
 
             EndLayoutOption(layoutOption);
         }
@@ -134,7 +83,7 @@ namespace IterationToolkit.ToolkitEditor
                 EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(HeaderColor, fontSize: HeaderFontSize));
 
             BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
-
+            /*
             for (int i = 0; i < dataList.Count; i++)
                 if (dataList[i] != null)
                 {
@@ -145,15 +94,14 @@ namespace IterationToolkit.ToolkitEditor
                 }
 
             EndLayoutOption(layoutOption);
+            */
         }
 
-        public static void InsertHeader(string headerText, LayoutOption layoutOption, TextAnchor textAnchor, Color color, params GUILayoutOption[] options)
+        public static void InsertHeader(string headerText, LayoutOption layoutOption, TextAnchor textAnchor, GUIStyle backgroundStyle, GUIStyle textStyle, params GUILayoutOption[] options)
         {
-            GUIStyle backgroundStyle = GetNewStyle(color);
             backgroundStyle.alignment = textAnchor;
             BeginLayoutOption(layoutOption, backgroundStyle);
 
-            GUIStyle textStyle = new GUIStyle();
             textStyle.alignment = textAnchor;
             textStyle.fontSize = HeaderFontSize;
             textStyle.normal.textColor = Color.white;
@@ -165,20 +113,18 @@ namespace IterationToolkit.ToolkitEditor
             EndLayoutOption(layoutOption);
         }
 
-        public static void InsertField(SerializedProperty value, LayoutOption layoutOption, GUIStyle style, Color color, params GUILayoutOption[] options)
+        public static void InsertField(SerializedProperty value, LayoutOption layoutOption, GUIStyle backgroundStyle, params GUILayoutOption[] options)
         {
-            GUIStyle backgroundStyle = GetNewStyle(color);
             BeginLayoutOption(layoutOption, backgroundStyle);
             EditorGUILayout.PropertyField(value, GUIContent.none, options);
 
             EndLayoutOption(layoutOption);
         }
 
-        public static void InsertField<T>(T value, LayoutOption layoutOption, GUIStyle style, Color color, params GUILayoutOption[] options)
+        public static void InsertField<T>(T value, LayoutOption layoutOption, GUIStyle backgroundStyle, GUIStyle textStyle, params GUILayoutOption[] options)
         {
-            GUIStyle backgroundStyle = GetNewStyle(color);
             BeginLayoutOption(layoutOption, backgroundStyle);
-            EditorGUILayout.LabelField(value.ToString(), style, options);
+            EditorGUILayout.LabelField(value.ToString(), backgroundStyle, options);
 
             EndLayoutOption(layoutOption);
         }
@@ -186,11 +132,21 @@ namespace IterationToolkit.ToolkitEditor
         public static T InsertPopup<T>(List<T> popupOptions, T currentSelection, string labelText)
         {
             string[] valueNames = null;
+
             if (popupOptions is List<Type> typeOptions)
                 valueNames = typeOptions.Select(o => o.Name).ToArray();
             else
                 valueNames = popupOptions.Select(o => o.ToString()).ToArray();
+
             T returnValue = default;
+
+            returnValue = InsertPopup<T>(popupOptions, valueNames, currentSelection, labelText);
+
+            return (returnValue);
+        }
+
+        public static T InsertPopup<T>(List<T> popupOptions, string[] popupNames, T currentSelection, string labelText)
+        {
             int returnIndex = popupOptions.IndexOf(currentSelection);
 
             if (!string.IsNullOrEmpty(labelText))
@@ -199,7 +155,7 @@ namespace IterationToolkit.ToolkitEditor
                 EditorGUILayout.LabelField(labelText);
             }
 
-            returnValue = popupOptions[EditorGUILayout.Popup(returnIndex, valueNames)];
+            T returnValue = popupOptions[EditorGUILayout.Popup(returnIndex, popupNames)];
 
             if (!string.IsNullOrEmpty(labelText))
                 EditorGUILayout.EndHorizontal();
@@ -262,6 +218,13 @@ namespace IterationToolkit.ToolkitEditor
             if (arrayIndex % 2 == 0)
                 return (PrimaryAlternatingColor);
             return (SecondaryAlternatingColor);
+        }
+
+        public static GUIStyle GetAlternatingStyle(GUIStyle firstStyle, GUIStyle secondStyle, int collectionIndex)
+        {
+            if (collectionIndex % 2 == 0)
+                return (firstStyle);
+            return (secondStyle);
         }
 
         public static GUIStyle GetNewStyle(bool enableRichText = true, int fontSize = -1)

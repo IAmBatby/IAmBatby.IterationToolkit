@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,6 +127,8 @@ namespace IterationToolkit.ToolkitEditor
         public Dictionary<P, List<T>> settingsDict;
         private P selectedScriptableSettingsType;
 
+        private string[] parentNames;
+
         protected abstract P[] GetParentObjects(T childObject);
 
         protected override void TryPopulateData()
@@ -150,6 +153,16 @@ namespace IterationToolkit.ToolkitEditor
             }
             selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
             selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
+
+            List<string> newParentNames = new List<string>();
+            foreach (P parent in settingsDict.Keys)
+            {
+                if (parent is Type typeParent)
+                    newParentNames.Add(typeParent.Name);
+                else
+                    newParentNames.Add(parent.ToString());
+            }
+            parentNames = newParentNames.ToArray();
         }
 
         protected override void OnGUI()
@@ -162,7 +175,7 @@ namespace IterationToolkit.ToolkitEditor
             if (allSettings != null || allSettings.Count == 0)
             {
                 P previousParentSelection = selectedScriptableSettingsType;
-                selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<P>(settingsDict.Keys.ToList(), selectedScriptableSettingsType, "Select Setting Type: ");
+                selectedScriptableSettingsType = EditorLabelUtilities.InsertPopup<P>(settingsDict.Keys.ToList(), parentNames, selectedScriptableSettingsType, "Select Setting Type: ");
 
                 GUILayout.Space(25);
                 if (allSettings != null || allSettings.Count == 0)
