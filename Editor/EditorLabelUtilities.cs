@@ -175,7 +175,7 @@ namespace IterationToolkit.ToolkitEditor
         {
             GUIStyle backgroundStyle = GetNewStyle(color);
             BeginLayoutOption(layoutOption, backgroundStyle);
-            EditorGUILayout.PropertyField(value, GUIContent.none, options);
+            EditorGUILayout.PropertyField(value, new GUIContent("test"), options);
 
             EndLayoutOption(layoutOption);
         }
