@@ -114,7 +114,8 @@ namespace IterationToolkit.ToolkitEditor
         public static void InsertField(SerializedProperty value, LayoutOption layoutOption, GUIStyle backgroundStyle, params GUILayoutOption[] options)
         {
             BeginLayoutOption(layoutOption, backgroundStyle);
-            EditorGUILayout.PropertyField(value, GUIContent.none, options);
+            if (!(value.propertyType == SerializedPropertyType.ObjectReference && value.objectReferenceValue is MonoScript))
+                EditorGUILayout.PropertyField(value, GUIContent.none, options);
 
             EndLayoutOption(layoutOption);
         }
