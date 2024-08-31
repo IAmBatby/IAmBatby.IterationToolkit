@@ -158,7 +158,7 @@ namespace IterationToolkit.ToolkitEditor
                 if (parent is Type typeParent)
                     newParentNames.Add(typeParent.Name);
                 else
-                    newParentNames.Add(parent.ToString() + " (" + settingsDict[parent].Count + ")");
+                    newParentNames.Add(parent.ToString() + " (" + settingsDict[parent].Count + " " + typeof(T) + "'s )");
             }
             parentNames = newParentNames.ToArray();
         }
