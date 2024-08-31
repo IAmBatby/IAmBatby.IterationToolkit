@@ -42,7 +42,7 @@ namespace IterationToolkit.ToolkitEditor
             primaryAlternatingBackgroundStyle = EditorLabelUtilities.GetNewStyle(EditorLabelUtilities.PrimaryAlternatingColor);
             secondaryAlternatingBackgroundStyle = EditorLabelUtilities.GetNewStyle(EditorLabelUtilities.SecondaryAlternatingColor);
 
-            headerTextStyle = new GUIStyle();
+            headerTextStyle = new GUIStyle(EditorStyles.boldLabel);
         }
 
         public void DrawTable()
@@ -63,27 +63,31 @@ namespace IterationToolkit.ToolkitEditor
                 if (flipTable != cachedFlipTable)
                     FlipTable();
 
+                GUILayout.Space(25);
+
                 EditorLabelUtilities.BeginLayoutOption(LayoutOption.Vertical);
                 currentScrollValue = EditorGUILayout.BeginScrollView(currentScrollValue);
 
                 EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
-                foreach (string columnHeader in adjustedColumnHeaders)
+
+                for (int i = 0; i < adjustedColumnHeaders.Count; i++)
                 {
-                    if (adjustedColumnHeaders.IndexOf(columnHeader) == 0)
-                        EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+                    if (i == 0)
+                        EditorLabelUtilities.InsertHeader(adjustedColumnHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
                     else
-                        EditorLabelUtilities.InsertHeader(columnHeader, LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MinWidth(minWidth));
+                        EditorLabelUtilities.InsertHeader(adjustedColumnHeaders[i], LayoutOption.None, TextAnchor.MiddleCenter, headerBackgroundStyle, headerTextStyle, GUILayout.MinWidth(minWidth));
                 }
                 EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
 
                 for (int i = 0; i < Mathf.Max(rowHeaders.Count, adjustedColumnHeaders.Count); i++)
                 {
-                    EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, null);
+                    GUIStyle style = EditorLabelUtilities.GetAlternatingStyle(primaryAlternatingBackgroundStyle, secondaryAlternatingBackgroundStyle, i);
+                    EditorLabelUtilities.BeginLayoutOption(LayoutOption.Horizontal, style);
                     if (rowHeaders.Count > i)
-                        EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, headerBackgroundStyle, fieldTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
+                        EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, style, fieldTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
                     foreach (List<SerializedProperty> serializedProperties in dataTable)
                         if (serializedProperties.Count > i)
-                            EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, EditorLabelUtilities.GetAlternatingStyle(primaryAlternatingBackgroundStyle, secondaryAlternatingBackgroundStyle, dataTable.IndexOf(serializedProperties)), GUILayout.MinWidth(minWidth));
+                            EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, null, GUILayout.MinWidth(minWidth));
                     EditorLabelUtilities.EndLayoutOption(LayoutOption.Horizontal);
                 }
 

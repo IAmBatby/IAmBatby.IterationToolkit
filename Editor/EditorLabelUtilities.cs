@@ -30,10 +30,8 @@ namespace IterationToolkit.ToolkitEditor
         }
 
         public static Color HeaderColor = new Color(81f / 255f, 81f / 255f, 81f / 255f, 255);
-        //public static Color PrimaryAlternatingColor = new Color(62f / 255f, 62f / 255f, 62f / 255f, 255);
-        //public static Color SecondaryAlternatingColor = new Color(43f / 255f, 41f / 255f, 43f / 255f, 255);
-        public static Color PrimaryAlternatingColor = Color.red;
-        public static Color SecondaryAlternatingColor = Color.green;
+        public static Color PrimaryAlternatingColor = new Color(62f / 255f, 62f / 255f, 62f / 255f, 255);
+        public static Color SecondaryAlternatingColor = new Color(43f / 255f, 41f / 255f, 43f / 255f, 255);
 
         public static int HeaderFontSize = 14;
         public static int TextFontSize = 13;
