@@ -1,3 +1,4 @@
+using Codice.Client.Common.GameUI;
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -20,6 +21,7 @@ namespace IterationToolkit
 
     public abstract class ValueSetting<T> : ValueSetting
     {
+        protected bool hasInitialized;
         [SerializeField] protected T _value;
         [SerializeField] private T _defaultValue;
         protected virtual T RuntimeValue { get; set; }
@@ -27,8 +29,11 @@ namespace IterationToolkit
         { 
             get 
             {
-                if (Compare(Value, _value) == false && Compare(Value, _defaultValue) == false && (Compare(_value, _defaultValue) == true))
-                    SetValue(_defaultValue);
+                if (hasInitialized == false)
+                {
+                    RuntimeValue = _defaultValue;
+                    hasInitialized = true;
+                }
                 return (RuntimeValue);
             } 
             set { SetValue(value); } }
@@ -105,7 +110,15 @@ namespace IterationToolkit
     public class ObjectSetting<M> : ValueSetting<M> where M : Object
     {
         [SerializeField] private M _typeValue;
-        public override M Value { get { return (base.RuntimeValue as M); } set { SetValue(value); } }
+        public override M Value 
+        { 
+            get
+            {
+                if (hasInitialized == false)
+                    base.RuntimeValue = _typeValue;
+                return (base.RuntimeValue as M);
+            }
+            set { SetValue(value); } }
 
         protected override M GetInternalValue() => _typeValue;
         protected override void SetInternalValue(M newValue) { _typeValue = newValue as M; _value = newValue; }
@@ -117,7 +130,16 @@ namespace IterationToolkit
     public class EnumSetting<M> : ValueSetting<M> where M : Enum
     {
         [SerializeField] private M _typeValue;
-        public override M Value { get { return ((M)base.RuntimeValue); } set { SetValue(value); } }
+        public override M Value
+        {
+            get
+            {
+                if (hasInitialized == false)
+                    base.RuntimeValue = _typeValue;
+                return (base.RuntimeValue);
+            }
+            set { SetValue(value); }
+        }
 
         protected override M GetInternalValue() => _typeValue;
 
