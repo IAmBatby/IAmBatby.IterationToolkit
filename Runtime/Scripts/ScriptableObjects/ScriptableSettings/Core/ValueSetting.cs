@@ -23,11 +23,19 @@ namespace IterationToolkit
         [SerializeField] protected T _value;
         [SerializeField] private T _defaultValue;
         protected virtual T RuntimeValue { get; set; }
-        public virtual T Value { get { return (RuntimeValue); } set { SetValue(value); } }
+        public virtual T Value
+        { 
+            get 
+            {
+                if (Compare(Value, _value) == false && Compare(Value, _defaultValue) == false && (Compare(_value, _defaultValue) == true))
+                    SetValue(_defaultValue);
+                return (RuntimeValue);
+            } 
+            set { SetValue(value); } }
 
         public new ExtendedEvent<T> OnValueChanged = new ExtendedEvent<T>();
 
-        public override BoxedValueSetting GetBoxedValue() => new BoxedValueSetting((T)Value);
+        public override BoxedValueSetting GetBoxedValue() => new BoxedValueSetting((T)RuntimeValue);
 
         public override void RefreshValue()
         {
