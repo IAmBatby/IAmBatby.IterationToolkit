@@ -17,7 +17,7 @@ namespace IterationToolkit
             //Gizmos.DrawWireCube(transform.position + centreOffset, new Vector3(spawnableSize.x, 1, spawnableSize.y));
 
             foreach (Vector3 position in GetUnits())
-                Gizmos.DrawWireCube(position, Vector3.one);
+                Gizmos.DrawWireCube(position, 1f * transform.lossyScale);
         }
 
         public List<Vector3> GetUnits()
