@@ -27,20 +27,15 @@ namespace IterationToolkit
                 return (new Color(nonScaledColor.r, nonScaledColor.g, nonScaledColor.b, newAlpha));
         }
 
-        public static string ToBold(this string input)
-        {
-            return new string("<b>" + input + "</b>");
-        }
+        public static string ToBold(this string input) => "<b>" + input + "</b>";
+
+        public static string ToItalic(this string str) => "<i>" + str + "</i>";
+
+        public static string Colorize(this string input, Color color) => "<color=" + ColorUtility.ToHtmlStringRGB(color) + ">" + input + "</color>";
 
         public static string Colorize(this string input)
         {
             string hexColor = "#" + "FFFFFF";
-            return new string("<color=" + hexColor + ">" + input + "</color>");
-        }
-
-        public static string Colorize(this string input, Color color)
-        {
-            string hexColor = "#" + ColorUtility.ToHtmlStringRGB(color);
             return new string("<color=" + hexColor + ">" + input + "</color>");
         }
 
@@ -53,7 +48,7 @@ namespace IterationToolkit
             return (new string(chars));
         }
 
-        public static string ToItalic(this string str) => "<i>" + str + "</i>";
+
 
         public static int Increase<T>(this int value, List<T> collection)
         {
