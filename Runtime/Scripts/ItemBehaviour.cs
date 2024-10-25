@@ -52,7 +52,7 @@ namespace IterationToolkit
 
         }
 
-        public virtual string GetItemPrimaryDisplayText() => string.Empty;
+        public virtual string GetItemPrimaryDisplayText() => itemData.itemName;
 
         public virtual string GetItemSecondaryDisplayText() => string.Empty;
     }
