@@ -27,7 +27,7 @@ namespace IterationToolkit
                 if (TryUseItem() == true)
                 {
                     UseItem();
-                    OnItemTryUsed.Invoke();
+                    OnItemUsed.Invoke();
                 }
             }
         }
