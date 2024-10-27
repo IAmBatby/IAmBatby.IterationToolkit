@@ -12,6 +12,10 @@ namespace IterationToolkit
 
         public GameObject itemPrefab;
 
+        [field: SerializeField] public bool UseMouse { get; private set; }
+        [field: SerializeField] public int UseItemMouseIndex { get; private set; }
+        [field: SerializeField] public KeyCode UseItemKeyCode { get; private set; } //Will be replaced with ScriptableSetting stuff later
+
         public ItemBehaviour SpawnPrefab()
         {
             GameObject instancedItemPrefab = GameObject.Instantiate(itemPrefab);

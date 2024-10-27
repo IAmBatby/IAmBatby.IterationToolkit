@@ -14,10 +14,6 @@ namespace IterationToolkit
         public ExtendedEvent<ItemBehaviour> OnItemTryUsed = new ExtendedEvent<ItemBehaviour>();
         public ExtendedEvent<ItemBehaviour> OnItemUsed = new ExtendedEvent<ItemBehaviour>();
 
-        [SerializeField] private bool useMouse;
-        [SerializeField] private int useItemMouseIndex;
-        [SerializeField] private KeyCode useItemKeyCode; //Will be replaced with ScriptableSetting stuff later
-
         public bool IsItemActive {  get; private set; }
         public bool isItemAvailable { get; private set; } //Lowkey don't know why this exists
 
@@ -25,7 +21,7 @@ namespace IterationToolkit
         {
             if (isItemAvailable == false || isItemAvailable == false) return;
 
-            if (useMouse == true && Input.GetMouseButtonDown(useItemMouseIndex) || Input.GetKeyDown(useItemKeyCode))
+            if (itemData.UseMouse == true && Input.GetMouseButtonDown(itemData.UseItemMouseIndex) || Input.GetKeyDown(itemData.UseItemKeyCode))
             {
                 OnItemTryUsed.Invoke();
                 if (TryUseItem() == true)
