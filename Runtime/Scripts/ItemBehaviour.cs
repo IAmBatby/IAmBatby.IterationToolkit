@@ -62,7 +62,7 @@ namespace IterationToolkit
             OnItemActiveToggle.Invoke();
         }
 
-        protected virtual bool TryUseItem() => false;
+        public virtual bool TryUseItem() => false;
 
         protected virtual void UseItem() { }
 
