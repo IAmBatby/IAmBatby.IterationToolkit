@@ -34,22 +34,18 @@ namespace IterationToolkit
 
         public void ToggleItemActive(bool newValue)
         {
-            if (IsItemActive == newValue) return;
-
             IsItemActive = newValue;
 
             if (IsItemActive == true)
                 ItemActivated();
             else
                 ItemDeactivated();
-            
+           
             OnItemActiveToggle.Invoke();
         }
 
         public void ToggleItemAvailable(bool newValue)
         {
-            if (isItemAvailable == newValue) return;
-
             isItemAvailable = newValue;
 
             if (isItemAvailable == true)
