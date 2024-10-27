@@ -23,11 +23,11 @@ namespace IterationToolkit
 
             if (itemData.UseMouse == true && Input.GetMouseButtonDown(itemData.UseItemMouseIndex) || Input.GetKeyDown(itemData.UseItemKeyCode))
             {
-                OnItemTryUsed.Invoke();
+                OnItemTryUsed.Invoke(this);
                 if (TryUseItem() == true)
                 {
                     UseItem();
-                    OnItemUsed.Invoke();
+                    OnItemUsed.Invoke(this);
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace IterationToolkit
             else
                 ItemDeactivated();
            
-            OnItemActiveToggle.Invoke();
+            OnItemActiveToggle.Invoke(this);
         }
 
         public void ToggleItemAvailable(bool newValue)
@@ -53,7 +53,7 @@ namespace IterationToolkit
             else
                 ItemUnavailable();
 
-            OnItemActiveToggle.Invoke();
+            OnItemActiveToggle.Invoke(this);
         }
 
         public virtual bool TryUseItem() => false;
