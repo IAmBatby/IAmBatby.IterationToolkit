@@ -19,7 +19,7 @@ namespace IterationToolkit
 
         protected virtual void Update()
         {
-            if (isItemAvailable == false || isItemAvailable == false) return;
+            if (IsItemActive == false) return;
 
             if (itemData.UseMouse == true && Input.GetMouseButtonDown(itemData.UseItemMouseIndex) || Input.GetKeyDown(itemData.UseItemKeyCode))
             {
