@@ -9,48 +9,70 @@ namespace IterationToolkit
         public Rigidbody rigidBody;
         public ItemData itemData;
 
+        public ExtendedEvent<ItemBehaviour> OnItemAvailableToggle = new ExtendedEvent<ItemBehaviour>();
+        public ExtendedEvent<ItemBehaviour> OnItemActiveToggle = new ExtendedEvent<ItemBehaviour>();
+        public ExtendedEvent<ItemBehaviour> OnItemTryUsed = new ExtendedEvent<ItemBehaviour>();
+        public ExtendedEvent<ItemBehaviour> OnItemUsed = new ExtendedEvent<ItemBehaviour>();
+
+        [SerializeField] private KeyCode useItem; //Will be replaced with ScriptableSetting stuff later
+
         public bool IsItemActive {  get; private set; }
-        public bool isItemAvailable { get; private set; }
+        public bool isItemAvailable { get; private set; } //Lowkey don't know why this exists
+
+        protected virtual void Update()
+        {
+            if (isItemAvailable == false || isItemAvailable == false) return;
+
+            if (Input.GetKeyDown(useItem))
+            {
+                OnItemTryUsed.Invoke();
+                if (TryUseItem() == true)
+                {
+                    UseItem();
+                    OnItemTryUsed.Invoke();
+                }
+            }
+        }
 
         public void ToggleItemActive(bool newValue)
         {
+            if (IsItemActive == newValue) return;
+
             IsItemActive = newValue;
 
             if (IsItemActive == true)
-                OnItemActivated();
+                ItemActivated();
             else
-                OnItemDectivated();
+                ItemDeactivated();
+            
+            OnItemActiveToggle.Invoke();
         }
 
         public void ToggleItemAvailable(bool newValue)
         {
+            if (isItemAvailable == newValue) return;
+
             isItemAvailable = newValue;
 
             if (isItemAvailable == true)
-                OnItemAvailable();
+                ItemAvailable();
             else
-                OnItemUnavailable();
+                ItemUnavailable();
+
+            OnItemActiveToggle.Invoke();
         }
 
-        protected virtual void OnItemActivated()
-        {
+        protected virtual bool TryUseItem() => false;
 
-        }
+        protected virtual void UseItem() { }
 
-        protected virtual void OnItemDectivated()
-        {
+        protected virtual void ItemActivated() { }
 
-        }
+        protected virtual void ItemDeactivated() { }
 
-        protected virtual void OnItemAvailable()
-        {
+        protected virtual void ItemAvailable() { }
 
-        }
-
-        protected virtual void OnItemUnavailable()
-        {
-
-        }
+        protected virtual void ItemUnavailable() { }
 
         public virtual string GetItemPrimaryDisplayText() => itemData.itemName;
 
