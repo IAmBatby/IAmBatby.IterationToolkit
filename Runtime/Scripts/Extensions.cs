@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
+    public enum RichTextType { UGUI, TMP }
     public static class Extensions
     {
         public static Color SetAlpha(this Color color, float newAlpha, bool scaledValues = false)
@@ -31,7 +32,13 @@ namespace IterationToolkit
 
         public static string ToItalic(this string str) => "<i>" + str + "</i>";
 
-        public static string Colorize(this string input, Color color) => "<color=" + ColorUtility.ToHtmlStringRGB(color) + ">" + input + "</color>";
+        //public static string Colorize(this string input, Color color) => "<color=" + ColorUtility.ToHtmlStringRGB(color) + ">" + input + "</color>";
+
+        public static string Colorize(this string input, Color color, RichTextType textType = RichTextType.UGUI)
+        {
+            string startingTag = textType == RichTextType.UGUI ? "<color=" : "<color=#";
+            return (startingTag + ColorUtility.ToHtmlStringRGB(color) + ">" + input + "</color>");
+        }
 
         public static string Colorize(this string input)
         {
