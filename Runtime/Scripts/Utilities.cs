@@ -13,7 +13,7 @@ namespace IterationToolkit
 
         public static int DecreaseIndex(int index, int count) => index != 0 ? index - 1 : count;
 
-        public static int DecreaseIndex<T>(int index, List<T> collection) => index != 0 ? index = 1 : collection.Count - 1;
+        public static int DecreaseIndex<T>(int index, List<T> collection) => index != 0 ? index - 1 : collection.Count - 1;
 
         public static bool IsInLayerMask(GameObject obj, LayerMask mask) => (mask.value & (1 << obj.layer)) != 0;
         public static bool IsInLayerMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) != 0;
