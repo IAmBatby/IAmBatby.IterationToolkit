@@ -9,6 +9,8 @@ namespace IterationToolkit
     {
         public ExtendedEvent OnInitalize = new ExtendedEvent();
 
+        public static Manager Instance => SingletonManager.GetSingleton<Manager>(typeof(Manager));
+
         protected virtual void Awake()
         {
             OnInitalize.Invoke();

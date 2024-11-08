@@ -19,6 +19,8 @@ namespace IterationToolkit
         public ExtendedEvent<LevelData> OnBeforeLevelLoaded = new ExtendedEvent<LevelData>();
         public ExtendedEvent<LevelData> OnLevelLoaded = new ExtendedEvent<LevelData>();
 
+        public static new GlobalManager Instance => SingletonManager.GetSingleton<GlobalManager>(typeof(GlobalManager));
+
         protected override void Awake()
         {
             GameObject.DontDestroyOnLoad(gameObject);
