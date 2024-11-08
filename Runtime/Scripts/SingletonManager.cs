@@ -3,25 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class SingletonManager
+namespace IterationToolkit
 {
-    private static Dictionary<Type, MonoBehaviour> managerDict = new Dictionary<Type, MonoBehaviour>();
-
-    public static T GetSingleton<T>(Type type) where T : MonoBehaviour
+    public static class SingletonManager
     {
-        T returnObject = null;
-        if (managerDict.ContainsKey(type))
-            returnObject = managerDict[type] as T;
-        else
+        private static Dictionary<Type, MonoBehaviour> managerDict = new Dictionary<Type, MonoBehaviour>();
+
+        public static T GetSingleton<T>(Type type) where T : MonoBehaviour
         {
-            T retrivedSingleton = UnityEngine.Object.FindObjectOfType<T>();
-            if (retrivedSingleton != null)
-            {
-                Debug.Log("Registering New Singleton Reference For: " + retrivedSingleton.gameObject.name);
-                managerDict.Add(type, retrivedSingleton);
+            T returnObject = null;
+            if (managerDict.ContainsKey(type))
                 returnObject = managerDict[type] as T;
+            else
+            {
+                T retrivedSingleton = UnityEngine.Object.FindObjectOfType<T>();
+                if (retrivedSingleton != null)
+                {
+                    Debug.Log("Registering New Singleton Reference For: " + retrivedSingleton.gameObject.name);
+                    managerDict.Add(type, retrivedSingleton);
+                    returnObject = managerDict[type] as T;
+                }
             }
+            return (returnObject);
         }
-        return (returnObject);
     }
 }
