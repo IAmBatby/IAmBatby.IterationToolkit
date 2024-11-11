@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,21 +11,16 @@ namespace IterationToolkit
         private Coroutine coroutine;
         private MonoBehaviour coroutineHostBehaviour;
 
-        public float Progress
-        {
-            get
-            {
-                if (coroutine != null)
-                    return ((currentTimerLength - (startTime - Time.time)) - currentTimerLength);
-                else
-                    return (0f);
-            }
-        }
+        private float ComparisonTime => IsPaused ? lastStartedTime : Time.time;
 
-        public float TimeElapsed => Time.time - startTime;
+        public float Progress => coroutine == null ? 0f : (currentTimerLength - (startTime - ComparisonTime)) - currentTimerLength;
+
+        public float TimeElapsed => ComparisonTime - startTime;
 
         public bool IsRunning => (coroutine != null);
+        public bool IsPaused { get; private set; }
 
+        private float lastStartedTime;
         private float startTime;
         private float currentTimerLength;
 
@@ -40,10 +36,29 @@ namespace IterationToolkit
             }
         }
 
+        public void ToggleTimer(bool value)
+        {
+            if (IsRunning == false) return;
+
+            IsPaused = value;
+            lastStartedTime = Time.time;
+        }
+
+        public bool TryStopTimer()
+        {
+            if (coroutine == null)
+                return (false);
+
+            coroutineHostBehaviour.StopCoroutine(coroutine);
+            coroutine = null;
+            return (true);
+        }
+
         private IEnumerator TimerCoroutine(float time)
         {
             currentTimerLength = time;
             startTime = Time.time;
+            lastStartedTime = Time.time;
 
             onTimerStart.Invoke();
 
