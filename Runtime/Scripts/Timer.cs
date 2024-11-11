@@ -60,7 +60,7 @@ namespace IterationToolkit
             Debug.Log(text + " Timer!");
             if (value == true)
             {
-                cachedTime += Time.time - (startTime - cachedTime);
+                cachedTime = Time.time - startTime;
                 startTime = Time.time;
             }
         }
