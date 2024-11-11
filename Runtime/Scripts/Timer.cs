@@ -15,12 +15,22 @@ namespace IterationToolkit
 
         public float Progress => coroutine == null ? 0f : (currentTimerLength - (ComparisonTime - Time.time)) - currentTimerLength;
 
-        public float TimeElapsed => Time.time - ComparisonTime;
+        public float TimeElapsed
+        {
+            get
+            {
+                if (IsPaused)
+                    return (lastPausedTime - lastStartedTime);
+                else
+                    return (Time.time - (startTime - lastPausedTime));
+            }
+        }
 
         public bool IsRunning => (coroutine != null);
         public bool IsPaused { get; private set; }
 
         [SerializeField] private float lastStartedTime;
+        [SerializeField] private float lastPausedTime = 0f;
         [SerializeField] private float startTime;
         [SerializeField] private float currentTimerLength;
 
@@ -42,6 +52,8 @@ namespace IterationToolkit
 
             IsPaused = value;
             if (value == true)
+                lastPausedTime = Time.time;
+            else
                 lastStartedTime = Time.time;
         }
 
