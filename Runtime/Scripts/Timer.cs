@@ -11,7 +11,7 @@ namespace IterationToolkit
         private Coroutine coroutine;
         private MonoBehaviour coroutineHostBehaviour;
 
-        private float ComparisonTime => IsPaused ? lastStartedTime : startTime;
+        private float ComparisonTime => IsPaused ? lastResumedTime : startTime;
 
         public float Progress => coroutine == null ? 0f : (currentTimerLength - (ComparisonTime - Time.time)) - currentTimerLength;
 
@@ -20,16 +20,16 @@ namespace IterationToolkit
             get
             {
                 if (IsPaused)
-                    return (lastPausedTime - lastStartedTime);
+                    return (lastPausedTime - lastResumedTime);
                 else
-                    return (Time.time - (startTime - lastStartedTime));
+                    return (Time.time - (startTime - lastResumedTime));
             }
         }
 
         public bool IsRunning => (coroutine != null);
         public bool IsPaused { get; private set; }
 
-        [SerializeField] private float lastStartedTime;
+        [SerializeField] private float lastResumedTime;
         [SerializeField] private float lastPausedTime = 0f;
         [SerializeField] private float startTime;
         [SerializeField] private float currentTimerLength;
@@ -54,7 +54,7 @@ namespace IterationToolkit
             if (value == true)
                 lastPausedTime = Time.time;
             else
-                lastStartedTime = Time.time;
+                lastResumedTime = Time.time;
         }
 
         public bool TryStopTimer()
@@ -71,7 +71,6 @@ namespace IterationToolkit
         {
             currentTimerLength = time;
             startTime = Time.time;
-            lastStartedTime = Time.time;
 
             onTimerStart.Invoke();
 
