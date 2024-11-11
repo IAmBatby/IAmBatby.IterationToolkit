@@ -21,6 +21,8 @@ namespace IterationToolkit
             }
         }
 
+        public float TimeElapsed => Time.time - startTime;
+
         public bool IsRunning => (coroutine != null);
 
         private float startTime;
@@ -29,7 +31,7 @@ namespace IterationToolkit
         public ExtendedEvent onTimerStart = new ExtendedEvent();
         public ExtendedEvent onTimerEnd = new ExtendedEvent();
 
-        public void StartTimer(MonoBehaviour host, float time)
+        public void StartTimer(MonoBehaviour host, float time = Mathf.Infinity)
         {
             coroutineHostBehaviour = host;
             if (coroutine == null)
