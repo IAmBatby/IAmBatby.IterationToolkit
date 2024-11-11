@@ -23,7 +23,7 @@ namespace IterationToolkit
                     return (cachedTime);
                 else
                 {
-                    return ((Time.time - startTime));
+                    return ((Time.time - startTime) + cachedTime);
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace IterationToolkit
             IsPaused = value;
 
             if (value == true)
-                cachedTime = Time.time - startTime;
+                cachedTime += Time.time - startTime;
             else
                 startTime = Time.time;
 
