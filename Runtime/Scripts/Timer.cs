@@ -11,11 +11,11 @@ namespace IterationToolkit
         private Coroutine coroutine;
         private MonoBehaviour coroutineHostBehaviour;
 
-        private float ComparisonTime => IsPaused ? lastStartedTime : Time.time;
+        private float ComparisonTime => IsPaused ? lastStartedTime : startTime;
 
-        public float Progress => coroutine == null ? 0f : (currentTimerLength - (startTime - ComparisonTime)) - currentTimerLength;
+        public float Progress => coroutine == null ? 0f : (currentTimerLength - (ComparisonTime - Time.time)) - currentTimerLength;
 
-        public float TimeElapsed => ComparisonTime - startTime;
+        public float TimeElapsed => Time.time - ComparisonTime;
 
         public bool IsRunning => (coroutine != null);
         public bool IsPaused { get; private set; }
@@ -41,7 +41,8 @@ namespace IterationToolkit
             if (IsRunning == false) return;
 
             IsPaused = value;
-            lastStartedTime = Time.time;
+            if (value == true)
+                lastStartedTime = Time.time;
         }
 
         public bool TryStopTimer()
