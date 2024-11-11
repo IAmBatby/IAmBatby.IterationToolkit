@@ -20,9 +20,11 @@ namespace IterationToolkit
             get
             {
                 if (IsPaused)
-                    return (lastPausedTime - lastResumedTime);
+                    return (cachedTime);
                 else
-                    return (Time.time - (lastResumedTime - startTime));
+                {
+                    return (Time.time - (startTime + cachedTime));
+                }
             }
         }
 
@@ -33,6 +35,8 @@ namespace IterationToolkit
         [SerializeField] private float lastPausedTime = 0f;
         [SerializeField] private float startTime;
         [SerializeField] private float currentTimerLength;
+
+        [SerializeField] private float cachedTime;
 
         public ExtendedEvent onTimerStart = new ExtendedEvent();
         public ExtendedEvent onTimerEnd = new ExtendedEvent();
@@ -52,9 +56,7 @@ namespace IterationToolkit
 
             IsPaused = value;
             if (value == true)
-                lastPausedTime = Time.time;
-            else
-                lastResumedTime = Time.time;
+                cachedTime = Time.time - startTime;
         }
 
         public bool TryStopTimer()
@@ -71,6 +73,7 @@ namespace IterationToolkit
         {
             currentTimerLength = time;
             startTime = Time.time;
+            cachedTime = 0f;
 
             onTimerStart.Invoke();
 
