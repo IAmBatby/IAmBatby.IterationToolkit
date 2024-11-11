@@ -22,7 +22,7 @@ namespace IterationToolkit
                 if (IsPaused)
                     return (lastPausedTime - lastStartedTime);
                 else
-                    return (Time.time - (startTime - lastPausedTime));
+                    return (Time.time - (startTime - lastStartedTime));
             }
         }
 
