@@ -56,7 +56,7 @@ namespace IterationToolkit
 
             IsPaused = value;
             if (value == true)
-                cachedTime = Time.time - startTime;
+                cachedTime = Time.time - (startTime + cachedTime);
         }
 
         public bool TryStopTimer()
