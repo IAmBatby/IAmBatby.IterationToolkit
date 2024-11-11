@@ -59,10 +59,9 @@ namespace IterationToolkit
             string text = IsPaused ? "Pausing" : "Unpausing";
             Debug.Log(text + " Timer!");
             if (value == true)
-            {
                 cachedTime = Time.time - startTime;
+            else
                 startTime = Time.time;
-            }
         }
 
         public bool TryStopTimer()
