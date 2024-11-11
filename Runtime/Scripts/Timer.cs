@@ -43,11 +43,18 @@ namespace IterationToolkit
 
         public void StartTimer(MonoBehaviour host, float time = Mathf.Infinity)
         {
+            if (host == null)
+            {
+                Debug.LogError("Tried to start Timer but passed MonoBehaviour reference is null!");
+                return;
+            }    
             coroutineHostBehaviour = host;
             if (coroutine == null)
             {
                 coroutine = coroutineHostBehaviour.StartCoroutine(TimerCoroutine(time));
             }
+            else
+                Debug.LogError("Cannot start Timer as Coroutine is not null!");
         }
 
         public void ToggleTimer(bool value)
