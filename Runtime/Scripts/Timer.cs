@@ -23,7 +23,7 @@ namespace IterationToolkit
                     return (cachedTime);
                 else
                 {
-                    return ((Time.time - startTime) + cachedTime);
+                    return ((Time.time - startTime));
                 }
             }
         }
@@ -56,12 +56,13 @@ namespace IterationToolkit
 
             IsPaused = value;
 
-            string text = IsPaused ? "Pausing" : "Unpausing";
-            Debug.Log(text + " Timer!");
             if (value == true)
                 cachedTime = Time.time - startTime;
             else
                 startTime = Time.time;
+
+            string text = IsPaused ? "Pausing" : "Unpausing";
+            Debug.Log(text + " Timer! Elapsed Time Is: " + TimeElapsed);
         }
 
         public bool TryStopTimer()
