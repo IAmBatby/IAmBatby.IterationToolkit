@@ -20,9 +20,9 @@ namespace IterationToolkit
         public bool IsRunning => (coroutine != null);
         public bool IsPaused { get; private set; }
 
-        private float lastStartedTime;
-        private float startTime;
-        private float currentTimerLength;
+        [SerializeField] private float lastStartedTime;
+        [SerializeField] private float startTime;
+        [SerializeField] private float currentTimerLength;
 
         public ExtendedEvent onTimerStart = new ExtendedEvent();
         public ExtendedEvent onTimerEnd = new ExtendedEvent();
