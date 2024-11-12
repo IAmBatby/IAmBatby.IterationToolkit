@@ -28,9 +28,12 @@ namespace IterationToolkit
             for (int i = 0; i < objects.Count; i++)
             {
                 GameObject obj = objects[i].gameObject;
-                obj.transform.parent = childParentFolder.transform;
-                if (renameObjects)
-                    obj.name = genericType.Name + "#" + i;
+                if (obj.transform.parent == parent)
+                {
+                    obj.transform.parent = childParentFolder.transform;
+                    if (renameObjects)
+                        obj.name = genericType.Name + "#" + i;
+                }
             }
         }
     }
