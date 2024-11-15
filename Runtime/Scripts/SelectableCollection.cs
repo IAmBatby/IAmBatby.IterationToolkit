@@ -27,6 +27,7 @@ namespace IterationToolkit
         }
 
         private int selectionIndex;
+        public int ActiveIndex => selectionIndex;
 
         public ExtendedEvent<T> onSelected = new ExtendedEvent<T>();
         public ExtendedEvent<T> onUnselected = new ExtendedEvent<T>();
