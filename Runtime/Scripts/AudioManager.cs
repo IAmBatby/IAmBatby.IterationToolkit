@@ -9,7 +9,7 @@ namespace IterationToolkit
     public class AudioManager : GlobalManager
     {
         private static AudioManager _instance;
-        public static AudioManager Instance => Singleton.GetInstance<AudioManager>(ref _instance);
+        public static new AudioManager Instance => SingletonManager.GetSingleton<AudioManager>(typeof(AudioManager));
 
         private static AudioSource _audioSource;
         private static AudioSource ManagerSource

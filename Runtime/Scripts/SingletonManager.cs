@@ -9,6 +9,12 @@ namespace IterationToolkit
     {
         private static Dictionary<Type, MonoBehaviour> managerDict = new Dictionary<Type, MonoBehaviour>();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
+        {
+            managerDict.Clear();
+        }
+
         public static T GetSingleton<T>(Type type) where T : MonoBehaviour
         {
             T returnObject = null;
