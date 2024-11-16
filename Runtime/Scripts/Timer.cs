@@ -87,15 +87,20 @@ namespace IterationToolkit
             startTime = Time.time;
             cachedTime = 0f;
 
-            onTimerStart.Invoke();
+            InvokeTimerEvent(onTimerStart);
 
             yield return new WaitForSeconds(time);
 
             currentTimerLength = 0f;
             startTime = 0f;
 
-            onTimerEnd.Invoke();
             coroutine = null;
+            InvokeTimerEvent(onTimerEnd);
+        }
+
+        protected virtual void InvokeTimerEvent(ExtendedEvent timerEvent)
+        {
+            timerEvent.Invoke();
         }
     }
 
@@ -103,9 +108,19 @@ namespace IterationToolkit
     {
         public T Value { get; private set; }
 
+        public new ExtendedEvent<T> onTimerStart = new ExtendedEvent<T>();
+        public new ExtendedEvent<T> onTimerEnd = new ExtendedEvent<T>();
+
         public Timer(T newValue)
         {
             Value = newValue;
+        }
+
+        protected override void InvokeTimerEvent(ExtendedEvent timerEvent)
+        {
+            if (timerEvent is ExtendedEvent<T> genericTimerEvent)
+                genericTimerEvent.Invoke(Value);
+
         }
     }
 }
