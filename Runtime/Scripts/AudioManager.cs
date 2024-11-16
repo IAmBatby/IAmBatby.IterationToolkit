@@ -37,7 +37,7 @@ namespace IterationToolkit
             PlayAudio(data, ManagerSource);
         }
 
-        private static void ApplyAudioData(AudioPreset data, AudioSource source)
+        public static void ApplyAudioData(AudioPreset data, AudioSource source)
         {
             source.outputAudioMixerGroup  = data.audioMixer.outputAudioMixerGroup;
             source.volume = data.audioVolume;
