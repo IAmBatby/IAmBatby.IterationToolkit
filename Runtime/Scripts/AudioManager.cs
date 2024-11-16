@@ -43,6 +43,7 @@ namespace IterationToolkit
             source.volume = data.audioVolume;
             source.pitch = Random.Range(data.audioRandomPitchMinMax.x, data.audioRandomPitchMinMax.y);
             source.clip = data.audioRandomClipList[Random.Range(0, data.audioRandomClipList.Count)];
+            source.loop = data.shouldLoop;
         }
 
         private static bool ShouldPlay(AudioPreset data, AudioSource audioSource)

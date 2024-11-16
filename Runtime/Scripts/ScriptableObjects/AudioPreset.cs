@@ -16,6 +16,7 @@ namespace IterationToolkit
         [Header("Contextual Values")]
         [Space(10)]
         public bool onlyPlayOnInactiveSource;
+        public bool shouldLoop;
 
         [Space(10)]
         [Header("Audio Assets")]
