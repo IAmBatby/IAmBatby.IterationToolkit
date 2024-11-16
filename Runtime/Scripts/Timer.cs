@@ -118,8 +118,10 @@ namespace IterationToolkit
 
         protected override void InvokeTimerEvent(ExtendedEvent timerEvent)
         {
-            if (timerEvent is ExtendedEvent<T> genericTimerEvent)
-                genericTimerEvent.Invoke(Value);
+            if (timerEvent == base.onTimerEnd)
+                onTimerEnd.Invoke(Value);
+            else if (timerEvent == base.onTimerStart)
+                onTimerStart.Invoke(Value);
 
         }
     }
