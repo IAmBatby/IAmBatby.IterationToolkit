@@ -98,4 +98,14 @@ namespace IterationToolkit
             coroutine = null;
         }
     }
+
+    public class Timer<T> : Timer
+    {
+        public T Value { get; private set; }
+
+        public Timer(T newValue)
+        {
+            Value = newValue;
+        }
+    }
 }
