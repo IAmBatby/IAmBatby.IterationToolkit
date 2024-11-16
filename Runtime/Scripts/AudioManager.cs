@@ -23,11 +23,13 @@ namespace IterationToolkit
         }
 
 
-        public static void PlayAudio(AudioPreset data, AudioSource source)
+        public static void PlayAudio(AudioPreset data, AudioSource source, AudioClip overrideClip = null)
         {
             if (!ShouldPlay(data, source)) return;
 
             ApplyAudioData(data, source);
+            if (overrideClip != null)
+                source.clip = overrideClip;
             source.Play();
         }
 
