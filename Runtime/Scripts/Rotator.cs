@@ -13,12 +13,12 @@ namespace IterationToolkit
         private Vector3 GroundHitMin => groundHitPosition + new Vector3(0, verticalLerpMinOffset, 0);
         private Vector3 GroundHitMax => GroundHitMin + new Vector3(0, verticalLerpMaxOffset, 0);
 
-        [SerializeField] private float verticalLerpMinOffset;
-        [SerializeField] private float verticalLerpMaxOffset;
-        [SerializeField] private float verticalLerpSpeed;
+        public float verticalLerpMinOffset;
+        public float verticalLerpMaxOffset;
+        public float verticalLerpSpeed;
 
-        [SerializeField] private float horizontalLerpAmount;
-        [SerializeField] private float horizontalLerpSpeed;
+        public float horizontalLerpAmount;
+        public float horizontalLerpSpeed;
 
         [SerializeField] private bool isRaising;
 
