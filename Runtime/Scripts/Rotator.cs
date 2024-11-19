@@ -29,6 +29,9 @@ namespace IterationToolkit
             transform.position = Vector3.Lerp(GroundHitMin, GroundHitMax, 0.5f);
         }
 
+        private void Update() => UpdateRotation();
+
+
         //Becuase i'm a freak who sometimes wants to call this from other classes
         public void UpdateRotation()
         {
