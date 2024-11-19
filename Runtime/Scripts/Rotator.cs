@@ -22,11 +22,17 @@ namespace IterationToolkit
 
         [SerializeField] private bool isRaising;
 
+        [field: SerializeField] public bool EnablePositionChanging;
+        [field: SerializeField] public bool EnableRotationChanging;
+
         private void Awake()
         {
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, groundMask))
-                groundHitPosition = hit.point;
-            transform.position = Vector3.Lerp(GroundHitMin, GroundHitMax, 0.5f);
+            if (EnablePositionChanging == true)
+            {
+                if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, groundMask))
+                    groundHitPosition = hit.point;
+                transform.position = Vector3.Lerp(GroundHitMin, GroundHitMax, 0.5f);
+            }
         }
 
         private void Update() => UpdateRotation();
@@ -35,13 +41,18 @@ namespace IterationToolkit
         //Becuase i'm a freak who sometimes wants to call this from other classes
         public void UpdateRotation()
         {
-            Vector3 target = isRaising == true ? GroundHitMin : GroundHitMax;
-            transform.position = Vector3.Lerp(transform.position, target, verticalLerpSpeed * Time.deltaTime);
+            if (EnablePositionChanging == true)
+            {
+                Vector3 target = isRaising == true ? GroundHitMin : GroundHitMax;
+                transform.position = Vector3.Lerp(transform.position, target, verticalLerpSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, target) < 0.1f)
-                isRaising = !isRaising;
+                if (Vector3.Distance(transform.position, target) < 0.1f)
+                    isRaising = !isRaising;
 
-            transform.Rotate(new Vector3(0, horizontalLerpAmount, 0));
+            }
+
+            if (EnableRotationChanging == true)
+                transform.Rotate(new Vector3(0, horizontalLerpAmount, 0));
         }
 
 
