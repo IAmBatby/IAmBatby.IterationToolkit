@@ -126,7 +126,7 @@ namespace IterationToolkit
 
         private static bool IsInEditor()
         {
-            bool returnValue;
+            bool returnValue = false;
 #if UNITY_EDITOR
             returnValue = true;
 #endif
