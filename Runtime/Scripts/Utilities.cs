@@ -37,8 +37,10 @@ namespace IterationToolkit
             }
         }
 
-        public static void DrawPrefabPreview(Vector3 position, Quaternion rotation, GameObject prefab, Color primary, Color secondary, ref List<MeshFilter> filters)
+        public static void DrawPrefabPreview(Transform context, GameObject prefab, Color primary, Color secondary, ref List<MeshFilter> filters)
         {
+            Matrix4x4 previousMatrix = Gizmos.matrix;
+            Gizmos.matrix = context.localToWorldMatrix;
             if (prefab == null) return;
             if (filters == null)
                 filters = new List<MeshFilter>();
@@ -55,10 +57,12 @@ namespace IterationToolkit
 
             Gizmos.color = new Color(primary.r, primary.g, primary.b, 0.3f);
             foreach (MeshFilter renderer in filters)
-                Gizmos.DrawMesh(renderer.sharedMesh, position + renderer.transform.position, rotation * renderer.transform.rotation, renderer.transform.lossyScale);
+                Gizmos.DrawMesh(renderer.sharedMesh, renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
             Gizmos.color = new Color(secondary.r, secondary.g, secondary.b, 0.05f);
             foreach (MeshFilter renderer in filters)
-                Gizmos.DrawWireMesh(renderer.sharedMesh, position + renderer.transform.position, rotation * renderer.transform.rotation, renderer.transform.lossyScale);
+                Gizmos.DrawWireMesh(renderer.sharedMesh, renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
+
+            Gizmos.matrix = previousMatrix;
         }
     }
 }
