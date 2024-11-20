@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace IterationToolkit
 {
@@ -39,9 +40,8 @@ namespace IterationToolkit
 
         public static void DrawPrefabPreview(Transform context, GameObject prefab, Color primary, Color secondary, ref List<MeshFilter> filters)
         {
-            Matrix4x4 previousMatrix = Gizmos.matrix;
-            Color previousColor = Gizmos.color;
-            Gizmos.matrix = context.localToWorldMatrix;
+            GizmosCache cache = new GizmosCache(context);
+
             if (prefab == null) return;
             if (filters == null)
                 filters = new List<MeshFilter>();
@@ -63,36 +63,78 @@ namespace IterationToolkit
             foreach (MeshFilter renderer in filters)
                 Gizmos.DrawWireMesh(renderer.sharedMesh, renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
 
-            Gizmos.color = previousColor;
-            Gizmos.matrix = previousMatrix;
+            cache.Revert();
         }
 
         public static void DrawSnapToGroundPreview(Transform transform, int layerMask = ~0, float yOffset = 0f)
         {
-            Matrix4x4 previousMatrix = Gizmos.matrix;
-            Color previousColor = Gizmos.color;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            GizmosCache cache = new GizmosCache(transform);
+            Vector3 boxSize = new Vector3(0.3f, 0.3f, 0.3f);
 
-            Vector3 target = Vector3.positiveInfinity;
+            if (TryGetSnap(transform, layerMask, out Vector3 snapPos, yOffset, Mathf.Infinity))
+            {
+                DrawLine(Vector3.zero, snapPos - transform.position, Color.white);
+                DrawWireCube(Vector3.zero, boxSize, Color.yellow);
+                DrawWireCube(snapPos - transform.position, boxSize, Color.green);
+            }
+            else
+                DrawWireCube(Vector3.zero, boxSize, Color.red);
 
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
-                target = hit.point + new Vector3(0, yOffset, 0);
-
-            Gizmos.DrawLine(Vector3.zero - transform.position, target);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(Vector3.zero - transform.position, new Vector3(0.2f, 0.2f, 0.2f));
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(transform.position - target, new Vector3(0.2f, 0.2f, 0.2f));
-
-            Gizmos.color = previousColor;
-            Gizmos.matrix = previousMatrix;
+            cache.Revert();
         }
 
-        public static void TrySnapToGround(Transform transform, LayerMask layerMask, float yOffset = 0f, float distance = Mathf.Infinity)
+        public static bool TryGetSnap(Transform transform, LayerMask layerMask, out Vector3 snapPosition, float yOffset = 0f, float distance = Mathf.Infinity)
         {
+            snapPosition = Vector3.negativeInfinity;
+
             if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, distance, layerMask))
-                transform.position = hit.point + new Vector3(0, yOffset, 0);
+                snapPosition = hit.point + new Vector3(0, yOffset, 0);
+
+            return (snapPosition != Vector3.negativeInfinity);
         }
+
+        public static void DrawWireCube(Vector3 position, Vector3 scale, Color color)
+        {
+            Color previousColor = SwitchGizmosColors(color);
+            Gizmos.DrawWireCube(position, scale);
+            Gizmos.color = previousColor;
+        }
+
+        public static void DrawLine(Vector3 to, Vector3 from, Color color)
+        {
+            Color previousColor = SwitchGizmosColors(color);
+            Gizmos.DrawLine(to, from);
+            Gizmos.color = previousColor;
+        }
+
+        public static Color SwitchGizmosColors(Color newColor)
+        {
+            Color oldColor = Gizmos.color;
+            Gizmos.color = newColor;
+            return (oldColor);
+        }
+    }
+}
+
+public struct GizmosCache
+{
+    private Matrix4x4 matrix;
+    private Color color;
+    private Transform transform;
+
+    public GizmosCache(Transform newTransform = null)
+    {
+        matrix = Gizmos.matrix;
+        color = Gizmos.color;
+        transform = newTransform;
+
+        if (transform != null)
+            Gizmos.matrix = transform.localToWorldMatrix;
+    }
+
+    public void Revert()
+    {
+        Gizmos.matrix = matrix;
+        Gizmos.color = color;
     }
 }
