@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -71,11 +74,12 @@ namespace IterationToolkit
             GizmosCache cache = new GizmosCache(transform);
             Vector3 boxSize = new Vector3(0.3f, 0.3f, 0.3f);
 
-            if (TryGetSnap(transform, layerMask, out Vector3 snapPos, yOffset, Mathf.Infinity))
+            if (TryGetSnap(transform, layerMask, out Vector3 snapPos, out RaycastHit hit, yOffset, Mathf.Infinity))
             {
                 DrawLine(Vector3.zero, snapPos - transform.position, Color.white);
                 DrawWireCube(Vector3.zero, boxSize, Color.yellow);
-                DrawWireCube(snapPos - transform.position, boxSize, Color.green);
+                DrawLabel(snapPos - transform.position, hit.collider.gameObject.name, Color.green);
+                //DrawWireCube(snapPos - transform.position, boxSize, Color.green);
             }
             else
                 DrawWireCube(Vector3.zero, boxSize, Color.red);
@@ -83,35 +87,59 @@ namespace IterationToolkit
             cache.Revert();
         }
 
-        public static bool TryGetSnap(Transform transform, LayerMask layerMask, out Vector3 snapPosition, float yOffset = 0f, float distance = Mathf.Infinity)
+        public static bool TryGetSnap(Transform transform, LayerMask layerMask, out Vector3 snapPosition, out RaycastHit hit, float yOffset = 0f, float distance = Mathf.Infinity)
         {
             snapPosition = Vector3.negativeInfinity;
 
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, distance, layerMask))
+            if (Physics.Raycast(transform.position, -transform.up, out hit, distance, layerMask))
+            {
                 snapPosition = hit.point + new Vector3(0, yOffset, 0);
+                return (true);
+            }
 
-            return (snapPosition != Vector3.negativeInfinity);
+            return (false);
         }
 
         public static void DrawWireCube(Vector3 position, Vector3 scale, Color color)
         {
             Color previousColor = SwitchGizmosColors(color);
             Gizmos.DrawWireCube(position, scale);
-            Gizmos.color = previousColor;
+            SwitchGizmosColors(previousColor);
         }
 
         public static void DrawLine(Vector3 to, Vector3 from, Color color)
         {
             Color previousColor = SwitchGizmosColors(color);
             Gizmos.DrawLine(to, from);
-            Gizmos.color = previousColor;
+            SwitchGizmosColors(previousColor);
         }
 
         public static Color SwitchGizmosColors(Color newColor)
         {
             Color oldColor = Gizmos.color;
             Gizmos.color = newColor;
+#if UNITY_EDITOR
+            Handles.color = newColor;
+#endif
             return (oldColor);
+        }
+
+        private static bool IsInEditor()
+        {
+            bool returnValue;
+#if UNITY_EDITOR
+            returnValue = true;
+#endif
+            return (returnValue);
+        }
+
+        public static void DrawLabel(Vector3 position, string text, Color color)
+        {
+            Color previousColor = SwitchGizmosColors(color);
+#if UNITY_EDITOR
+            Handles.Label(position, text);
+#endif
+            SwitchGizmosColors(previousColor);
         }
     }
 }
@@ -129,12 +157,20 @@ public struct GizmosCache
         transform = newTransform;
 
         if (transform != null)
+        {
             Gizmos.matrix = transform.localToWorldMatrix;
+#if UNITY_EDITOR
+            Handles.matrix = transform.localToWorldMatrix;
+#endif
+        }
     }
 
     public void Revert()
     {
         Gizmos.matrix = matrix;
         Gizmos.color = color;
+#if UNITY_EDITOR
+        Handles.color = color;
+#endif
     }
 }
