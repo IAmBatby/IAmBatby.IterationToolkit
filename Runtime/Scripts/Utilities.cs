@@ -74,7 +74,7 @@ namespace IterationToolkit
 
             Vector3 target = Vector3.positiveInfinity;
 
-            if (Physics.Raycast(Vector3.zero, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
                 target = hit.point + new Vector3(0, yOffset, 0);
 
             Gizmos.DrawLine(Vector3.zero, target);
