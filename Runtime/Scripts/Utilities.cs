@@ -41,6 +41,7 @@ namespace IterationToolkit
         {
             Matrix4x4 previousMatrix = Gizmos.matrix;
             Gizmos.matrix = context.localToWorldMatrix;
+            Color previousColor = Gizmos.color;
             if (prefab == null) return;
             if (filters == null)
                 filters = new List<MeshFilter>();
@@ -62,6 +63,7 @@ namespace IterationToolkit
             foreach (MeshFilter renderer in filters)
                 Gizmos.DrawWireMesh(renderer.sharedMesh, renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
 
+            Gizmos.color = previousColor;
             Gizmos.matrix = previousMatrix;
         }
 
@@ -72,12 +74,12 @@ namespace IterationToolkit
 
             Vector3 target = Vector3.positiveInfinity;
 
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(Vector3.zero, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
                 target = hit.point + new Vector3(0, yOffset, 0);
 
-            Gizmos.DrawLine(transform.position, target);
+            Gizmos.DrawLine(Vector3.zero, target);
 
-            Gizmos.DrawWireCube(transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(0.2f, 0.2f, 0.2f));
             Gizmos.DrawWireCube(target, new Vector3(0.2f, 0.2f, 0.2f));
 
             Gizmos.matrix = previousMatrix;
