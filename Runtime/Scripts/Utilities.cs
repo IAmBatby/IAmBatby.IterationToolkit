@@ -83,7 +83,7 @@ namespace IterationToolkit
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(Vector3.zero - transform.position, new Vector3(0.2f, 0.2f, 0.2f));
             Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(target - transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.DrawWireCube(transform.position - target, new Vector3(0.2f, 0.2f, 0.2f));
 
             Gizmos.color = previousColor;
             Gizmos.matrix = previousMatrix;
