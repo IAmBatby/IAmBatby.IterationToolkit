@@ -1,3 +1,4 @@
+using log4net.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +36,30 @@ namespace IterationToolkit
                         obj.name = genericType.Name + "#" + i;
                 }
             }
+        }
+
+        public static void DrawPrefabPreview(Vector3 position, GameObject prefab, Color primary, Color secondary, ref List<MeshFilter> filters)
+        {
+            if (prefab == null) return;
+            if (filters == null)
+                filters = new List<MeshFilter>();
+            if (filters.Count == 0)
+                foreach (MeshFilter renderer in prefab.GetComponentsInChildren<MeshFilter>())
+                    filters.Add(renderer);
+
+            for (int i = 0;i < filters.Count;i++)
+                if (filters[i].transform.root != prefab)
+                {
+                    filters.Clear();
+                    return;
+                }
+
+            Gizmos.color = new Color(primary.r, primary.g, primary.b, 0.3f);
+            foreach (MeshFilter renderer in filters)
+                Gizmos.DrawMesh(renderer.sharedMesh, position + renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
+            Gizmos.color = new Color(secondary.r, secondary.g, secondary.b, 0.05f);
+            foreach (MeshFilter renderer in filters)
+                Gizmos.DrawWireMesh(renderer.sharedMesh, position + renderer.transform.position, renderer.transform.rotation, renderer.transform.lossyScale);
         }
     }
 }
