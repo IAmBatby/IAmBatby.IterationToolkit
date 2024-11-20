@@ -78,12 +78,12 @@ namespace IterationToolkit
             if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
                 target = hit.point + new Vector3(0, yOffset, 0);
 
-            Gizmos.DrawLine(Vector3.zero - transform.position, target - transform.position);
+            Gizmos.DrawLine(Vector3.zero - transform.position, target);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(Vector3.zero - transform.position, new Vector3(0.2f, 0.2f, 0.2f));
             Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(target - transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.DrawWireCube(target, new Vector3(0.2f, 0.2f, 0.2f));
 
             Gizmos.color = previousColor;
             Gizmos.matrix = previousMatrix;
