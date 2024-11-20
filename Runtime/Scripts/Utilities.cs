@@ -65,17 +65,20 @@ namespace IterationToolkit
             Gizmos.matrix = previousMatrix;
         }
 
-        public static void DrawSnapToGroundPreview(Transform transform, float yOffset = 0f)
+        public static void DrawSnapToGroundPreview(Transform transform, int layerMask = ~0, float yOffset = 0f)
         {
             Matrix4x4 previousMatrix = Gizmos.matrix;
             Gizmos.matrix = transform.localToWorldMatrix;
 
             Vector3 target = Vector3.positiveInfinity;
 
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, ~0))
+            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, layerMask))
                 target = hit.point + new Vector3(0, yOffset, 0);
 
             Gizmos.DrawLine(transform.position, target);
+
+            Gizmos.DrawWireCube(transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.DrawWireCube(target, new Vector3(0.2f, 0.2f, 0.2f));
 
             Gizmos.matrix = previousMatrix;
         }
