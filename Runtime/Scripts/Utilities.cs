@@ -40,8 +40,8 @@ namespace IterationToolkit
         public static void DrawPrefabPreview(Transform context, GameObject prefab, Color primary, Color secondary, ref List<MeshFilter> filters)
         {
             Matrix4x4 previousMatrix = Gizmos.matrix;
-            Gizmos.matrix = context.localToWorldMatrix;
             Color previousColor = Gizmos.color;
+            Gizmos.matrix = context.localToWorldMatrix;
             if (prefab == null) return;
             if (filters == null)
                 filters = new List<MeshFilter>();
@@ -70,6 +70,7 @@ namespace IterationToolkit
         public static void DrawSnapToGroundPreview(Transform transform, int layerMask = ~0, float yOffset = 0f)
         {
             Matrix4x4 previousMatrix = Gizmos.matrix;
+            Color previousColor = Gizmos.color;
             Gizmos.matrix = transform.localToWorldMatrix;
 
             Vector3 target = Vector3.positiveInfinity;
@@ -79,9 +80,12 @@ namespace IterationToolkit
 
             Gizmos.DrawLine(Vector3.zero, target);
 
+            Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.color = Color.green;
             Gizmos.DrawWireCube(target, new Vector3(0.2f, 0.2f, 0.2f));
 
+            Gizmos.color = previousColor;
             Gizmos.matrix = previousMatrix;
         }
 
