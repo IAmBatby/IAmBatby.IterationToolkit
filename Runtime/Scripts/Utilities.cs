@@ -46,13 +46,13 @@ namespace IterationToolkit
             if (filters.Count == 0)
                 foreach (MeshFilter renderer in prefab.GetComponentsInChildren<MeshFilter>())
                     filters.Add(renderer);
-
+            /*
             for (int i = 0;i < filters.Count;i++)
                 if (filters[i].transform.root != prefab)
                 {
                     filters.Clear();
                     return;
-                }
+                }*/
 
             Gizmos.color = new Color(primary.r, primary.g, primary.b, 0.3f);
             foreach (MeshFilter renderer in filters)
