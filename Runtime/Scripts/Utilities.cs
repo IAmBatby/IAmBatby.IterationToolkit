@@ -78,7 +78,7 @@ namespace IterationToolkit
             {
                 DrawLine(Vector3.zero, snapPos - transform.position, Color.white);
                 DrawWireCube(Vector3.zero, boxSize, Color.yellow);
-                DrawLabel(snapPos - transform.position, hit.collider.gameObject.name, Color.green);
+                //DrawLabel(snapPos - transform.position, hit.collider.gameObject.name, Color.green);
                 //DrawWireCube(snapPos - transform.position, boxSize, Color.green);
             }
             else
