@@ -53,7 +53,7 @@ namespace IterationToolkit
                     filters.Add(renderer);
             
             for (int i = 0;i < filters.Count;i++)
-                if (filters[i].transform.root != prefab.transform)
+                if (filters[i] == null || filters[i].transform.root != prefab.transform)
                 {
                     filters.Clear();
                     return;
@@ -138,6 +138,15 @@ namespace IterationToolkit
             Color previousColor = SwitchGizmosColors(color);
 #if UNITY_EDITOR
             Handles.Label(position, text);
+#endif
+            SwitchGizmosColors(previousColor);
+        }
+
+        public static void DrawCircle(Vector3 position, float radius, Color color)
+        {
+            Color previousColor = SwitchGizmosColors(color);
+#if UNITY_EDITOR
+            Handles.DrawWireDisc(position, Vector3.up, radius);
 #endif
             SwitchGizmosColors(previousColor);
         }
