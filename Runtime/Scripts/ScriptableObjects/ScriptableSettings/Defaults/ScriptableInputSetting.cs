@@ -26,6 +26,12 @@ namespace IterationToolkit
             return (false);
         }
 
-        public bool JoystickActive() => (!string.IsNullOrEmpty(Input.GetJoystickNames()[0]));
+        public bool JoystickActive()
+        {
+            string[] joysticks = Input.GetJoystickNames();
+            if (joysticks == null || joysticks.Length == 0 || string.IsNullOrEmpty(joysticks[0]))
+                return (false);
+            return (true);
+        }
     }
 }
