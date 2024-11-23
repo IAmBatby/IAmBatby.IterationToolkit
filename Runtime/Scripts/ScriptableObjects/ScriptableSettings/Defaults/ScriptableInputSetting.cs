@@ -9,7 +9,7 @@ namespace IterationToolkit
     {
         public override List<ValueSetting> GetValues()
         {
-            return (new List<ValueSetting> { InputKeyCode, VirtualAxis });
+            return (new List<ValueSetting> { InputKeyCode, VirtualAxis, JoystickVirtualAxis });
         }
 
         public EnumSetting<KeyCode> InputKeyCode;
