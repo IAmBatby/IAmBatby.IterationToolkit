@@ -19,10 +19,10 @@ namespace IterationToolkit
         public bool GetInputDown()
         {
             bool returnValue = false;
-            if (JoystickActive() && !string.IsNullOrEmpty(VirtualAxis.Value))
-                returnValue = Input.GetButtonDown(VirtualAxis.Value);
-            else if (!string.IsNullOrEmpty(JoystickVirtualAxis.Value))
+            if (JoystickActive() && !string.IsNullOrEmpty(JoystickVirtualAxis.Value))
                 returnValue = Input.GetButtonDown(JoystickVirtualAxis.Value);
+            else if (!string.IsNullOrEmpty(VirtualAxis.Value))
+                returnValue = Input.GetButtonDown(VirtualAxis.Value);
             if (Input.GetKeyDown(InputKeyCode.Value))
                 returnValue = true;
 
