@@ -14,10 +14,16 @@ namespace IterationToolkit
 
         public EnumSetting<KeyCode> InputKeyCode;
         public StringSetting VirtualAxis;
+        public StringSetting JoystickVirtualAxis;
 
         public bool GetInputDown()
         {
-            return (Input.GetKeyDown(InputKeyCode.Value) || (!string.IsNullOrEmpty(VirtualAxis.Value) && Input.GetButtonDown(VirtualAxis.Value)));
+            if (Input.GetKeyDown(InputKeyCode.Value)) return (true);
+            if (!string.IsNullOrEmpty(VirtualAxis.Value) && Input.GetButtonDown(VirtualAxis.Value)) return (true);
+            if (JoystickActive() && !string.IsNullOrEmpty(JoystickVirtualAxis.Value) && Input.GetButtonDown(JoystickVirtualAxis.Value)) return (true);
+            return (false);
         }
+
+        public bool JoystickActive() => (!string.IsNullOrEmpty(Input.GetJoystickNames()[0]));
     }
 }
