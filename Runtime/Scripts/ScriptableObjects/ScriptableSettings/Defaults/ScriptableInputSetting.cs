@@ -7,7 +7,7 @@ namespace IterationToolkit
 
     public enum ControllerInput
     {
-        PRIMARY_SOUTH, PRIMARY_EAST, PRIMARY_WEST, PRIMARY_NORTH,
+        NONE, PRIMARY_SOUTH, PRIMARY_EAST, PRIMARY_WEST, PRIMARY_NORTH,
         DPAD_LEFT, DPAD_RIGHT, DPAD_UP, DPAD_DOWN,
         R1, R2, R3, L1, L2, L3, SELECT, START
     }
