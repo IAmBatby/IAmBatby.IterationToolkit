@@ -73,7 +73,11 @@ namespace IterationToolkit.InputSystem
 
         public static InputDevice CompareActivity(InputDevice firstDevice, InputDevice secondDevice)
         {
-            if (firstDevice.lastUpdateTime > secondDevice.lastUpdateTime)
+            if (firstDevice.wasUpdatedThisFrame == true && secondDevice.wasUpdatedThisFrame == false)
+                return (firstDevice);
+            else if (firstDevice.wasUpdatedThisFrame == false && secondDevice.wasUpdatedThisFrame == true)
+                return (secondDevice);
+            else if (firstDevice.lastUpdateTime > secondDevice.lastUpdateTime)
                 return (firstDevice);
             return (secondDevice);
         }
