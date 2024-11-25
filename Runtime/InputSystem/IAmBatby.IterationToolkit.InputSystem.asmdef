@@ -16,7 +16,7 @@
         {
             "name": "com.unity.inputsystem",
             "expression": "",
-            "define": ""
+            "define": "ENABLE_INPUT_SYSTEM"
         }
     ],
     "noEngineReferences": false
