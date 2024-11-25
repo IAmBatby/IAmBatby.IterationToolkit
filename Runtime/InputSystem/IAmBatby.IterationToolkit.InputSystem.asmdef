@@ -2,8 +2,8 @@
     "name": "IAmBatby.IterationToolkit.InputSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:36bcc334529b5ae47bdc38272e62b4f0",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "IAmBatby.IterationToolkit",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -16,7 +16,7 @@
         {
             "name": "com.unity.inputsystem",
             "expression": "",
-            "define": "ENABLE_INPUT_SYSTEM"
+            "define": "INPUTSYSTEM_PRESENT"
         }
     ],
     "noEngineReferences": false

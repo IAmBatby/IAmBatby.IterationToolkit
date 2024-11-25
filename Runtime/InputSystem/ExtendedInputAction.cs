@@ -1,3 +1,5 @@
+#if INPUTSYSTEM_PRESENT
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -72,3 +74,5 @@ namespace IterationToolkit.InputSystem
         }
     }
 }
+
+#endif
