@@ -4,14 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Utilities;
 
 namespace IterationToolkit.InputSystem
 {
     public enum InputType { Keyboard, Mouse, Gamepad }
     public static class InputUtilities
     {
+        public static InputDevice LastPressedDevice { get; private set; }
+
         private static Dictionary<InputType, string> inputTypeToStringDict = new Dictionary<InputType, string>()
     { {InputType.Keyboard, "<Keyboard>" }, {InputType.Mouse, "<Mouse>" }, {InputType.Gamepad, "<Gamepad>" }};
+
+
+        [RuntimeInitializeOnLoadMethod]
+        private static void ListenForEvents()
+        {
+            UnityEngine.InputSystem.InputSystem.onAnyButtonPress.Call(OnAnyButtonPress);
+        }
+
+        private static void OnAnyButtonPress(InputControl control)
+        {
+            LastPressedDevice = control.device;
+        }
 
         public static InputAction CreateInputAction(string displayName, InputType inputType, KeyCode keyidentifier)
         {
@@ -58,22 +73,27 @@ namespace IterationToolkit.InputSystem
         {
             if (setting == null) return (0f);
 
+            /*
             float returnValue = 0f;
 
             float gamePadInput = PreferGamepadInput() == false ? 0 : GetInputAxis(setting.GamepadInputAxis.Value, setting.UseRawGamepadInputValues.Value);
             float kbmInput = GetInputAxis(setting.InputAxis.Value, setting.UseRawInputValues.Value);
 
-            if (kbmInput != 0)
+            if (kbmInput != 0f)
             {
-                if (kbmInput > 0 && kbmInput > gamePadInput)
+                if (kbmInput > 0f && kbmInput > gamePadInput)
                     returnValue = kbmInput;
-                else if (kbmInput < 0 && kbmInput < gamePadInput)
+                else if (kbmInput < 0f && kbmInput < gamePadInput)
                     returnValue = kbmInput;
                 else
                     returnValue = gamePadInput;
             }
+            */
 
-            return (returnValue);
+            if (Gamepad.current != null && LastPressedDevice == Gamepad.current)
+                return (GetInputAxis(setting.GamepadInputAxis.Value, setting.UseRawGamepadInputValues.Value));
+            else
+                return (GetInputAxis(setting.InputAxis.Value, setting.UseRawInputValues.Value));
         }
 
         private static bool PreferGamepadInput()
