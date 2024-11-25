@@ -57,10 +57,23 @@ namespace IterationToolkit.InputSystem
         public static float GetInputAxis(ScriptableInputSetting setting)
         {
             if (setting == null) return (0f);
-            if (PreferGamepadInput())
-                return (GetInputAxis(setting.GamepadInputAxis.Value, setting.UseRawGamepadInputValues.Value));
 
-            return (GetInputAxis(setting.InputAxis.Value, setting.UseRawInputValues.Value));
+            float returnValue = 0f;
+
+            float gamePadInput = PreferGamepadInput() == false ? 0 : GetInputAxis(setting.GamepadInputAxis.Value, setting.UseRawGamepadInputValues.Value);
+            float kbmInput = GetInputAxis(setting.InputAxis.Value, setting.UseRawInputValues.Value);
+
+            if (kbmInput != 0)
+            {
+                if (kbmInput > 0 && kbmInput > gamePadInput)
+                    returnValue = kbmInput;
+                else if (kbmInput < 0 && kbmInput < gamePadInput)
+                    returnValue = kbmInput;
+                else
+                    returnValue = gamePadInput;
+            }
+
+            return (returnValue);
         }
 
         private static bool PreferGamepadInput()
