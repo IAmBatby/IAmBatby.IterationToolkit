@@ -121,9 +121,11 @@ namespace IterationToolkit.InputSystem
                 _ => 0f
             };
 
-            if (raw == true)
-                value = Mathf.RoundToInt(Mathf.Clamp(value, -1f, 1f));
+            //if (raw == true)
+            //value = Mathf.RoundToInt(Mathf.Clamp(value, -1f, 1f));
 
+            if (raw == true)
+                value = Mathf.RoundToInt(value);
             return (value);
         }
 
