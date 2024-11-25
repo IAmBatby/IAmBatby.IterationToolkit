@@ -116,8 +116,8 @@ namespace IterationToolkit.InputSystem
                 InputAxes.GamepadRightHorizontal => Gamepad.current.rightStick.ReadValue().x,
                 InputAxes.GamepadLeftVertical => Gamepad.current.leftStick.ReadValue().y,
                 InputAxes.GamepadRightVertical => Gamepad.current.rightStick.ReadValue().y,
-                InputAxes.MouseHorizontal => Mouse.current.delta.ReadValue().x,
-                InputAxes.MouseVertical => Mouse.current.delta.ReadValue().y,
+                InputAxes.MouseHorizontal => Mouse.current.delta.ReadUnprocessedValue().x,
+                InputAxes.MouseVertical => Mouse.current.delta.ReadUnprocessedValue().y,
                 _ => 0f
             };
 
