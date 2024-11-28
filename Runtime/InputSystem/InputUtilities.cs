@@ -22,13 +22,16 @@ namespace IterationToolkit.InputSystem
         [RuntimeInitializeOnLoadMethod]
         private static void ListenForEvents()
         {
+            OnDeviceChanged = new ExtendedEvent<InputDevice>();
             UnityEngine.InputSystem.InputSystem.onAnyButtonPress.Call(OnAnyButtonPress);
         }
 
         private static void OnAnyButtonPress(InputControl control)
         {
+            InputDevice cacheDevice = null;
             LastPressedDevice = control.device;
-            OnDeviceChanged.Invoke(LastPressedDevice);
+            if (cacheDevice != control)
+                OnDeviceChanged.Invoke(LastPressedDevice);
         }
 
         public static InputAction CreateInputAction(string displayName, InputType inputType, KeyCode keyidentifier)
