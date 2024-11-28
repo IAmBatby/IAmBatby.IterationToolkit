@@ -13,6 +13,8 @@ namespace IterationToolkit.InputSystem
     {
         public static InputDevice LastPressedDevice { get; private set; }
 
+        public static ExtendedEvent<InputDevice> OnDeviceChanged = new ExtendedEvent<InputDevice>();
+
         private static Dictionary<InputType, string> inputTypeToStringDict = new Dictionary<InputType, string>()
     { {InputType.Keyboard, "<Keyboard>" }, {InputType.Mouse, "<Mouse>" }, {InputType.Gamepad, "<Gamepad>" }};
 
@@ -26,6 +28,7 @@ namespace IterationToolkit.InputSystem
         private static void OnAnyButtonPress(InputControl control)
         {
             LastPressedDevice = control.device;
+            OnDeviceChanged.Invoke(LastPressedDevice);
         }
 
         public static InputAction CreateInputAction(string displayName, InputType inputType, KeyCode keyidentifier)
