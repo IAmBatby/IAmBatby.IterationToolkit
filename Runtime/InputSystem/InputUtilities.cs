@@ -22,7 +22,7 @@ namespace IterationToolkit.InputSystem
         [RuntimeInitializeOnLoadMethod]
         private static void ListenForEvents()
         {
-            LastPressedDevice = null;
+            LastPressedDevice = Keyboard.current;
             OnDeviceChanged = new ExtendedEvent<InputDevice>();
             UnityEngine.InputSystem.InputSystem.onAnyButtonPress.Call(OnAnyButtonPress);
         }
