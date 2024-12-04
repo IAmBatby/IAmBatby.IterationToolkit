@@ -114,6 +114,15 @@ namespace IterationToolkit
             SwitchGizmosColors(previousColor);
         }
 
+        public static void DrawDottedLine(Vector3 to, Vector3 from, Color color, float width)
+        {
+            Color previousColor = SwitchGizmosColors(color);
+#if UNITY_EDITOR
+            Handles.DrawDottedLine(to, from, width);
+#endif
+            SwitchGizmosColors(previousColor);
+        }
+
         public static Color SwitchGizmosColors(Color newColor)
         {
             Color oldColor = Gizmos.color;
