@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     /*
     [CustomPropertyDrawer(typeof(ScriptableSetting), true)]

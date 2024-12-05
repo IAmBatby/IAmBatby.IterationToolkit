@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace IterationToolkit.Editor
 {
-    public static class Utilities
+    public static class EditorUtilities
     {
         public static bool InEditor => IsInEditorCheck();
 
@@ -32,6 +33,14 @@ namespace IterationToolkit.Editor
             }
 
             return (moveTypes);
+        }
+
+        public static List<T> FindAssets<T>(params string[] directories) where T : UnityEngine.Object
+        {
+            List<T> returnList = new List<T>();
+            foreach (string guid in AssetDatabase.FindAssets("t:" + typeof(T).Name, directories))
+                returnList.Add(AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid)));
+            return (returnList);
         }
 
         public static IEnumerable<ScriptableObject> GetScriptableObjects(Type type)

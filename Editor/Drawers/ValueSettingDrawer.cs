@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     [CustomPropertyDrawer(typeof(ValueSetting<>), true)]
     public class ValueSettingDrawer : PropertyDrawer

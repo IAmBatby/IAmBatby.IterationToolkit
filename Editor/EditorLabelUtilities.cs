@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     public enum LayoutOption { None, Horizontal, Vertical }
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     public class DataFieldTable
     {

@@ -1,3 +1,4 @@
+using IterationToolkit.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     public abstract class BulkObjectEditorWindow<T> : EditorWindow where T : UnityEngine.Object
     {

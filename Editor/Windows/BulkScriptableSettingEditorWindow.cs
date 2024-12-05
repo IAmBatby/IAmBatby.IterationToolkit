@@ -1,5 +1,4 @@
 using IterationToolkit;
-using IterationToolkit.ToolkitEditor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEngine;
 
-namespace IterationToolkit.ToolkitEditor
+namespace IterationToolkit.Editor
 {
     public class BulkScriptableSettingEditorWindow : BulkScriptableObjectEditorWindow<ScriptableSetting, Type>
     {
