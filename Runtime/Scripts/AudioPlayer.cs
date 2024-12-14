@@ -19,6 +19,7 @@ namespace IterationToolkit
 
         public void PlayAudio(AudioPreset audioPreset)
         {
+            if (audioPreset == null) return;
             if (!audioSourceDict.ContainsKey(audioPreset.SoundPriority))
                 GenerateNewAudioSource(audioPreset.SoundPriority);
 
@@ -30,6 +31,7 @@ namespace IterationToolkit
 
         public void RegisterAudioSource(int soundPriority, AudioSource audioSource)
         {
+            if (audioSource == null) return;
             if (audioSourceDict.ContainsKey(soundPriority))
                 audioSourceDict[soundPriority] = audioSource;
             else
