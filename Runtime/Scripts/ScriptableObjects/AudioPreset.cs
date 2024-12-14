@@ -12,6 +12,7 @@ namespace IterationToolkit
         public Vector2 audioRandomPitchMinMax;
         [Range(0, 1)]
         public float audioVolume;
+        [field: SerializeField] public int SoundPriority { get; private set; }
 
         [Header("Contextual Values")]
         [Space(10)]
@@ -21,6 +22,6 @@ namespace IterationToolkit
         [Space(10)]
         [Header("Audio Assets")]
         public List<AudioClip> audioRandomClipList = new List<AudioClip>();
-        public AudioMixer audioMixer;
+        [field: SerializeField] public AudioMixerGroup AudioMixerGroup { get; private set; }
     }
 }
