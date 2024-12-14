@@ -41,8 +41,8 @@ namespace IterationToolkit
 
         public static void ApplyAudioData(AudioPreset data, AudioSource source)
         {
-            if (data.audioMixer != null)
-                source.outputAudioMixerGroup  = data.audioMixer.outputAudioMixerGroup;
+            if (data.AudioMixerGroup != null)
+                source.outputAudioMixerGroup = data.AudioMixerGroup;
             source.volume = data.audioVolume;
             source.pitch = Random.Range(data.audioRandomPitchMinMax.x, data.audioRandomPitchMinMax.y);
             if (data.audioRandomClipList.Count > 0)
