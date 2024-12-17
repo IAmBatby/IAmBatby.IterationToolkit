@@ -66,9 +66,9 @@ namespace IterationToolkit.Editor
 
             BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
 
-            //for (int i = 0; i < dataList.Count; i++)
-                //if (dataList[i] != null)
-                    //InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), GetAlternatingColor(i), GUILayout.ExpandWidth(false));
+            for (int i = 0; i < dataList.Count; i++)
+                if (dataList[i] != null)
+                    InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), GUILayout.ExpandWidth(false));
 
             EndLayoutOption(layoutOption);
         }
