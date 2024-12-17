@@ -57,25 +57,25 @@ namespace IterationToolkit.Editor
             rowHeaders = new List<string>(tempStrings);
         }
 
-        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, GUILayoutOption[] layoutOptions = null, GUILayoutOption[] fieldOptions = null)
+        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, List<GUILayoutOption> layoutOptions = null, List<GUILayoutOption> fieldOptions = null)
         {
             if (dataList == null || dataList.Count == 0) return;
 
 
             
-            if (layoutOptions == null)
+            if (layoutOptions != null && layoutOptions.Count > 0)
+            {
+                if (useColors == true)
+                    BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor), layoutOptions.ToArray());
+                else
+                    BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions.ToArray());
+            }
+            else
             {
                 if (useColors == true)
                     BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
                 else
                     BeginLayoutOption(layoutOption, GetNewStyle());
-            }
-            else
-            {
-                if (useColors == true)
-                    BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor), layoutOptions);
-                else
-                    BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions);
             }
             
 
@@ -92,15 +92,15 @@ namespace IterationToolkit.Editor
                 {
                     if (useColors == true)
                     {
-                        if (fieldOptions != null && fieldOptions.Length > 0)
-                            InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), fieldOptions);
+                        if (fieldOptions != null && fieldOptions.Count > 0)
+                            InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), fieldOptions.ToArray());
                         else
                             InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), GUILayout.ExpandWidth(false));
                     }
                     else
                     {
-                        if (fieldOptions != null && fieldOptions.Length > 0)
-                            InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), fieldOptions);
+                        if (fieldOptions != null && fieldOptions.Count > 0)
+                            InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), fieldOptions.ToArray());
                         else
                             InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), GUILayout.ExpandWidth(false));
                     }
