@@ -57,15 +57,12 @@ namespace IterationToolkit.Editor
             rowHeaders = new List<string>(tempStrings);
         }
 
-        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, params GUILayoutOption[] fieldOptions)
+        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, GUILayoutOption[] layoutOptions = null, GUILayoutOption[] fieldOptions = null)
         {
             if (dataList == null || dataList.Count == 0) return;
 
-            if (useColors == true)
-                BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
-            else
-                BeginLayoutOption(layoutOption, GetNewStyle());
-            /*
+
+            
             if (layoutOptions == null)
             {
                 if (useColors == true)
@@ -80,7 +77,7 @@ namespace IterationToolkit.Editor
                 else
                     BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions);
             }
-            */
+            
 
             if (!string.IsNullOrEmpty(headerText))
             {
@@ -95,14 +92,14 @@ namespace IterationToolkit.Editor
                 {
                     if (useColors == true)
                     {
-                        if (fieldOptions.Length > 0)
+                        if (fieldOptions != null && fieldOptions.Length > 0)
                             InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), fieldOptions);
                         else
                             InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), GUILayout.ExpandWidth(false));
                     }
                     else
                     {
-                        if (fieldOptions.Length > 0)
+                        if (fieldOptions != null && fieldOptions.Length > 0)
                             InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), fieldOptions);
                         else
                             InsertField(dataList[i], layoutOption, GetNewStyle(fontSize: TextFontSize), GUILayout.ExpandWidth(false));
