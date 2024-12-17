@@ -61,23 +61,23 @@ namespace IterationToolkit.Editor
         {
             if (dataList == null || dataList.Count == 0) return;
 
-            if (useColors)
+            if (useColors == true)
                 BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
             else
                 BeginLayoutOption(layoutOption, GetNewStyle());
 
             if (!string.IsNullOrEmpty(headerText))
             {
-                if (useColors)
-                    EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(fontSize: HeaderFontSize));
-                else
+                if (useColors == true)
                     EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(HeaderColor, fontSize: HeaderFontSize));
+                else
+                    EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(fontSize: HeaderFontSize));
             }
 
             for (int i = 0; i < dataList.Count; i++)
                 if (dataList[i] != null)
                 {
-                    if (useColors)
+                    if (useColors == true)
                     {
                         if (options.Length > 0)
                             InsertField(dataList[i], layoutOption, GetNewStyle(GetAlternatingColor(i), fontSize: TextFontSize), options);
