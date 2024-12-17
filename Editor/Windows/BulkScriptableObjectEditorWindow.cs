@@ -151,7 +151,12 @@ namespace IterationToolkit.Editor
                 }
             }
             selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
-            selectedScriptableSetting = settingsDict[selectedScriptableSettingsType].First();
+            if (settingsDict != null && settingsDict.TryGetValue(selectedScriptableSettingsType, out List<T> values))
+                selectedScriptableSetting = values.First();
+            else
+                return;
+
+            if (selectedScriptableSetting == null) return;
 
             List<string> newParentNames = new List<string>();
             foreach (P parent in settingsDict.Keys)
