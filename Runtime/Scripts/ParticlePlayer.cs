@@ -48,6 +48,13 @@ namespace IterationToolkit
             module.duration = preset.Duration;
         }
 
+        public void DetatchParticles()
+        {
+            foreach (KeyValuePair<ParticleSystem, ParticleSystem> kvp in assetToInstancedParticleDict)
+                if (kvp.Value != null)
+                    kvp.Value.transform.SetParent(null, true);
+        }
+
         public void StopParticle(ParticlePreset preset)
         {
             if (preset == null || preset.Particle == null) return;
