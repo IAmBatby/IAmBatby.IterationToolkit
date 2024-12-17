@@ -61,10 +61,10 @@ namespace IterationToolkit.Editor
         {
             if (dataList == null || dataList.Count == 0) return;
 
+            BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
+
             if (!string.IsNullOrEmpty(headerText))
                 EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(HeaderColor, fontSize: HeaderFontSize));
-
-            BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
 
             for (int i = 0; i < dataList.Count; i++)
                 if (dataList[i] != null)
