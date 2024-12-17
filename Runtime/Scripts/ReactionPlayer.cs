@@ -19,5 +19,21 @@ namespace IterationToolkit
             newPlayer.Particles = ParticlePlayer.Create(newPlayer);
             return (newPlayer);
         }
+
+        public void Play(ReactionInfo info)
+        {
+            Audio.PlayAudio(info.AudioPreset);
+            Particles.PlayParticle(info.ParticlePreset);
+        }
+
+        public void Play(AudioPreset audioPreset)
+        {
+            Audio.PlayAudio(audioPreset);
+        }
+
+        public void Play(ParticlePreset particlePreset)
+        {
+            Particles.PlayParticle(particlePreset);
+        }
     }
 }

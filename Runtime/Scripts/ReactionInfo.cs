@@ -5,9 +5,9 @@ using UnityEngine;
 namespace IterationToolkit
 {
     [System.Serializable]
-    public class ReactionInfo
+    public struct ReactionInfo
     {
         [field: SerializeField] public AudioPreset AudioPreset { get; private set; }
-        [field: SerializeField] public ParticlePlayer ParticlePreset { get; private set; }
+        [field: SerializeField] public ParticlePreset ParticlePreset { get; private set; }
     }
 }
