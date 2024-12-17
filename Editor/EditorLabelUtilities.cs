@@ -62,11 +62,20 @@ namespace IterationToolkit.Editor
             if (dataList == null || dataList.Count == 0) return;
 
             if (layoutOptions == null)
-                layoutOptions = new GUILayoutOption[0];
-            if (useColors == true)
-                BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor), layoutOptions);
+            {
+                if (useColors == true)
+                    BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
+                else
+                    BeginLayoutOption(layoutOption, GetNewStyle());
+            }
             else
-                BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions);
+            {
+                if (useColors == true)
+                    BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor), layoutOptions);
+                else
+                    BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions);
+            }
+
 
             if (!string.IsNullOrEmpty(headerText))
             {
