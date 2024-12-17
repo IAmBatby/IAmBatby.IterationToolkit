@@ -26,8 +26,7 @@ namespace IterationToolkit
             {
                 ParticleSystem newInstance = GameObject.Instantiate(preset.Particle);
                 newInstance.transform.position = transform.position;
-                newInstance.transform.SetParent(transform);
-                newInstance.transform.position = Vector3.zero;
+                newInstance.transform.SetParent(transform, true);
                 assetToInstancedParticleDict.Add(preset.Particle, newInstance);
                 systemToPlay = newInstance;
             }
