@@ -57,7 +57,7 @@ namespace IterationToolkit.Editor
             rowHeaders = new List<string>(tempStrings);
         }
 
-        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, GUILayoutOption[] layoutOptions = null, params GUILayoutOption[] fieldOptions)
+        public static void InsertFieldDataColumn(string headerText, List<SerializedProperty> dataList, LayoutOption layoutOption, bool useColors = true, params GUILayoutOption[] fieldOptions)
         {
             if (dataList == null || dataList.Count == 0) return;
 
