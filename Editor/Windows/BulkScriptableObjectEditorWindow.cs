@@ -151,7 +151,7 @@ namespace IterationToolkit.Editor
                 }
             }
             selectedScriptableSettingsType = settingsDict.Keys.FirstOrDefault();
-            if (settingsDict != null && settingsDict.TryGetValue(selectedScriptableSettingsType, out List<T> values))
+            if (settingsDict != null && selectedScriptableSettingsType != null && settingsDict.TryGetValue(selectedScriptableSettingsType, out List<T> values))
                 selectedScriptableSetting = values.First();
             else
                 return;
