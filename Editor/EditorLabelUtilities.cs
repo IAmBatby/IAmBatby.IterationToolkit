@@ -61,6 +61,11 @@ namespace IterationToolkit.Editor
         {
             if (dataList == null || dataList.Count == 0) return;
 
+            if (useColors == true)
+                BeginLayoutOption(layoutOption, GetNewStyle(HeaderColor));
+            else
+                BeginLayoutOption(layoutOption, GetNewStyle());
+            /*
             if (layoutOptions == null)
             {
                 if (useColors == true)
@@ -75,7 +80,7 @@ namespace IterationToolkit.Editor
                 else
                     BeginLayoutOption(layoutOption, GetNewStyle(), layoutOptions);
             }
-
+            */
 
             if (!string.IsNullOrEmpty(headerText))
             {
