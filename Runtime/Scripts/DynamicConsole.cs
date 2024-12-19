@@ -137,7 +137,7 @@ namespace IterationToolkit
             //else
                 //fakeScrollbar = GUILayout.BeginScrollView(fakeScrollbar, false, alwaysShowVertical: true, GUILayout.Height(200));
             for (int i = 0; i < logLines.Count; i++)
-                    GUILayout.Label(GetMessageStart(i) + logLines[i], labelStyle);
+                    GUILayout.Label(logLines[i], labelStyle);
 
             previousCount = logLines.Count;
             GUILayout.EndScrollView();
