@@ -12,7 +12,7 @@ public static class ExtendedEventManager
     {
         if (registeredEvents == null) return;
         int clearCount = 0;
-        for (int i = registeredEvents.Count; i > 0; i--)
+        for (int i = registeredEvents.Count - 1; i > 0; i--)
         {
             if (registeredEvents[i] == null)
                 registeredEvents.RemoveAt(i);
