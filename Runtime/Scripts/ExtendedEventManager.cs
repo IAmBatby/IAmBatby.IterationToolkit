@@ -23,7 +23,6 @@ public static class ExtendedEventManager
             }
         }
         Debug.Log("Cleared #" + clearCount + " Static ExtendedEvents.");
-        registeredEvents.Clear();
     }
 
     public static void RegisterExtendedEvent(ExtendedEvent extendedEvent)
