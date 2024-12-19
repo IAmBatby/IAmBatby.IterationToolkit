@@ -27,8 +27,8 @@ public class TimerEvent : MonoBehaviour
         }
 
         timer = new Timer();
-        timer.onTimerStart.AddListener(OnTimerStart.Invoke);
-        timer.onTimerEnd.AddListener(OnTimerFinish.Invoke);
+        timer.OnTimerStart.AddListener(OnTimerStart.Invoke);
+        timer.OnTimerFinish.AddListener(OnTimerFinish.Invoke);
         timer.StartTimer(this, time);
     }
 }

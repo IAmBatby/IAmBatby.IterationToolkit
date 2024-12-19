@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,38 +8,35 @@ namespace IterationToolkit
     [System.Serializable]
     public class Timer
     {
-        private Coroutine coroutine;
-        private MonoBehaviour coroutineHostBehaviour;
-
-        private float ComparisonTime => IsPaused ? lastResumedTime : startTime;
-
-        public float Progress => coroutine == null ? 0f : (currentTimerLength - (ComparisonTime - Time.time)) - currentTimerLength;
-
-        public float TimeElapsed
-        {
-            get
-            {
-                if (IsPaused)
-                    return (cachedTime);
-                else
-                {
-                    return ((Time.time - startTime) + cachedTime);
-                }
-            }
-        }
-
-        public bool IsRunning => (coroutine != null);
-        public bool IsPaused { get; private set; }
-
         [SerializeField] private float lastResumedTime;
         [SerializeField] private float lastPausedTime = 0f;
         [SerializeField] private float startTime;
         [SerializeField] private float currentTimerLength;
-
         [SerializeField] private float cachedTime;
+        private Coroutine coroutine;
+        private MonoBehaviour coroutineHostBehaviour;
+        private float ComparisonTime => IsPaused ? lastResumedTime : startTime;
 
-        public ExtendedEvent onTimerStart = new ExtendedEvent();
-        public ExtendedEvent onTimerEnd = new ExtendedEvent();
+        public float Progress => coroutine == null ? 0f : (currentTimerLength - (ComparisonTime - Time.time)) - currentTimerLength;
+        public float TimeElapsed => IsPaused ? cachedTime : (Time.time - startTime) + cachedTime;
+        public bool IsRunning => (coroutine != null);
+        public bool IsPaused { get; private set; }
+
+        public ExtendedEvent OnTimerStart { get; private set; } = new ExtendedEvent();
+        public ExtendedEvent OnTimerFinish { get; private set; } = new ExtendedEvent();
+
+        public Timer(MonoBehaviour host, float time, params Action[] onFinishCallbacks)
+        {
+            foreach (Action endCallback in onFinishCallbacks)
+                OnTimerFinish.AddListener(endCallback);
+            StartTimer(host, time);
+        }
+
+        public Timer(params Action[] onFinishCallbacks)
+        {
+            foreach (Action endCallback in onFinishCallbacks)
+                OnTimerFinish.AddListener(endCallback);
+        }
 
         public void StartTimer(MonoBehaviour host, float time = Mathf.Infinity)
         {
@@ -67,8 +65,7 @@ namespace IterationToolkit
             else
                 startTime = Time.time;
 
-            string text = IsPaused ? "Pausing" : "Unpausing";
-            Debug.Log(text + " Timer! Elapsed Time Is: " + TimeElapsed);
+            Debug.Log((IsPaused ? "Pausing" : "Unpausing") + " Timer! Elapsed Time Is: " + TimeElapsed);
         }
 
         public bool TryStopTimer()
@@ -87,15 +84,18 @@ namespace IterationToolkit
             startTime = Time.time;
             cachedTime = 0f;
 
-            InvokeTimerEvent(onTimerStart);
+            if (coroutineHostBehaviour != null)
+                InvokeTimerEvent(OnTimerStart);
 
             yield return new WaitForSeconds(time);
 
-            currentTimerLength = 0f;
-            startTime = 0f;
+            //I had these when I setup timer pausing but i think i want these off so i can still sample the finished progress
+            //currentTimerLength = 0f;
+            //startTime = 0f;
 
             coroutine = null;
-            InvokeTimerEvent(onTimerEnd);
+            if (coroutineHostBehaviour != null)
+                InvokeTimerEvent(OnTimerFinish);
         }
 
         protected virtual void InvokeTimerEvent(ExtendedEvent timerEvent)
@@ -108,8 +108,8 @@ namespace IterationToolkit
     {
         public T Value { get; private set; }
 
-        public new ExtendedEvent<T> onTimerStart = new ExtendedEvent<T>();
-        public new ExtendedEvent<T> onTimerEnd = new ExtendedEvent<T>();
+        public new ExtendedEvent<T> OnTimerStart { get; private set; } = new ExtendedEvent<T>();
+        public new ExtendedEvent<T> OnTimerFinish { get; private set; } = new ExtendedEvent<T>();
 
         public Timer(T newValue)
         {
@@ -118,10 +118,10 @@ namespace IterationToolkit
 
         protected override void InvokeTimerEvent(ExtendedEvent timerEvent)
         {
-            if (timerEvent == base.onTimerEnd)
-                onTimerEnd.Invoke(Value);
-            else if (timerEvent == base.onTimerStart)
-                onTimerStart.Invoke(Value);
+            if (timerEvent == base.OnTimerStart)
+                OnTimerStart.Invoke(Value);
+            else if (timerEvent == base.OnTimerFinish)
+                OnTimerFinish.Invoke(Value);
 
         }
     }
