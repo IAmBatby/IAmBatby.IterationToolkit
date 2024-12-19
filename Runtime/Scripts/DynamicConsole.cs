@@ -20,6 +20,8 @@ namespace IterationToolkit
 
         private static Vector2 consoleScrollView;
 
+        private static int previousCount;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
         {
@@ -127,6 +129,8 @@ namespace IterationToolkit
             GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), headerStyle);
             GUILayout.Space(10);
             List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
+            if (logLines.Count > previousCount)
+                consoleScrollView = new Vector2(0, 9999999999);
             Vector2 fakeScrollbar = new Vector2(0, 99999999);
             //if (rect.Contains(Input.mousePosition))
                 consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
@@ -134,6 +138,8 @@ namespace IterationToolkit
                 //fakeScrollbar = GUILayout.BeginScrollView(fakeScrollbar, false, alwaysShowVertical: true, GUILayout.Height(200));
             for (int i = 0; i < logLines.Count; i++)
                     GUILayout.Label(GetMessageStart(i) + logLines[i], labelStyle);
+
+            previousCount = logLines.Count;
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
