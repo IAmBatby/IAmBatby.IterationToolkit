@@ -129,7 +129,7 @@ namespace IterationToolkit
             List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
             Vector2 fakeScrollbar = new Vector2(0, 99999999);
             //if (rect.Contains(Input.mousePosition))
-                consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true, GUILayout.Height(200));
+                consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
             //else
                 //fakeScrollbar = GUILayout.BeginScrollView(fakeScrollbar, false, alwaysShowVertical: true, GUILayout.Height(200));
             for (int i = 0; i < logLines.Count; i++)
