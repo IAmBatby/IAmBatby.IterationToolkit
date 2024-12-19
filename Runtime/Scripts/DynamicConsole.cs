@@ -6,24 +6,24 @@ namespace IterationToolkit
 {
     public static class DynamicConsole
     {
-        public static ExtendedEvent OnLoggerModified { get; private set; } = new ExtendedEvent();
-
-        public static SelectableCollection<Logger> ActiveLogs { get; private set; }
         private static Dictionary<string, Logger> loggerDict = new Dictionary<string, Logger>();
         private static List<Logger> loggerList = new List<Logger>();
-        private static int maxLines = 12;
+
+        public static SelectableCollection<Logger> ActiveLogs { get; private set; }
+        public static int MaxLines { get; private set; } = 12;
+        public static ExtendedEvent OnLoggerModified { get; private set; } = new ExtendedEvent();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
         {
+            OnLoggerModified = new ExtendedEvent();
             loggerDict.Clear();
             loggerList.Clear();
             ActiveLogs = null;
         }
-
+        /*
         public static void SetLoggers(List<Logger> loggers, int newMaxLines)
         {
-            OnLoggerModified = new ExtendedEvent();
             loggerList.Clear();
             loggerDict.Clear();
             maxLines = newMaxLines;
@@ -42,6 +42,24 @@ namespace IterationToolkit
             }
             ActiveLogs = new SelectableCollection<Logger>(loggers);
             ActiveLogs.AssignOnSelected(InvokeLogModified);
+        }*/
+
+        public static bool TryAddLogger(string loggerName, out Logger newLogger)
+        {
+            newLogger = null;
+            if (loggerDict.ContainsKey(loggerName))
+            {
+                Debug.LogWarning("Can't initialize logger as it's logname already initialized!");
+                return (false);
+            }
+            newLogger = new Logger(loggerName, MaxLines);
+            loggerDict.Add(loggerName, newLogger);
+            loggerList.Add(newLogger);
+            if (ActiveLogs == null)
+                ActiveLogs = new SelectableCollection<Logger>(loggerList);
+            ActiveLogs.AddObject(newLogger);
+
+            return (true);
         }
 
         public static List<Logger> GetLoggers() => new List<Logger>(loggerList);
@@ -78,7 +96,7 @@ namespace IterationToolkit
 
         public static Logger Register(string logName, ref List<Logger> loggers)
         {
-            Logger newLogger = new Logger(logName, maxLines);
+            Logger newLogger = new Logger(logName, MaxLines);
             loggers.Add(newLogger);
             return (newLogger);
         }
