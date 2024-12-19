@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static IterationToolkit.ExtendedEvent<T>;
 
 namespace IterationToolkit
 {
@@ -111,18 +112,18 @@ namespace IterationToolkit
         public new ExtendedEvent<T> OnTimerStart { get; private set; } = new ExtendedEvent<T>();
         public new ExtendedEvent<T> OnTimerFinish { get; private set; } = new ExtendedEvent<T>();
 
-        public Timer(MonoBehaviour host, float time, T newValue, params Action[] onFinishCallbacks)
+        public Timer(MonoBehaviour host, float time, T newValue, params ParameterEvent<T>[] onFinishCallbacks)
         {
             Value = newValue;
-            foreach (Action endCallback in onFinishCallbacks)
+            foreach (ParameterEvent<T> endCallback in onFinishCallbacks)
                 OnTimerFinish.AddListener(endCallback);
             StartTimer(host, time);
         }
 
-        public Timer(T newValue, params Action[] onFinishCallbacks)
+        public Timer(T newValue, params ParameterEvent<T>[] onFinishCallbacks)
         {
             Value = newValue;
-            foreach (Action endCallback in onFinishCallbacks)
+            foreach (ParameterEvent<T> endCallback in onFinishCallbacks)
                 OnTimerFinish.AddListener(endCallback);
         }
 

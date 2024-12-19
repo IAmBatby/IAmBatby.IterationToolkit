@@ -18,10 +18,10 @@ namespace IterationToolkit
         public void RemoveListener(Action listener) { onEvent -= listener; Listeners--; }
     }
 
+    public delegate void ParameterEvent<T>(T param);
     public class ExtendedEvent<T> : ExtendedEvent
     {
-        public delegate void ParameterEvent(T param);
-        private event ParameterEvent onParameterEvent;
+        private event ParameterEvent<T> onParameterEvent;
 
         public void Invoke(T param)
         {
@@ -29,8 +29,8 @@ namespace IterationToolkit
             Invoke();
         }
 
-        public void AddListener(ParameterEvent listener) { onParameterEvent += listener; Listeners++; }
-        public void RemoveListener(ParameterEvent listener) { onParameterEvent -= listener; Listeners--; }
+        public void AddListener(ParameterEvent<T> listener) { onParameterEvent += listener; Listeners++; }
+        public void RemoveListener(ParameterEvent<T> listener) { onParameterEvent -= listener; Listeners--; }
     }
 }
 
