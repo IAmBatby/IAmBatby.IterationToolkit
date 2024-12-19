@@ -7,7 +7,7 @@ public static class ExtendedEventManager
 {
     private static List<ExtendedEvent> registeredEvents = new List<ExtendedEvent>();
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ClearEvents()
     {
         if (registeredEvents == null) return;
