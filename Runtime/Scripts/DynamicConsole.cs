@@ -18,6 +18,8 @@ namespace IterationToolkit
         private static float consoleWidthScale = 2f;
         private static float consoleHeightScale = 4.25f;
 
+        private static Vector2 consoleScrollView;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
         {
@@ -125,12 +127,18 @@ namespace IterationToolkit
             GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), headerStyle);
             GUILayout.Space(10);
             List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
-            for (int i = 0; i < MaxLines; i++)
-                if (i < logLines.Count)
-                    GUILayout.Label(logLines[i], labelStyle);
+            Vector2 fakeScrollbar = new Vector2(0, 99999999);
+            //if (rect.Contains(Input.mousePosition))
+                consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true, GUILayout.Height(200));
+            //else
+                //fakeScrollbar = GUILayout.BeginScrollView(fakeScrollbar, false, alwaysShowVertical: true, GUILayout.Height(200));
+            for (int i = 0; i < logLines.Count; i++)
+                    GUILayout.Label(GetMessageStart(i) + logLines[i], labelStyle);
+            GUILayout.EndScrollView();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
+            GUILayout.FlexibleSpace();
         }
 
         private static string GetMessageStart(int index) => (("[" + Time.time.ToString("F2") + "] ".ToBold()).Colorize(Color.white));

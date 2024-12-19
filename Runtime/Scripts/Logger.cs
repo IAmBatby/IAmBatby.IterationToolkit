@@ -28,12 +28,18 @@ namespace IterationToolkit
             activeRawLogLines.Clear();
         }
 
-        public List<string> GetLogLines(bool getRaw = false)
+        public List<string> GetLogLines(bool getRaw = false, int maxLines = 0)
         {
+            List<string> logLines;
             if (getRaw == false)
-                return new List<string>(activeLogLines);
+                logLines = new List<string>(activeLogLines);
             else
-                return new List<string>(activeRawLogLines);
+                logLines = new List<string>(activeRawLogLines);
+
+            if (maxLines > 0 && logLines.Count > maxLines)
+                logLines.RemoveRange(maxLines, logLines.Count - maxLines);
+
+            return (logLines);
         }
 
         public void LogInfo(string messageName, string messageInfo)
@@ -90,10 +96,11 @@ namespace IterationToolkit
             activeLogLines.Add(decoratedMessage);
             activeRawLogLines.Add(rawMessage);
 
+            /*
             if (activeLogLines.Count == maxLogLines)
                 activeLogLines.RemoveAt(0);
             if (activeRawLogLines.Count == maxLogLines)
-                activeRawLogLines.RemoveAt(0);
+                activeRawLogLines.RemoveAt(0);*/
 
             onLogAdded.Invoke();
         }
