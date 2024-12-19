@@ -4,59 +4,76 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    [System.Serializable]
-    public class DynamicConsole
+    public static class DynamicConsole
     {
-        public ExtendedEvent onLoggerModified = new ExtendedEvent();
+        public static ExtendedEvent OnLoggerModified { get; private set; } = new ExtendedEvent();
 
-        public SelectableCollection<Logger> selectableLogger;
+        public static SelectableCollection<Logger> ActiveLogs { get; private set; }
+        private static Dictionary<string, Logger> loggerDict = new Dictionary<string, Logger>();
+        private static List<Logger> loggerList = new List<Logger>();
+        private static int maxLines = 12;
 
-        public DynamicConsole(int maxLines)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Initialize()
         {
-            InitializeLoggers(GetLoggers(maxLines));
+            loggerDict.Clear();
+            loggerList.Clear();
+            ActiveLogs = null;
         }
 
-        public virtual List<Logger> GetLoggers(int maxLines)
+        public static void SetLoggers(List<Logger> loggers, int newMaxLines)
         {
-            return (new List<Logger>());
-        }
-
-        public void InitializeLoggers(List<Logger> loggers)
-        {
-            selectableLogger = new SelectableCollection<Logger>(loggers);
-            selectableLogger.AssignOnSelected(InvokeLogModified);
+            OnLoggerModified = new ExtendedEvent();
+            loggerList.Clear();
+            loggerDict.Clear();
+            maxLines = newMaxLines;
             foreach (Logger logger in loggers)
-                logger.onLogAdded.AddListener(InvokeLogModified);
+            {
+                if (loggerDict.ContainsKey(logger.logName))
+                    Debug.LogWarning("Can't initialize logger as it's logname already initialized!");
+                else
+                    loggerDict.Add(logger.logName, logger);
+            }
+
+            foreach (KeyValuePair<string, Logger> kvp in loggerDict)
+            {
+                loggerList.Add(kvp.Value);
+                kvp.Value.onLogAdded.AddListener(InvokeLogModified);
+            }
+            ActiveLogs = new SelectableCollection<Logger>(loggers);
+            ActiveLogs.AssignOnSelected(InvokeLogModified);
         }
 
-        public void ClearLog(Logger logger)
+        public static List<Logger> GetLoggers() => new List<Logger>(loggerList);
+
+        public static void ClearLog(Logger logger)
         {
             logger.activeLogLines.Clear();
         }
 
-        public void AddLog(Logger logger, string message)
+        public static void AddLog(Logger logger, string message)
         {
             logger.LogInfo(message);
         }
 
-        public string GetActiveLog()
+        public static string GetActiveLog()
         {
-            return (selectableLogger.ActiveSelection.GetLog());
+            return (ActiveLogs.ActiveSelection.GetLog());
         }
 
-        public void ToggleForward()
+        public static void ToggleForward()
         {
-            selectableLogger.SelectForward();
+            ActiveLogs.SelectForward();
         }
 
-        public void ToggleBackward()
+        public static void ToggleBackward()
         {
-            selectableLogger.SelectBackward();
+            ActiveLogs.SelectBackward();
         }
 
-        public void InvokeLogModified()
+        public static void InvokeLogModified()
         {
-            onLoggerModified.Invoke();
+            OnLoggerModified.Invoke();
         }
     }
 }
