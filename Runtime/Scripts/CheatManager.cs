@@ -52,7 +52,7 @@ namespace IterationToolkit
             GUILayout.Space(10);
 
             consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
-            List<CheatEntry> activeCheats = registeredCheats[cheatCategories.ActiveSelection];
+            List<CheatEntry> activeCheats = new List<CheatEntry>(registeredCheats[cheatCategories.ActiveSelection]);
             for (int i = 0; i < activeCheats.Count; i++)
             {
                 GUILayout.BeginHorizontal();
