@@ -75,5 +75,12 @@ namespace IterationToolkit
         {
             OnLoggerModified.Invoke();
         }
+
+        public static Logger Register(string logName, ref List<Logger> loggers)
+        {
+            Logger newLogger = new Logger(logName, maxLines);
+            loggers.Add(newLogger);
+            return (newLogger);
+        }
     }
 }
