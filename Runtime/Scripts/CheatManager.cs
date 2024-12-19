@@ -102,7 +102,12 @@ namespace IterationToolkit
         private static void AddCheat(CheatEntry cheat, string category)
         {
             if (registeredCheats.TryGetValue(category, out List<CheatEntry> cheats))
+            {
+                foreach (CheatEntry cheatEntry in cheats)
+                    if (cheatEntry.Compare(cheat) == true)
+                        return;
                 cheats.Add(cheat);
+            }
             else
             {
                 registeredCheats.Add(category, new List<CheatEntry> { cheat });
@@ -121,27 +126,36 @@ namespace IterationToolkit
 
     public class CheatEntry
     {
-        protected Action cheatEvent;
+        public Action CheatEvent { get; private set; }
 
-        public void SetCheat(Action newCheatEvent) => cheatEvent = newCheatEvent;
+        public void SetCheat(Action newCheatEvent) => CheatEvent = newCheatEvent;
 
-        public virtual void Cheat() => cheatEvent?.Invoke();
+        public virtual void Cheat() => CheatEvent?.Invoke();
 
-        public virtual string GetCheatName() => cheatEvent?.Method.Name;
+        public virtual string GetCheatName() => CheatEvent?.Method.Name;
+
+        public virtual bool Compare(CheatEntry entry) => (entry.CheatEvent == CheatEvent);
     }
 
     public class CheatEntry<T> : CheatEntry
     {
-        private T value;
-        private ParameterEvent<T> valueCheatEvent;
+        public T Value { get; private set; }
+        public ParameterEvent<T> ValueCheatEvent { get; private set; }
 
         public void SetCheat(ParameterEvent<T> newCheatEvent, T newValue)
         {
-            value = newValue;
-            valueCheatEvent = newCheatEvent;
+            Value = newValue;
+            ValueCheatEvent = newCheatEvent;
         }
 
-        public override void Cheat() => valueCheatEvent?.Invoke(value);
-        public override string GetCheatName() => GUIUtilities.GetName(value);
+        public override void Cheat() => ValueCheatEvent?.Invoke(Value);
+        public override string GetCheatName() => GUIUtilities.GetName(Value);
+        public override bool Compare(CheatEntry entry)
+        {
+            if (entry is CheatEntry<T> castEntry)
+                if (castEntry.ValueCheatEvent == ValueCheatEvent && GUIUtilities.GetName(Value) == GUIUtilities.GetName(castEntry.Value))
+                    return (true);
+            return (false);
+        }
     }
 }
