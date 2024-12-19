@@ -1,3 +1,4 @@
+using Codice.LogWrapper;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,11 +47,17 @@ namespace IterationToolkit
 
         public static bool TryAddLogger(string loggerName, out Logger newLogger)
         {
-            newLogger = null;
+            newLogger = AddLogger(loggerName);
+            return (newLogger != null);
+        }
+
+        public static Logger AddLogger(string loggerName)
+        {
+            Logger newLogger = null;
             if (loggerDict.ContainsKey(loggerName))
             {
                 Debug.LogWarning("Can't initialize logger as it's logname already initialized!");
-                return (false);
+                return (newLogger);
             }
             newLogger = new Logger(loggerName, MaxLines);
             loggerDict.Add(loggerName, newLogger);
@@ -58,8 +65,7 @@ namespace IterationToolkit
             if (ActiveLogs == null)
                 ActiveLogs = new SelectableCollection<Logger>(loggerList);
             ActiveLogs.AddObject(newLogger);
-
-            return (true);
+            return (newLogger);
         }
 
         public static List<Logger> GetLoggers() => new List<Logger>(loggerList);
