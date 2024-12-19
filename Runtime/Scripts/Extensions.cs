@@ -36,8 +36,8 @@ namespace IterationToolkit
 
         public static string Colorize(this string input, Color color, RichTextType textType = RichTextType.UGUI)
         {
-            string startingTag = textType == RichTextType.UGUI ? "<color=" : "<color=#";
-            return (startingTag + ColorUtility.ToHtmlStringRGB(color) + ">" + input + "</color>");
+            string startingTag = textType == RichTextType.UGUI ? "<color=#" : "<color=#";
+            return (startingTag + ColorUtility.ToHtmlStringRGBA(color) + ">" + input + "</color>");
         }
 
         public static string Colorize(this string input)

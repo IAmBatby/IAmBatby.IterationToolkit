@@ -1,4 +1,5 @@
 using Codice.LogWrapper;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace IterationToolkit
         public static SelectableCollection<Logger> ActiveLogs { get; private set; }
         public static int MaxLines { get; private set; } = 12;
         public static ExtendedEvent OnLoggerModified { get; private set; } = new ExtendedEvent();
+
+        private static float consoleWidthScale = 2f;
+        private static float consoleHeightScale = 4.25f;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
@@ -56,7 +60,7 @@ namespace IterationToolkit
 
         public static void ClearLog(Logger logger)
         {
-            logger.activeLogLines.Clear();
+            logger.Clear();
         }
 
         public static void AddLog(Logger logger, string message)
@@ -90,5 +94,45 @@ namespace IterationToolkit
             loggers.Add(newLogger);
             return (newLogger);
         }
+
+        public static void SetRenderedConsoleValues(float newWidthScale, float newHeightScale)
+        {
+            consoleHeightScale = newHeightScale;
+            consoleWidthScale = newWidthScale;
+        }
+
+        public static void RenderConsole()
+        {
+            Color backgroundColor = Color.black.SetAlpha(0.45f);
+            GUIStyle backgroundStyle = LabelUtilities.CreateStyle(enableRichText: true, backgroundColor);
+            //GUIStyle logStyle = LabelUtilities.CreateStyle(enableRichText: true, new Color(0,0,0,0));
+            GUIStyle labelStyle = LabelUtilities.CreateStyle(true);
+            GUIStyle headerStyle = LabelUtilities.CreateStyle(true);
+            labelStyle.richText = true;
+            headerStyle.fontSize = 18;
+            //labelStyle.normal.textColor = Color.white;
+            float smallest = Mathf.Min(Screen.width, Screen.height);
+
+            float consoleWidth = smallest / consoleWidthScale;
+            float consoleHeight = smallest / consoleHeightScale;
+
+            Rect rect = new Rect(0 + (consoleWidth / 12.5f), Screen.height - (consoleHeight + (consoleHeight / 4.5f)), consoleWidth, consoleHeight);
+            GUILayout.BeginArea(rect, backgroundStyle);
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(10);
+            GUILayout.BeginVertical();
+            GUILayout.Space(10);
+            GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), headerStyle);
+            GUILayout.Space(10);
+            List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
+            for (int i = 0; i < MaxLines; i++)
+                if (i < logLines.Count)
+                    GUILayout.Label(GetMessageStart(i) + logLines[i], labelStyle);
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
+        }
+
+        private static string GetMessageStart(int index) => (("#" + index + ": ".ToBold()).Colorize(Color.white));
     }
 }

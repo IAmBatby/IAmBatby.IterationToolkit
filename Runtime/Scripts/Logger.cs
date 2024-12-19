@@ -9,16 +9,16 @@ namespace IterationToolkit
     [System.Serializable]
     public class Logger
     {
-        public string logName;
-        public List<string> activeLogLines = new List<string>();
-        public List<string> activeRawLogLines = new List<string>();
-        public int maxLogLines;
+        public string LogName { get; private set; }
+        private List<string> activeLogLines = new List<string>();
+        private List<string> activeRawLogLines = new List<string>();
+        private int maxLogLines;
 
         public ExtendedEvent onLogAdded = new ExtendedEvent();
 
         public Logger(string newLogName, int newMaxLogLines)
         {
-            logName = newLogName;
+            LogName = newLogName;
             maxLogLines = newMaxLogLines;
         }
 
@@ -26,6 +26,14 @@ namespace IterationToolkit
         {
             activeLogLines.Clear();
             activeRawLogLines.Clear();
+        }
+
+        public List<string> GetLogLines(bool getRaw = false)
+        {
+            if (getRaw == false)
+                return new List<string>(activeLogLines);
+            else
+                return new List<string>(activeRawLogLines);
         }
 
         public void LogInfo(string messageName, string messageInfo)
@@ -36,9 +44,9 @@ namespace IterationToolkit
         public void LogInfo(string messageName, string messageInfo, Color infoColor)
         {
             string decoratedMessage = string.Empty;
-            decoratedMessage += "<size=80%>" + messageName.ToBold() + " ";
+            decoratedMessage += /*"<size=80%>" +*/ messageName.ToBold() + " ";
             if (!string.IsNullOrEmpty(messageInfo))
-                decoratedMessage += "<size=70%>" + messageInfo.ToItalic().Colorize(infoColor);
+                decoratedMessage += /*"<size=70%>" +*/ messageInfo.ToItalic().Colorize(infoColor);
 
             AddLog(decoratedMessage, messageName + " " + messageInfo);
         }
@@ -51,7 +59,8 @@ namespace IterationToolkit
         public void LogInfo(string message, Color color, float fontScale = 1.0f, TextStyle textStyle = TextStyle.Default)
         {
 
-            string decoratedMessage = "<size=" + fontScale * 100 + "%>";
+            //string decoratedMessage = "<size=" + fontScale * 100 + "%>";
+            string decoratedMessage = string.Empty;
             if (textStyle == TextStyle.Default)
                 decoratedMessage += message.Colorize(color);
             else if (textStyle == TextStyle.Bold)
@@ -64,7 +73,7 @@ namespace IterationToolkit
 
         public void LogInfo(string message)
         {
-            AddLog(message, message);
+            AddLog(message.Colorize(Color.white), message);
         }
 
         private void AddLog(string decoratedMessage, string rawMessage)
@@ -82,7 +91,7 @@ namespace IterationToolkit
 
         public string GetLog()
         {
-            string returnString = "<size=110%>" + logName.ToBold() + "\n" + "\n";
+            string returnString = /*"<size=110%>" +*/ LogName.ToBold() + "\n" + "\n";
 
             foreach (string logLine in activeLogLines)
                 returnString += logLine + "\n";
