@@ -41,7 +41,7 @@ namespace IterationToolkit
     {
         public override int Listeners => base.Listeners + paramListeners.Count;
         private event ParameterEvent<T> onParameterEvent;
-        private List<ParameterEvent<T>> paramListeners;
+        private List<ParameterEvent<T>> paramListeners = new List<ParameterEvent<T>>();
 
         public ExtendedEvent() => ExtendedEventManager.RegisterExtendedEvent(this);
 
