@@ -111,6 +111,21 @@ namespace IterationToolkit
         public new ExtendedEvent<T> OnTimerStart { get; private set; } = new ExtendedEvent<T>();
         public new ExtendedEvent<T> OnTimerFinish { get; private set; } = new ExtendedEvent<T>();
 
+        public Timer(MonoBehaviour host, float time, T newValue, params Action[] onFinishCallbacks)
+        {
+            Value = newValue;
+            foreach (Action endCallback in onFinishCallbacks)
+                OnTimerFinish.AddListener(endCallback);
+            StartTimer(host, time);
+        }
+
+        public Timer(T newValue, params Action[] onFinishCallbacks)
+        {
+            Value = newValue;
+            foreach (Action endCallback in onFinishCallbacks)
+                OnTimerFinish.AddListener(endCallback);
+        }
+
         public Timer(T newValue)
         {
             Value = newValue;
