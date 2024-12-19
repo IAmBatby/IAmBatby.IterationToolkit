@@ -44,7 +44,7 @@ namespace IterationToolkit
         public void LogInfo(string messageName, string messageInfo, Color infoColor)
         {
             string decoratedMessage = string.Empty;
-            decoratedMessage += /*"<size=80%>" +*/ messageName.ToBold() + " ";
+            decoratedMessage += /*"<size=80%>" +*/  GetDecoratedIntro() + messageName.ToBold() + " ";
             if (!string.IsNullOrEmpty(messageInfo))
                 decoratedMessage += /*"<size=70%>" +*/ messageInfo.ToItalic().Colorize(infoColor);
 
@@ -61,6 +61,7 @@ namespace IterationToolkit
 
             //string decoratedMessage = "<size=" + fontScale * 100 + "%>";
             string decoratedMessage = string.Empty;
+            message = GetDecoratedIntro() + message;
             if (textStyle == TextStyle.Default)
                 decoratedMessage += message.Colorize(color);
             else if (textStyle == TextStyle.Bold)
@@ -73,12 +74,19 @@ namespace IterationToolkit
 
         public void LogInfo(string message)
         {
-            AddLog(message.Colorize(Color.white), message);
+            AddLog((GetDecoratedIntro() + message).Colorize(Color.white), message);
+        }
+
+        private string GetDecoratedIntro()
+        {
+            if (Time.time < 10f)
+                return ("[0" + Time.time.ToString("F2") + "] ");
+            else
+                return ("[" + Time.time.ToString("F2") + "] ");
         }
 
         private void AddLog(string decoratedMessage, string rawMessage)
         {
-            decoratedMessage = "[" + Time.time.ToString("F2") + "] " + decoratedMessage;
             activeLogLines.Add(decoratedMessage);
             activeRawLogLines.Add(rawMessage);
 
