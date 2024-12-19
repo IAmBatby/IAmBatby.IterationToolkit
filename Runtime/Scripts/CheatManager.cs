@@ -17,6 +17,11 @@ namespace IterationToolkit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
         {
+            ClearCheats();
+        }
+
+        public static void ClearCheats()
+        {
             registeredCheats.Clear();
             cheatCategories = null;
         }
