@@ -79,11 +79,13 @@ namespace IterationToolkit
 
         public static void RegisterCheat(CheatEntry cheat, string category = "General")
         {
+            if (cheat == null) return;
             AddCheat(cheat, category);
         }
 
         public static void RegisterCheat(Action action, string category = "General")
         {
+            if (action == null) return;
             CheatEntry cheat = new CheatEntry();
             cheat.SetCheat(action);
             AddCheat(cheat, category);
@@ -91,6 +93,7 @@ namespace IterationToolkit
 
         public static void RegisterCheat<T>(ParameterEvent<T> newEvent, T newValue, string category = "General")
         {
+            if (newEvent == null || newValue == null) return;
             CheatEntry<T> cheat = new CheatEntry<T>();
             cheat.SetCheat(newEvent, newValue);
             AddCheat(cheat, category);

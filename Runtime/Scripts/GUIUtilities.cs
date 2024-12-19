@@ -165,6 +165,7 @@ namespace IterationToolkit
 
         public static string GetName<T>(T value)
         {
+            if (value == null) return string.Empty;
             if (value is UnityEngine.Object obj)
                 return (obj.name);
             else
