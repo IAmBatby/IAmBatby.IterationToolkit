@@ -78,6 +78,7 @@ namespace IterationToolkit
 
         private void AddLog(string decoratedMessage, string rawMessage)
         {
+            decoratedMessage = "[" + Time.time.ToString("F2") + "] " + decoratedMessage;
             activeLogLines.Add(decoratedMessage);
             activeRawLogLines.Add(rawMessage);
 

@@ -127,7 +127,7 @@ namespace IterationToolkit
             List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
             for (int i = 0; i < MaxLines; i++)
                 if (i < logLines.Count)
-                    GUILayout.Label(GetMessageStart(i) + logLines[i], labelStyle);
+                    GUILayout.Label(logLines[i], labelStyle);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
