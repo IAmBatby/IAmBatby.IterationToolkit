@@ -70,10 +70,9 @@ namespace IterationToolkit
 
         public bool TryStopTimer()
         {
-            if (coroutine == null)
-                return (false);
-
-            coroutineHostBehaviour.StopCoroutine(coroutine);
+            if (coroutine != null)
+                coroutineHostBehaviour.StopCoroutine(coroutine);
+            coroutineHostBehaviour = null;
             coroutine = null;
             return (true);
         }
