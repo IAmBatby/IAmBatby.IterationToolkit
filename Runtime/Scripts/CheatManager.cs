@@ -119,7 +119,7 @@ namespace IterationToolkit
 
         public virtual void Cheat() => cheatEvent?.Invoke();
 
-        public virtual string GetCheatName() => string.Empty;
+        public virtual string GetCheatName() => cheatEvent?.Method.Name;
     }
 
     public class CheatEntry<T> : CheatEntry
