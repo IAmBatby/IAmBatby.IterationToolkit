@@ -22,28 +22,6 @@ namespace IterationToolkit
             loggerList.Clear();
             ActiveLogs = null;
         }
-        /*
-        public static void SetLoggers(List<Logger> loggers, int newMaxLines)
-        {
-            loggerList.Clear();
-            loggerDict.Clear();
-            maxLines = newMaxLines;
-            foreach (Logger logger in loggers)
-            {
-                if (loggerDict.ContainsKey(logger.logName))
-                    Debug.LogWarning("Can't initialize logger as it's logname already initialized!");
-                else
-                    loggerDict.Add(logger.logName, logger);
-            }
-
-            foreach (KeyValuePair<string, Logger> kvp in loggerDict)
-            {
-                loggerList.Add(kvp.Value);
-                kvp.Value.onLogAdded.AddListener(InvokeLogModified);
-            }
-            ActiveLogs = new SelectableCollection<Logger>(loggers);
-            ActiveLogs.AssignOnSelected(InvokeLogModified);
-        }*/
 
         public static bool TryAddLogger(string loggerName, out Logger newLogger)
         {
@@ -64,11 +42,17 @@ namespace IterationToolkit
             loggerList.Add(newLogger);
             if (ActiveLogs == null)
                 ActiveLogs = new SelectableCollection<Logger>(loggerList);
-            ActiveLogs.AddObject(newLogger);
+            else
+                ActiveLogs.AddObject(newLogger);
             return (newLogger);
         }
 
         public static List<Logger> GetLoggers() => new List<Logger>(loggerList);
+
+        public static bool TryGetLogger(string loggerName, out Logger logger)
+        {
+            return (loggerDict.TryGetValue(loggerName, out logger));
+        }
 
         public static void ClearLog(Logger logger)
         {
