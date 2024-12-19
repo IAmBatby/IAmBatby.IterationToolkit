@@ -133,6 +133,6 @@ namespace IterationToolkit
             GUILayout.EndArea();
         }
 
-        private static string GetMessageStart(int index) => (("#" + index + ": ".ToBold()).Colorize(Color.white));
+        private static string GetMessageStart(int index) => (("[" + Time.time + "] ".ToBold()).Colorize(Color.white));
     }
 }
