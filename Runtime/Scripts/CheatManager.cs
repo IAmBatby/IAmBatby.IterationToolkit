@@ -11,7 +11,7 @@ namespace IterationToolkit
         //private static List<CheatEntry> registeredCheats = new List<CheatEntry>();
         private static Dictionary<string, List<CheatEntry>> registeredCheats = new Dictionary<string, List<CheatEntry>>();
         private static SelectableCollection<string> cheatCategories = new SelectableCollection<string>();
-        private static Vector2 cheatWindowSizeScale = new Vector2(4.25f, 2f);
+        private static Vector2 cheatWindowSizeScale = new Vector2(4.25f, 3f);
         private static Vector2 consoleScrollView;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -56,7 +56,7 @@ namespace IterationToolkit
             for (int i = 0; i < activeCheats.Count; i++)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(activeCheats[i].GetCheatName().ToBold(), GUILayout.Width(50));
+                GUILayout.Label(activeCheats[i].GetCheatName().ToBold(), GUILayout.Width(150));
                 RenderCheat(activeCheats[i]);
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
