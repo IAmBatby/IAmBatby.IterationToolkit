@@ -1,3 +1,4 @@
+using Codice.CM.SEIDInfo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,6 +38,22 @@ namespace IterationToolkit
             foreach (Action endCallback in onFinishCallbacks)
                 OnTimerFinish.AddListener(endCallback);
         }
+
+        public void Clear()
+        {
+            OnTimerStart = new ExtendedEvent();
+            OnTimerFinish = new ExtendedEvent();
+            TryStopTimer();
+            lastResumedTime = 0f;
+            lastPausedTime = 0f;
+            startTime = 0f;
+            currentTimerLength = 0f;
+            cachedTime = 0f;
+
+            OnClear();
+        }
+
+        protected virtual void OnClear() { }
 
         public void StartTimer(MonoBehaviour host, float time = Mathf.Infinity)
         {
@@ -137,6 +154,13 @@ namespace IterationToolkit
             else if (timerEvent == base.OnTimerFinish)
                 OnTimerFinish.Invoke(Value);
 
+        }
+
+        protected override void OnClear()
+        {
+            Value = default(T);
+            OnTimerStart = new ExtendedEvent<T>();
+            OnTimerFinish = new ExtendedEvent<T>();
         }
     }
 }
