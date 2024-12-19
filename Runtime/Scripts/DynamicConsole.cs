@@ -15,8 +15,7 @@ namespace IterationToolkit
         public static int MaxLines { get; private set; } = 12;
         public static ExtendedEvent OnLoggerModified { get; private set; } = new ExtendedEvent();
 
-        private static float consoleWidthScale = 2f;
-        private static float consoleHeightScale = 4.25f;
+        private static Vector2 consoleSizeScale = new Vector2(2f, 4.25f);
 
         private static Vector2 consoleScrollView;
 
@@ -101,43 +100,30 @@ namespace IterationToolkit
 
         public static void SetRenderedConsoleValues(float newWidthScale, float newHeightScale)
         {
-            consoleHeightScale = newHeightScale;
-            consoleWidthScale = newWidthScale;
+            consoleSizeScale.y = newHeightScale;
+            consoleSizeScale.x = newWidthScale;
         }
 
         public static void RenderConsole()
         {
-            Color backgroundColor = Color.black.SetAlpha(0.45f);
-            GUIStyle backgroundStyle = LabelUtilities.CreateStyle(enableRichText: true, backgroundColor);
-            //GUIStyle logStyle = LabelUtilities.CreateStyle(enableRichText: true, new Color(0,0,0,0));
-            GUIStyle labelStyle = LabelUtilities.CreateStyle(true);
-            GUIStyle headerStyle = LabelUtilities.CreateStyle(true);
-            labelStyle.richText = true;
-            headerStyle.fontSize = 18;
-            //labelStyle.normal.textColor = Color.white;
             float smallest = Mathf.Min(Screen.width, Screen.height);
-
-            float consoleWidth = smallest / consoleWidthScale;
-            float consoleHeight = smallest / consoleHeightScale;
+            float consoleWidth = smallest / consoleSizeScale.x;
+            float consoleHeight = smallest / consoleSizeScale.y;
 
             Rect rect = new Rect(0 + (consoleWidth / 12.5f), Screen.height - (consoleHeight + (consoleHeight / 4.5f)), consoleWidth, consoleHeight);
-            GUILayout.BeginArea(rect, backgroundStyle);
+            GUILayout.BeginArea(rect, GUIDefaults.UI_Background);
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             GUILayout.BeginVertical();
             GUILayout.Space(10);
-            GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), headerStyle);
+            GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), GUIDefaults.UI_Header);
             GUILayout.Space(10);
             List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
             if (logLines.Count > previousCount)
                 consoleScrollView = new Vector2(0, 9999999999);
-            Vector2 fakeScrollbar = new Vector2(0, 99999999);
-            //if (rect.Contains(Input.mousePosition))
-                consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
-            //else
-                //fakeScrollbar = GUILayout.BeginScrollView(fakeScrollbar, false, alwaysShowVertical: true, GUILayout.Height(200));
+            consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
             for (int i = 0; i < logLines.Count; i++)
-                    GUILayout.Label(logLines[i], labelStyle);
+                    GUILayout.Label(logLines[i], GUIDefaults.UI_Label);
 
             previousCount = logLines.Count;
             GUILayout.EndScrollView();
@@ -146,7 +132,5 @@ namespace IterationToolkit
             GUILayout.EndArea();
             GUILayout.FlexibleSpace();
         }
-
-        private static string GetMessageStart(int index) => (("[" + Time.time.ToString("F2") + "] ".ToBold()).Colorize(Color.white));
     }
 }
