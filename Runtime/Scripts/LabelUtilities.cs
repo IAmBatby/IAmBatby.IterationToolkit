@@ -1,27 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 
 namespace IterationToolkit
 {
     public static class LabelUtilities
     {
-        private static Color _DefaultBackgroundColor;
-        public static Color DefaultBackgroundColor
-        {
-            get
-            {
-                if (_DefaultBackgroundColor.a == 0)
-                {
-                    var method = typeof(EditorGUIUtility)
-                        .GetMethod("GetDefaultBackgroundColor", BindingFlags.NonPublic | BindingFlags.Static);
-                    _DefaultBackgroundColor = (Color)method.Invoke(null, null);
-                }
-                return _DefaultBackgroundColor;
-            }
-        }
+
 
         public static GUIStyle CreateStyle(bool enableRichText, int fontSize = -1)
         {
