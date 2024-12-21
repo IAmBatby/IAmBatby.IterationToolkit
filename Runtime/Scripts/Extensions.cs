@@ -62,6 +62,14 @@ namespace IterationToolkit
             return (Utilities.IncreaseIndex(value, collection));
         }
 
+        public static bool IsOdd(this int value)
+        {
+            if (value % 2 == 0)
+                return (true);
+            else
+                return (false);
+        }
+
         public static int Decrease<T>(this int value, List<T> collection)
         {
             return (Utilities.DecreaseIndex(value, collection));
