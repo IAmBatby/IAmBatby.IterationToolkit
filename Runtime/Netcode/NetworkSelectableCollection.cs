@@ -12,7 +12,7 @@ namespace IterationToolkit.Netcode
     {
         private bool isInitalized;
 
-        public bool IsServer => GameNetworkManager.Instance.IsServer;
+        public bool IsServer => NetworkManager.Singleton.IsServer;
 
         public List<T> Collection => allObjects;
         [SerializeField] private List<T> allObjects;
