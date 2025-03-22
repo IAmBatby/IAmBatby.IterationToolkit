@@ -8,6 +8,7 @@ using UnityEngine;
 public class ExtendedMatrix2D<T> where T : UnityEngine.Object
 {
     [SerializeField] private List<(Vector2Int index, T value)> flattenedMatrix = new List<(Vector2Int index, T value)>();
+    [field: SerializeField] public List<T> Contents { get; private set; }
     [field: SerializeField] public Vector2Int Bounds { get; private set; }
     private T[,] _matrix;
 
@@ -80,8 +81,13 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     private void ReconstructFlattenedMatrix()
     {
         flattenedMatrix.Clear();
+        Contents.Clear();
         for (int x = 0; x < Bounds.x; x++)
             for (int y = 0; y < Bounds.y; y++)
-                flattenedMatrix.Add((new Vector2Int(x,y), Matrix[x, y]));
+            {
+                if (Matrix[x,y] != null)
+                    Contents.Add(Matrix[x,y]);
+                flattenedMatrix.Add((new Vector2Int(x, y), Matrix[x, y]));
+            }
     }
 }
