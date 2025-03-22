@@ -10,6 +10,8 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     [SerializeField] private List<(Vector2Int index, T value)> flattenedMatrix = new List<(Vector2Int index, T value)>();
     [field: SerializeField] public List<T> Contents { get; private set; }
     [field: SerializeField] public Vector2Int Bounds { get; private set; }
+
+    public Dictionary<Vector2Int, T> ContentsDict { get; private set; } = new Dictionary<Vector2Int, T>();
     private T[,] _matrix;
 
     private T[,] Matrix
@@ -82,12 +84,14 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     {
         flattenedMatrix.Clear();
         Contents.Clear();
+        ContentsDict.Clear();
         for (int x = 0; x < Bounds.x; x++)
             for (int y = 0; y < Bounds.y; y++)
             {
                 if (Matrix[x,y] != null)
                     Contents.Add(Matrix[x,y]);
                 flattenedMatrix.Add((new Vector2Int(x, y), Matrix[x, y]));
+                ContentsDict.Add(new Vector2Int(x, y),Matrix[x, y]);
             }
     }
 }
