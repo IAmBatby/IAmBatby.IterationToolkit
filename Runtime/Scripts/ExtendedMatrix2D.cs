@@ -35,7 +35,13 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     public void Clear()
     {
         _matrix = null;
-        flattenedMatrix.Clear();
+        ReconstructFlattenedMatrix();
+    }
+
+    public void Replace(T[,] newMatrix)
+    {
+        _matrix = newMatrix;
+        ReconstructFlattenedMatrix();
     }
 
     public T Get(Vector2Int index) => Matrix[index.x, index.y];
