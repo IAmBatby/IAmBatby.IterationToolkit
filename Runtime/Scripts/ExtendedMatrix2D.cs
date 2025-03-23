@@ -75,7 +75,7 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
 
     private void ModifyMatrix(int x, int y, T value)
     {
-        if (Matrix[x, y].Equals(value)) return;
+        if (Matrix[x, y] == value) return;
         Matrix[x, y] = value;
         ReconstructFlattenedMatrix();
     }
