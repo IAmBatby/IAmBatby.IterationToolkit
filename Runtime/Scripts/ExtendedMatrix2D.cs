@@ -7,7 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class ExtendedMatrix2D<T> where T : UnityEngine.Object
 {
-    [SerializeField] private List<(Vector2Int index, T value)> flattenedMatrix = new List<(Vector2Int index, T value)>();
+    [SerializeField] private List<ContentWithIndex<T>> flattenedMatrix = new List<ContentWithIndex<T>>();
     [field: SerializeField] public List<T> Contents { get; private set; }
     [field: SerializeField] public Vector2Int Bounds { get; private set; }
 
@@ -21,8 +21,8 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
             if (_matrix == null)
             {
                 _matrix = new T[Bounds.x,Bounds.y];
-                foreach ((Vector2Int index, T value) pair in flattenedMatrix)
-                    _matrix[pair.index.x,pair.index.y] = pair.value;
+                foreach (ContentWithIndex<T> pair in flattenedMatrix)
+                    _matrix[pair.Index.x, pair.Index.y] = pair.Content;
             }
             return (_matrix);
         }
@@ -90,8 +90,22 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
             {
                 if (Matrix[x,y] != null)
                     Contents.Add(Matrix[x,y]);
-                flattenedMatrix.Add((new Vector2Int(x, y), Matrix[x, y]));
+                flattenedMatrix.Add((new ContentWithIndex<T>(Matrix[x, y], new Vector2Int(x, y))));
                 ContentsDict.Add(new Vector2Int(x, y),Matrix[x, y]);
             }
     }
 }
+
+[System.Serializable]
+public struct ContentWithIndex<T>
+{
+    [field: SerializeField] public T Content { get; private set; }
+    [field: SerializeField] public Vector2Int Index { get; private set; }
+
+    public ContentWithIndex(T newContent, Vector2Int newIndex)
+    {
+        Content = newContent;
+        Index = newIndex;
+    }
+}
+
