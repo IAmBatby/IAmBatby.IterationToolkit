@@ -115,7 +115,7 @@ public struct ContentWithIndex<T>
 
     public ContentWithIndex(T newContent, Vector2Int newIndex)
     {
-        name = newIndex.x + "," + newIndex.y + "," + newIndex.z;
+        name = newIndex.x + "," + newIndex.y;
         Content = newContent;
         Index = newIndex;
     }
