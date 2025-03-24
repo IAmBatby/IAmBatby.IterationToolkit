@@ -11,7 +11,17 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     [field: SerializeField] public List<T> Contents { get; private set; }
     [field: SerializeField] public Vector2Int Bounds { get; private set; }
 
-    public Dictionary<Vector2Int, T> ContentsDict { get; private set; } = new Dictionary<Vector2Int, T>();
+    public Dictionary<Vector2Int, T> ContentsDict
+    {
+        get
+        {
+            if (_contentDict == null || (flattenedMatrix != null && flattenedMatrix.Count > _contentDict.Count))
+                ReconstructFlattenedMatrix();
+            return _contentDict;
+        }
+    }
+    private Dictionary<Vector2Int, T> _contentDict;
+    
     private T[,] _matrix;
 
     private T[,] Matrix
