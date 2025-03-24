@@ -15,12 +15,12 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     {
         get
         {
-            if (_contentDict == null || (flattenedMatrix != null && flattenedMatrix.Count > _contentDict.Count))
+            if (_contentsDict == null || (flattenedMatrix != null && flattenedMatrix.Count > _contentsDict.Count))
                 ReconstructFlattenedMatrix();
-            return _contentDict;
+            return _contentsDict;
         }
     }
-    private Dictionary<Vector2Int, T> _contentDict;
+    private Dictionary<Vector2Int, T> _contentsDict;
     
     private T[,] _matrix;
 
@@ -94,14 +94,14 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     {
         flattenedMatrix.Clear();
         Contents.Clear();
-        ContentsDict.Clear();
+        _contentsDict.Clear();
         for (int x = 0; x < Bounds.x; x++)
             for (int y = 0; y < Bounds.y; y++)
             {
                 if (Matrix[x,y] != null)
                     Contents.Add(Matrix[x,y]);
                 flattenedMatrix.Add((new ContentWithIndex<T>(Matrix[x, y], new Vector2Int(x, y))));
-                ContentsDict.Add(new Vector2Int(x, y),Matrix[x, y]);
+                _contentsDict.Add(new Vector2Int(x, y),Matrix[x, y]);
             }
     }
 }
