@@ -20,7 +20,7 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
             return _contentsDict;
         }
     }
-    private Dictionary<Vector2Int, T> _contentsDict;
+    private Dictionary<Vector2Int, T> _contentsDict = new Dictionary<Vector2Int, T>();
     
     private T[,] _matrix;
 
@@ -94,7 +94,7 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
     {
         flattenedMatrix.Clear();
         Contents.Clear();
-        _contentsDict.Clear();
+        _contentsDict = new Dictionary<Vector2Int, T>();
         for (int x = 0; x < Bounds.x; x++)
             for (int y = 0; y < Bounds.y; y++)
             {
