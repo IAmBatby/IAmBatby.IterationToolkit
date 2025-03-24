@@ -109,11 +109,13 @@ public class ExtendedMatrix2D<T> where T : UnityEngine.Object
 [System.Serializable]
 public struct ContentWithIndex<T>
 {
+    [SerializeField] private string name;
     [field: SerializeField] public T Content { get; private set; }
-    [field: SerializeField] public Vector2Int Index { get; private set; }
+    [field: SerializeField, HideInInspector] public Vector2Int Index { get; private set; }
 
     public ContentWithIndex(T newContent, Vector2Int newIndex)
     {
+        name = newIndex.x + "," + newIndex.y + "," + newIndex.z
         Content = newContent;
         Index = newIndex;
     }
