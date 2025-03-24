@@ -8,7 +8,7 @@ using UnityEngine;
 public class ExtendedMatrix2D<T> where T : UnityEngine.Object
 {
     [SerializeField] private List<ContentWithIndex<T>> flattenedMatrix = new List<ContentWithIndex<T>>();
-    [field: SerializeField] public List<T> Contents { get; private set; }
+    [field: SerializeField] public List<T> Contents { get; private set; } = new List<T>();
     [field: SerializeField] public Vector2Int Bounds { get; private set; }
 
     public Dictionary<Vector2Int, T> ContentsDict { get; private set; } = new Dictionary<Vector2Int, T>();
