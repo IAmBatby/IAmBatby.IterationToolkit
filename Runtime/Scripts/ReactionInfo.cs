@@ -9,5 +9,6 @@ namespace IterationToolkit
     {
         [field: SerializeField] public AudioPreset AudioPreset { get; private set; }
         [field: SerializeField] public ParticlePreset ParticlePreset { get; private set; }
+        [field: SerializeField] public VisualPreset VisualPreset { get; private set; }
     }
 }
