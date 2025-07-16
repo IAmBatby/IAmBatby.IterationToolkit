@@ -13,7 +13,12 @@ namespace IterationToolkit
         public virtual int Listeners => listeners.Count;
         private List<Action> listeners = new List<Action>();
 
-        public ExtendedEvent() => ExtendedEventManager.AddEventListener(this);
+        public ExtendedEvent()
+        {
+            //Debug.Log("ExtendedEvent Constructor!");
+            ExtendedEventManager.AddEventListener(this);
+            ClearListeners();
+        }
 
         public void Invoke() { onEvent?.Invoke(); }
 
@@ -32,6 +37,7 @@ namespace IterationToolkit
         {
             foreach (Action listener in listeners)
                 onEvent -= listener;
+            onEvent = null;
             listeners.Clear();
         }
     }
@@ -67,6 +73,7 @@ namespace IterationToolkit
             base.ClearListeners();
             foreach (ParameterEvent<T> listener in paramListeners)
                 onParameterEvent -= listener;
+            onParameterEvent = null;
             paramListeners.Clear();
         }
     }
