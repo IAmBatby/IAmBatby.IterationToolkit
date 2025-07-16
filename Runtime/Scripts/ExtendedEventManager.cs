@@ -19,9 +19,7 @@ public static class ExtendedEventManager
             registeredEvents.Add(extendedEvent);
     }
 
-#if UNITY_EDITOR
-    [InitializeOnLoadMethod]
-#endif
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void InvokeClear()
     {
         List<ExtendedEvent> cache = new List<ExtendedEvent>(registeredEvents);

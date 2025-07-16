@@ -1,6 +1,6 @@
 {
   "name": "com.iambatby.iterationtoolkit",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "displayName": "Iteration Toolkit",
   "description": "Toolkit used to quick start unity prototypes.",
   "unity": "2022.3",
