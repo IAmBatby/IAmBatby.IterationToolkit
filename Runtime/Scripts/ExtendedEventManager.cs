@@ -15,6 +15,7 @@ public static class ExtendedEventManager
 
     public static void AddEventListener(ExtendedEvent extendedEvent)
     {
+        if (Application.isPlaying) return;
         if (!registeredEvents.Contains(extendedEvent))
             registeredEvents.Add(extendedEvent);
     }
