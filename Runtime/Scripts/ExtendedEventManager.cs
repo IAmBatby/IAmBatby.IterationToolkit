@@ -15,7 +15,6 @@ public static class ExtendedEventManager
 
     public static void AddEventListener(ExtendedEvent extendedEvent)
     {
-        if (Application.isPlaying) return;
         if (!registeredEvents.Contains(extendedEvent))
             registeredEvents.Add(extendedEvent);
     }
@@ -34,7 +33,8 @@ public static class ExtendedEventManager
                 count++;
             }
 
-            AddEventListener(extendedEvent);
+            if (!Application.isPlaying)
+                AddEventListener(extendedEvent);
         }
 
         Debug.Log("Currently Tracking #" + registeredEvents.Count + " Events. Cleared Listeners On #" + count + " Events.");
