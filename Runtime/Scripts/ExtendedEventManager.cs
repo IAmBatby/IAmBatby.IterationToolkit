@@ -1,35 +1,44 @@
 using IterationToolkit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public static class ExtendedEventManager
 {
     private static List<ExtendedEvent> registeredEvents = new List<ExtendedEvent>();
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ClearEvents()
+
+    public static void AddEventListener(ExtendedEvent extendedEvent)
     {
-        if (registeredEvents == null) return;
-        int clearCount = 0;
-        for (int i = registeredEvents.Count - 1; i > 0; i--)
+        if (!registeredEvents.Contains(extendedEvent))
+            registeredEvents.Add(extendedEvent);
+    }
+
+#if UNITY_EDITOR
+    [InitializeOnLoadMethod]
+#endif
+    private static void InvokeClear()
+    {
+        List<ExtendedEvent> cache = new List<ExtendedEvent>(registeredEvents);
+        registeredEvents.Clear();
+        int count = 0;  
+        foreach (ExtendedEvent extendedEvent in cache)
         {
-            if (registeredEvents[i] == null)
-                registeredEvents.RemoveAt(i);
-            else
+            if (extendedEvent.Listeners > 0)
             {
-                clearCount++;
-                registeredEvents[i].ClearListeners();
+                extendedEvent.ClearListeners();
+                count++;
             }
+
+            AddEventListener(extendedEvent);
         }
-        Debug.Log("Cleared #" + clearCount + " Static ExtendedEvents.");
+
+        Debug.Log("Currently Tracking #" + registeredEvents.Count + " Events. Cleared Listeners On #" + count + " Events.");
     }
 
-    public static void RegisterExtendedEvent(ExtendedEvent extendedEvent)
-    {
-        if (extendedEvent == null) return;
-        if (registeredEvents.Contains(extendedEvent)) return;
-
-        registeredEvents.Add(extendedEvent);
-    }
 }

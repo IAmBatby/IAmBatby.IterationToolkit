@@ -13,7 +13,7 @@ namespace IterationToolkit
         public virtual int Listeners => listeners.Count;
         private List<Action> listeners = new List<Action>();
 
-        public ExtendedEvent() => ExtendedEventManager.RegisterExtendedEvent(this);
+        public ExtendedEvent() => ExtendedEventManager.AddEventListener(this);
 
         public void Invoke() { onEvent?.Invoke(); }
 
@@ -43,7 +43,7 @@ namespace IterationToolkit
         private event ParameterEvent<T> onParameterEvent;
         private List<ParameterEvent<T>> paramListeners = new List<ParameterEvent<T>>();
 
-        public ExtendedEvent() => ExtendedEventManager.RegisterExtendedEvent(this);
+        public ExtendedEvent() => ExtendedEventManager.AddEventListener(this);
 
         public void Invoke(T param)
         {
