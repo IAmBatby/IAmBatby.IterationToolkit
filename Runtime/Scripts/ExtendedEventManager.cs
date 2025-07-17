@@ -23,21 +23,26 @@ public static class ExtendedEventManager
     {
         Debug.Log("Looking For Static ExtendedEvents");
         onRefresh = null;
-        List<(ExtendedEvent, FieldInfo)> foundStaticEvents = new List<(ExtendedEvent, FieldInfo)> ();
+        List<(ExtendedEvent, string)> foundStaticEvents = new List<(ExtendedEvent, string)> ();
         foreach (MemberInfo member in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers()))
-            if (member is FieldInfo field && field.IsStatic && field.FieldType == typeof(ExtendedEvent))
-                foundStaticEvents.Add((field.GetValue(null) as ExtendedEvent, field));
-        string log = "Managing Manual Domain Reloading For The Following ExtendedEvents:";
-        foreach ((ExtendedEvent, FieldInfo) kvp in foundStaticEvents)
         {
-            RegisterStaticEvent(kvp.Item1, kvp.Item2);
-            log += "\n   >" + kvp.Item2.DeclaringType.Name + "." + kvp.Item2.Name;
+            if (member is FieldInfo field && field.IsStatic && field.FieldType == typeof(ExtendedEvent))
+                foundStaticEvents.Add((field.GetValue(null) as ExtendedEvent, field.DeclaringType.Name + "." + field.Name));
+            else if (member is PropertyInfo property && property.GetGetMethod() != null && property.GetGetMethod().IsStatic && property.PropertyType == typeof(ExtendedEvent))
+                foundStaticEvents.Add((property.GetValue(null) as ExtendedEvent, property.DeclaringType.Name + "." + property.Name));
+        }
+
+        string log = "Managing Manual Domain Reloading For The Following ExtendedEvents:";
+        foreach ((ExtendedEvent, string) kvp in foundStaticEvents)
+        {
+            RegisterStaticEvent(kvp.Item1);
+            log += "\n   >" + kvp.Item2;
         }
         if (foundStaticEvents.Count > 0)
             Debug.Log(log);
     }
 
-    private static void RegisterStaticEvent(ExtendedEvent extendedEvent, FieldInfo field)
+    private static void RegisterStaticEvent(ExtendedEvent extendedEvent)
     {
         if (extendedEvent != null)
             onRefresh += () => extendedEvent.ClearListeners();
