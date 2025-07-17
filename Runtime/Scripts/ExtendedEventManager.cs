@@ -21,6 +21,7 @@ public static class ExtendedEventManager
 
     private static void LoadStaticEvents()
     {
+        Debug.Log("Looking For Static ExtendedEvents");
         onRefresh = null;
         List<(ExtendedEvent, FieldInfo)> foundStaticEvents = new List<(ExtendedEvent, FieldInfo)> ();
         foreach (MemberInfo member in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers()))
