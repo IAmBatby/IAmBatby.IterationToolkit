@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public class ExtendedEvent
+    public class ExtendedEvent : IDomainReloadable
     {
         protected event Action onEvent;
         public bool HasListeners => (Listeners != 0);
@@ -34,6 +34,8 @@ namespace IterationToolkit
             onEvent = null;
             listeners.Clear();
         }
+
+        public void OnDomainRefresh() => ClearListeners();
     }
 
     public delegate void ParameterEvent<T>(T param);
