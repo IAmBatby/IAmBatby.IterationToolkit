@@ -5,11 +5,6 @@ using UnityEngine;
 
 public interface IHighlightable
 {
-    public bool HighlightingEnabled { get; }
-    public MonoBehaviour Target{ get; }
-
-    public void OnHighlightChanged()
-    {
-        Debug.Log("Default OnHighlightChanged: " + Target);
-    }
+    public void OnHighlightChanged(bool value) { }
+    public bool IsHighlightable() => true;
 }

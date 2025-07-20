@@ -30,5 +30,11 @@ namespace IterationToolkit
         public void Play(AudioPreset audioPreset) => Audio.PlayAudio(audioPreset);
         public void Play(ParticlePreset particlePreset) => Particles.PlayParticle(particlePreset);
         public void Play(VisualPreset visualPreset) => MaterialCache.Override(visualPreset);
+        public void Play(VisualPreset visualPreset, bool conditional) => MaterialCache.ConditionalOverride(visualPreset, conditional);
+
+        public void PlayAudio(ReactionInfo info) => Play(info.AudioPreset);
+        public void PlayParticle(ReactionInfo info) => Play(info.ParticlePreset);
+        public void PlayVisual(ReactionInfo info) => Play(info.VisualPreset);
+        public void PlayVisual(ReactionInfo info, bool conditional) => Play(info.VisualPreset, conditional);
     }
 }

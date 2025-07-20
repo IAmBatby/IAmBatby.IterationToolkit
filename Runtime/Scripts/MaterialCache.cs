@@ -44,14 +44,28 @@ namespace IterationToolkit
                 r.OverrideRenderer(material, time);
         }
 
-        public void Override(VisualPreset preset)
+        public void Override(VisualPreset preset, bool revertIfOverriden = false)
         {
             if (preset == null) return;
             if (preset.OnlyOverrideIfReverted && OverrideState) return;
             foreach (RendererInfo r in rendererInfos)
-                r.OverrideRenderer(preset);
+            {
+                if (revertIfOverriden == true && OverrideState == true)
+                    r.RevertRenderer();
+                else
+                    r.OverrideRenderer(preset);
+            }
         }
 
+        public void ConditionalOverride(VisualPreset preset, bool value)
+        {
+            if (value)
+                Override(preset);
+            else
+                Revert();
+        }
+
+        public void ConditionalOverride(ReactionInfo info, bool value) => ConditionalOverride(info.VisualPreset, value);
         public void Revert()
         {
             foreach (RendererInfo r in rendererInfos)
