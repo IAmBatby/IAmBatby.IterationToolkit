@@ -83,5 +83,10 @@ namespace IterationToolkit
             input.normal.background = texture;
             return input;
         }
+
+        public static void Play<T>(this T source, MaterialPreset preset) where T : class, IReactable
+        {
+            source.ReactionController.Play(preset);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace IterationToolkit
         public virtual int Listeners => listeners.Count;
         private List<Action> listeners = new List<Action>();
 
-        public ExtendedEvent() { }
+        public ExtendedEvent() { DomainReloadManager.RegisterDomainReloadable(this); }
         public void Invoke() { onEvent?.Invoke(); }
 
         public void AddListener(Action listener)
@@ -44,8 +44,6 @@ namespace IterationToolkit
         public override int Listeners => base.Listeners + paramListeners.Count;
         private event ParameterEvent<T> onParameterEvent;
         private List<ParameterEvent<T>> paramListeners = new List<ParameterEvent<T>>();
-
-        public ExtendedEvent() { }
 
         public void Invoke(T param)
         {

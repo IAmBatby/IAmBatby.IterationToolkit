@@ -19,28 +19,30 @@ public static class Highlighting
         }
     }
 
-    public static Camera OverrideCamera { get; private set; }
+    [RuntimeInitializeOnLoadMethod] //Jank just triggers the singleton creation getter
+    private static void Start() => Instance.enabled = true;
+
+    private static HashSet<IHighlightable> highlighted = new HashSet<IHighlightable>();
+    private static HashSet<IHighlightable> frameHighlighted = new HashSet<IHighlightable>();
+
     private static Camera ActiveCamera => OverrideCamera ? OverrideCamera : Camera.main;
+
+    public static Camera OverrideCamera { get; private set; }
 
     public static IHighlightable LatestHighlight { get; private set; }
     public static Transform LatestHighlightTransform { get; private set; }
 
     public static ExtendedEvent OnHighlightsChanged { get; private set; } = new ExtendedEvent();
 
-
     public static IHighlightable[] GetActiveHighlights() => highlighted.ToArray();
-
-    [RuntimeInitializeOnLoadMethod]
-    private static void Start() => Instance.enabled = true;
 
     public static bool IsLastestHighlight(IHighlightable highlightable) => LatestHighlight == highlightable;
     public static bool IsHighlighted(IHighlightable highlightable) => highlighted.Contains(highlightable);
 
-    private static HashSet<IHighlightable> highlighted = new HashSet<IHighlightable>();
-    private static HashSet<IHighlightable> frameHighlighted = new HashSet<IHighlightable>();
-    private static void Refresh2()
+    private static void Refresh()
     {
         frameHighlighted.Clear();
+        //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
         foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse())
             if (hit.collider.TryGetComponent(out IHighlightable highlightable))
             {
@@ -54,33 +56,35 @@ public static class Highlighting
                 ToggleHighlightState(higlightable, false, null);
     }
 
-    private static void ToggleHighlightState(IHighlightable highlightable, bool value, Transform optionalTransform)
+    private static void ToggleHighlightState(IHighlightable highlightable, bool isHighlighted, Transform optionalTransform)
     {
-        if (highlighted.Contains(highlightable) == value) return;
-        if (value)
+        if (highlightable == null || highlighted.Contains(highlightable) == isHighlighted) return;
+        if (isHighlighted)
         {
-            if (LatestHighlight != null && LatestHighlight != highlightable)
+            if (LatestHighlight != null && LatestHighlight != highlightable) //If we are replacing the current latest highlight
                 ToggleHighlightState(LatestHighlight, false, null);
-            LatestHighlightTransform = optionalTransform;
-            LatestHighlight = highlightable;
+            RefreshLatestHighlight(highlightable, optionalTransform);
             highlighted.Add(highlightable);
         }
         else
         {
-            if (LatestHighlight == highlightable)
-            {
-                LatestHighlight = null;
-                LatestHighlightTransform = null;
-            }
+            if (LatestHighlight == highlightable) //If we are turning off the latest highlight
+                RefreshLatestHighlight(null, null);
             highlighted.Remove(highlightable);
         }
 
-        highlightable.OnHighlightChanged(value);
+        highlightable.OnHighlightChanged(isHighlighted);
         OnHighlightsChanged.Invoke();
+    }
+
+    private static void RefreshLatestHighlight(IHighlightable highlight, Transform transform)
+    {
+        LatestHighlight = highlight;
+        LatestHighlightTransform = transform;
     }
 
     protected class IHighlightsController : MonoBehaviour
     {
-        private void FixedUpdate() => Refresh2();
+        private void FixedUpdate() => Refresh();
     }
 }
