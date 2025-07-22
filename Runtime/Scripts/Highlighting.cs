@@ -41,7 +41,7 @@ public static class Highlighting
     private static void Refresh2()
     {
         frameHighlighted.Clear();
-        foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity))
+        foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse())
             if (hit.collider.TryGetComponent(out IHighlightable highlightable))
             {
                 frameHighlighted.Add(highlightable);
