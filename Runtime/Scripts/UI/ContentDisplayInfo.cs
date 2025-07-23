@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class ContentDisplayInfo
 {
-    public DisplayTexture ContentIcon;
-    public DisplayString ContentValue;
-    public DisplayTexture ContentBackground;
+    [field: SerializeField] public DisplayTexture ContentIcon { get; private set; }
+    [field: SerializeField] public DisplayString ContentText { get; private set; }
+    [field: SerializeField] public DisplayTexture ContentBackground { get; private set; }
+    [field: SerializeField] public FillInfo FillInfo { get; private set; }
 }

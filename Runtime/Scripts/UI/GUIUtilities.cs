@@ -284,5 +284,13 @@ namespace IterationToolkit
             newText.Apply();
             return (newText);
         }
+
+        public static List<Rect> SplitRects(Rect target, int splitCount)
+        {
+            List<Rect> rects = new List<Rect>();
+            for (int i = 0; i < splitCount; i++)
+                rects.Add(new Rect(target.x + (i * (target.width / splitCount)), target.y, target.width / splitCount, target.height));
+            return (rects);
+        }
     }
 }

@@ -67,5 +67,24 @@ namespace IterationToolkit.Editor
             else
                 return (null);
         }
+
+        public static string Decorate(string name) => "<" + name + ">k__BackingField";
+
+        public static SerializedProperty Seek(SerializedObject target, string targetField) => Seek(target.GetIterator(), targetField);
+
+        public static SerializedProperty Seek(SerializedProperty target, string targetField)
+        {
+            foreach (SerializedProperty sp in EditorLabelUtilities.FindSerializedProperties(target.Copy()))
+                if (sp.name.Contains(targetField) || sp.name.Contains(Decorate(targetField)))
+                    return (sp.Copy());
+            return (null);
+        }
+
+        public static void DrawProperties(SerializedProperty source, Rect totalSize, params string[] propertyNames)
+        {
+            List<Rect> rects = GUIUtilities.SplitRects(totalSize, propertyNames.Length);
+            for (int i = 0; i < rects.Count; i++)
+                EditorGUI.PropertyField(rects[i], source.Seek(propertyNames[i]), GUIContent.none);
+        }
     }
 }
