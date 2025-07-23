@@ -9,4 +9,12 @@ public class ContentDisplayInfo
     [field: SerializeField] public DisplayString ContentText { get; private set; }
     [field: SerializeField] public DisplayTexture ContentBackground { get; private set; }
     [field: SerializeField] public FillInfo FillInfo { get; private set; }
+
+    public ContentDisplayInfo(DisplayString contentText, DisplayTexture contentIcon, DisplayTexture contentBackground, FillInfo fillInfo)
+    {
+        ContentText = contentText;
+        ContentIcon = contentIcon;
+        ContentBackground = contentBackground;
+        FillInfo = fillInfo;
+    }
 }
