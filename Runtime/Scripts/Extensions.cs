@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace IterationToolkit
@@ -87,6 +88,11 @@ namespace IterationToolkit
         public static void Play<T>(this T source, MaterialPreset preset) where T : class, IReactable
         {
             source.ReactionController.Play(preset);
+        }
+
+        public static Rect AddPadding(this Rect rect, Rect padding)
+        {
+            return (new Rect(rect.x - padding.x, rect.y - padding.y, rect.width + padding.width, rect.height + padding.height));
         }
     }
 }

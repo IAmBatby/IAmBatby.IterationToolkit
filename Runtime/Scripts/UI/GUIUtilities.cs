@@ -1,8 +1,11 @@
 using IterationToolkit;
+using log4net.Util;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace IterationToolkit
 {
@@ -170,6 +173,116 @@ namespace IterationToolkit
                 return (obj.name);
             else
                 return (value.ToString());
+        }
+
+        public static Rect WorldPointToSizedRect(Vector3 position, GUIContent content, GUIStyle style)
+        {
+            if (style == null) return (new Rect(0, 0, 0, 0));
+            Vector2 vector = WorldToGUIPointWithDepth(position);
+            Vector2 vector2 = style.CalcSize(content);
+            Rect rect = new Rect(vector.x, vector.y, vector2.x, vector2.y);
+            switch (style.alignment)
+            {
+                case TextAnchor.UpperCenter:
+                    rect.x -= rect.width * 0.5f;
+                    break;
+                case TextAnchor.UpperRight:
+                    rect.x -= rect.width;
+                    break;
+                case TextAnchor.MiddleLeft:
+                    rect.y -= rect.height * 0.5f;
+                    break;
+                case TextAnchor.MiddleCenter:
+                    rect.x -= rect.width * 0.5f;
+                    rect.y -= rect.height * 0.5f;
+                    break;
+                case TextAnchor.MiddleRight:
+                    rect.x -= rect.width;
+                    rect.y -= rect.height * 0.5f;
+                    break;
+                case TextAnchor.LowerLeft:
+                    rect.y -= rect.height;
+                    break;
+                case TextAnchor.LowerCenter:
+                    rect.x -= rect.width * 0.5f;
+                    rect.y -= rect.height;
+                    break;
+                case TextAnchor.LowerRight:
+                    rect.x -= rect.width;
+                    rect.y -= rect.height;
+                    break;
+            }
+
+            return style.padding.Add(rect);
+        }
+
+        public static Vector2 WorldToGUIPointWithDepth(Vector3 world) => WorldToGUIPointWithDepth(Camera.main, world);
+        public static Vector2 WorldToGUIPointWithDepth(Camera camera, Vector3 world)
+        {
+            world = Gizmos.matrix.MultiplyPoint(world);
+            if ((bool)camera)
+            {
+                Vector3 vector = camera.WorldToScreenPoint(world);
+                vector.y = (float)camera.pixelHeight - vector.y;
+                Vector2 vector2 = PixelsToPoints(vector);
+                return new Vector3(vector2.x, vector2.y, vector.z);
+            }
+
+            return world;
+        }
+
+        private static MethodInfo pixelsPerPointGetter;
+        public static float PixelsPerPoint
+        {
+            get
+            {
+                if (pixelsPerPointGetter == null)
+                    pixelsPerPointGetter = typeof(GUIUtility).GetMethod("get_pixelsPerPoint", BindingFlags.Static | BindingFlags.NonPublic);
+                return ((float)pixelsPerPointGetter.Invoke(null, null));
+            }
+        }
+
+        public static Vector2 PixelsToPoints(Vector2 position)
+        {
+            //float num = 1f / PixelsPerPoint;
+            float num = 1f / 1;
+            position.x *= num;
+            position.y *= num;
+            return position;
+        }
+
+        public static void RenderBoxedString(Vector3 position, string text, GUIStyle style)
+        {
+            Color old = GUI.color;
+            GUI.color = Color.red;
+            GUIContent testLabel = new GUIContent(text, Texture2D.blackTexture);
+            Rect test = GUIUtilities.WorldPointToSizedRect(position, testLabel, style);
+            GUIStyle newStyle = new GUIStyle(style);
+            GUI.Box(test, testLabel, newStyle);
+            GUI.color = old;
+
+        }
+
+        private static Texture2D invertedBox;
+        public static Texture2D InvertedBox
+        {
+            get
+            {
+                if (invertedBox == null)
+                    invertedBox = InvertTexture(GUI.skin.box.normal.background);
+                return (invertedBox);
+            }
+        }
+
+        public static Texture2D InvertTexture(Texture2D texture)
+        {
+            Texture2D newText = new Texture2D(texture.width, texture.height);
+            Color[] old = texture.GetPixels();
+            for (int i = 0; i < old.Length; i++)
+                old[i] = new Color(1 - old[i].r,1 - old[i].g,1 - old[i].b, 1 - old[i].a);
+            newText.SetPixels(old);
+            newText.Apply();
+            return (newText);
         }
     }
 }
