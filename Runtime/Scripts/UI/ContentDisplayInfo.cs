@@ -1,50 +1,69 @@
+using IterationToolkit;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ContentDisplayInfo
-{
-    public abstract IDisplayValue DisplayValue { get; }
-}
-
 public interface IContentDisplayInfo
 {
-    public IDisplayValue DisplayValue { get; }
-    public DisplayTexture ContentBackground { get; }
-    public DisplayTexture ContentBorder { get; set; }
-    public FillInfo FillInfo { get; }
+    public DisplayString DisplayText { get; set;  }
+    public DisplayTexture DisplayIcon { get; set; }
+    public DisplayTexture DisplayBackground { get; }
+    public DisplayTexture DisplayBorder { get; set; }
+    public FillInfo FillInfo { get; set; }
+
+    public ExtendedEvent OnBeforeDisplay { get; }
+
+    public GUIContent CreateContent() => new GUIContent(DisplayText.String, DisplayIcon.Texture);
+
 }
 
 [System.Serializable]
-public class ContentDisplayInfo<T> : IContentDisplayInfo where T : class, IDisplayValue
+public class ContentDisplayInfo : IContentDisplayInfo
 {
-    [field: SerializeField] public T ContentValue { get; private set; }
-    [field: SerializeField] public DisplayTexture ContentBackground { get; private set; }
-    [field: SerializeField] public DisplayTexture ContentBorder { get; set; }
-    [field: SerializeField] public FillInfo FillInfo { get; private set; }
-    public IDisplayValue DisplayValue => ContentValue;
+    [field: SerializeField] public DisplayString DisplayText { get; set; }
+    [field: SerializeField] public DisplayTexture DisplayIcon { get; set; }
+    [field: SerializeField] public DisplayTexture DisplayBackground { get; set; }
+    [field: SerializeField] public DisplayTexture DisplayBorder { get; set; }
+    [field: SerializeField] public FillInfo FillInfo { get; set; }
 
-    public ContentDisplayInfo(T contentValue, DisplayTexture contentBackground, FillInfo fillInfo = null)
+    public ExtendedEvent OnBeforeDisplay { get; private set; } = new ExtendedEvent();
+
+
+    public ContentDisplayInfo(DisplayString text = null, DisplayTexture background = null, DisplayTexture border = null, DisplayTexture icon = null, FillInfo fillInfo = null)
     {
-        ContentValue = contentValue;
-        ContentBackground = contentBackground;
+        Construct(text, background, border, icon, fillInfo);
+    }
+
+    public ContentDisplayInfo(string newText, ScriptableStyle style)
+    {
+        Construct();
+        DisplayText = new DisplayString(newText, style.StyleStates.Normal.TextColor);
+        DisplayBackground = new DisplayTexture(style.Background, style.StyleStates.Normal.BackgroundColor);
+        DisplayBorder = new DisplayTexture(style.Border, style.StyleStates.Normal.BackgroundColor);
+    }
+
+    public ContentDisplayInfo(string newText, Color newTextColor, ScriptableStyle style)
+    {
+        Construct();
+        DisplayText = new DisplayString(newText, newTextColor);
+        DisplayBackground = new DisplayTexture(style.Background, style.StyleStates.Normal.BackgroundColor);
+        DisplayBorder = new DisplayTexture(style.Border, style.StyleStates.Normal.BackgroundColor);
+    }
+
+    public ContentDisplayInfo(string newText, ScriptableStyle defaultStyle, Color textColor, Color backgroundColor)
+    {
+        Construct();
+        DisplayText = new DisplayString(newText, textColor);
+        DisplayBackground = new DisplayTexture(defaultStyle.Background, backgroundColor);
+        DisplayBorder = new DisplayTexture(defaultStyle.Border, defaultStyle.StyleStates.Normal.BackgroundColor);
+    }
+
+    private void Construct(DisplayString text = null, DisplayTexture background = null, DisplayTexture border = null, DisplayTexture icon = null, FillInfo fillInfo = null)
+    {
+        DisplayText = text != null ? text : new DisplayString(string.Empty);
+        DisplayIcon = icon != null ? icon : new DisplayTexture(null);
+        DisplayBackground = background != null ? background : new DisplayTexture(null);
+        DisplayBorder = border != null ? border : new DisplayTexture(null);
         FillInfo = fillInfo != null ? fillInfo : new FillInfo();
     }
-}
-
-[System.Serializable]
-public class ContentDisplayString : ContentDisplayInfo<DisplayString>
-{
-    public ContentDisplayString(DisplayString contentValue, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(contentValue, contentBackground, fillInfo) { }
-    public ContentDisplayString(string value, Color color, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(new DisplayString(value, color), contentBackground, fillInfo) { }
-    public ContentDisplayString(string value, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(new DisplayString(value, Color.black), contentBackground, fillInfo) { }
-    public ContentDisplayString(string value) : base(new DisplayString(value, Color.black), DisplayTexture.DefaultBackground, null) { }
-}
-
-[System.Serializable]
-public class ContentDisplayTexture : ContentDisplayInfo<DisplayTexture>
-{
-    public ContentDisplayTexture(DisplayTexture contentValue, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(contentValue, contentBackground, fillInfo) { }
-    public ContentDisplayTexture(Texture2D value, Color color, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(new DisplayTexture(value,color), contentBackground, fillInfo) { }
-    public ContentDisplayTexture(Texture2D value, DisplayTexture contentBackground, FillInfo fillInfo = null) : base(new DisplayTexture(value, Color.black), contentBackground, fillInfo) { }
 }

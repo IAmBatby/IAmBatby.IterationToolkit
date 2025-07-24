@@ -17,7 +17,7 @@ public interface IDisplayValue<T> : IDisplayValue
 
 public abstract class DisplayValue<T> : IDisplayValue<T>
 {
-    [field: SerializeField] public Color DisplayColor { get; private set; } = Color.white;
+    [field: SerializeField] public Color DisplayColor { get; set; } = Color.white;
     public abstract T DisplayContent { get; set; }
     public abstract GUIContent GetGUIContent();
 
@@ -32,6 +32,7 @@ public abstract class DisplayValue<T> : IDisplayValue<T>
 public class DisplayString : DisplayValue<string>
 {
     public DisplayString(string displayValue, Color displayColor) : base(displayValue, displayColor) { }
+    public DisplayString(string displayValue) : base(displayValue, Color.black) { }
 
     [field: SerializeField] public string String { get; private set; }
     public override string DisplayContent { get => String; set => String = value; }
@@ -43,7 +44,7 @@ public class DisplayString : DisplayValue<string>
 public class DisplayTexture : DisplayValue<Texture2D>
 {
     public DisplayTexture(Texture2D displayValue, Color displayColor) : base(displayValue, displayColor) { }
-    public DisplayTexture(Texture2D displayValue) : base(displayValue, Color.black) { }
+    public DisplayTexture(Texture2D displayValue) : base(displayValue, Color.white) { }
 
     [field: SerializeField] public Texture2D Texture { get; private set; }
     public override Texture2D DisplayContent { get => Texture; set => Texture = value; }

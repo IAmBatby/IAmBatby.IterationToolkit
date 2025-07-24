@@ -5,17 +5,24 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ScriptableStyle", menuName = "IterationToolkit/UI/ScriptableStyle", order = 1)]
 public class ScriptableStyle : ScriptableObject
 {
+    [field: Header("Font Options")]
     [field: SerializeField] public Font Font { get; private set; }
     [field: SerializeField] public int FontSize { get; private set; }
     [field: SerializeField] public FontStyle FontStyle { get; private set; }
+
+    [field: Header("Formatting Options")]
     [field: SerializeField] public TextAnchor Allignment { get; private set; }
-    [field: SerializeField] public Texture2D Background { get; private set; }
-    [field: SerializeField] public Texture2D Border { get; private set; }
     [field: SerializeField] public RectOffset Padding { get; private set; }
     [field: SerializeField] public bool StretchWidth { get; private set; }
     [field: SerializeField] public bool StretchHeight { get; private set; }
-
     [field: SerializeField] public Vector2 FixedSize { get; private set; }
+
+    [field: Header("Display Options")]
+    [field: SerializeField] public Texture2D Background { get; private set; }
+    [field: SerializeField] public Texture2D Border { get; private set; }
+
+    [field: Header("StyleStateColor Options")]
+    [field: SerializeField] public StyleStates StyleStates { get; private set; }
 
     [SerializeField, HideInInspector] private GUIStyle generatedStyle;
 
