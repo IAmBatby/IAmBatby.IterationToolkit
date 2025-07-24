@@ -90,6 +90,21 @@ namespace IterationToolkit
             source.ReactionController.Play(preset);
         }
 
+        public static bool IsHighlighted<T>(this T source) where T : class, IHighlightable
+        {
+            return (Highlighting.LatestHighlight != null && Highlighting.LatestHighlight == source);
+        }
+
+        public static void DisplayContent<T>(this T source, Vector3 position, GUIStyle style = null) where T : MonoBehaviour, IContentDisplaySource
+        {
+            ContentDisplay.DrawContentDisplayGroup(position, source.ContentDisplayGroup, style);
+        }
+
+        public static void DisplayContent<T>(this T source, GUIStyle style = null) where T : MonoBehaviour, IContentDisplaySource
+        {
+            ContentDisplay.DrawContentDisplayGroup(source.transform.position, source.ContentDisplayGroup, style);
+        }
+
         public static Rect AddPadding(this Rect rect, Rect padding)
         {
             return (new Rect(rect.x - padding.x, rect.y - padding.y, rect.width + padding.width, rect.height + padding.height));

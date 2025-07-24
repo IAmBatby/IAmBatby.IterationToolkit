@@ -39,6 +39,8 @@ public static class Highlighting
     public static bool IsLastestHighlight(IHighlightable highlightable) => LatestHighlight == highlightable;
     public static bool IsHighlighted(IHighlightable highlightable) => highlighted.Contains(highlightable);
 
+    public static Vector3 MousePoint => ActiveCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,ActiveCamera.nearClipPlane));
+
     private static void Refresh()
     {
         frameHighlighted.Clear();

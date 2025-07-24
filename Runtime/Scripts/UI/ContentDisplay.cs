@@ -1,19 +1,20 @@
 using IterationToolkit;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public static class ContentDisplay
 {
-    private static ContentDisplayBehaviour _instance;
-    private static ContentDisplayBehaviour Instance
+    private static ContentDisplayController _instance;
+    private static ContentDisplayController Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new GameObject("IterationToolkit.ContentDisplayBehaviour").AddComponent<ContentDisplayBehaviour>();
+                _instance = new GameObject("IterationToolkit.ContentDisplayBehaviour").AddComponent<ContentDisplayController>();
                 GameObject.DontDestroyOnLoad(_instance.gameObject);
             }
             return (_instance);
@@ -25,74 +26,109 @@ public static class ContentDisplay
 
     }
 
-    public static void DrawContentDisplayInfos(Vector3 position, List<ContentDisplayInfo> infos, GUIStyle style = null)
+    public static void DrawContentDisplayGroup(Vector3 position, ContentDisplayGroup group, GUIStyle style = null)
     {
-        /*
-        Rect offset = new Rect();
-        foreach (ContentDisplayInfo info in infos)
-        {
-            DrawContentDisplayInfo(position, info, style, offset);
-            offset = new Rect(offset.x, offset.y - 50, offset.width, offset.height);
-        }*/
-        style = style != null ? style : GUIDefaults.UI_Label;
+        DrawContentDisplayListings(position, group.Listings, style);    
+    }
+
+    public static void DrawContentDisplayInfos(Vector3 position, List<IContentDisplayInfo> infos, GUIStyle style = null)
+    {
+        GetSafeStyle(ref style);
         List<Rect> rects = GetContentDisplayInfoRects(position, infos, style, 5f);
         for (int i = 0; i < rects.Count; i++)
             DrawContentDisplayInfoDirect(rects[i], infos[i], style);
     }
-    /*
-    public static void DrawContentDisplayInfo(Vector3 position, ContentDisplayInfo info, GUIStyle style = null, Rect offset = default)
+
+    public static void DrawContentDisplayListings(Vector3 position, GUIStyle style = null, params ContentDisplayListing[] listings)
     {
-        style = style != null ? style : GUIDefaults.UI_Label;
+        DrawContentDisplayListings(position, listings.ToList(), style);
+    }
 
-        style = new GUIStyle(style);
-        style.normal.background = info.ContentBackground.DisplayContent;
-        Color oldColor = GUI.backgroundColor;
-        Color oldTextColor = GUI.contentColor;
-        GUI.contentColor = info.ContentText.DisplayColor;
-
-        GUI.backgroundColor = info.ContentBackground.DisplayColor;
-
-        GUIContent content = new GUIContent(info.ContentText.DisplayContent);
-        Rect contentRect = GUIUtilities.WorldPointToSizedRect(position, content, style);
-        Rect useRect = new Rect(offset.x + contentRect.x, offset.y + contentRect.y, offset.width + contentRect.width, offset.height + contentRect.height);
-        GUI.Box(useRect, content, style); 
-
-        GUI.backgroundColor = oldColor;
-        GUI.contentColor = oldTextColor;
-    }*/
-
-    private static void DrawContentDisplayInfoDirect(Rect rect, ContentDisplayInfo info, GUIStyle style)
+    public static void DrawContentDisplayListings(Vector3 position, List<ContentDisplayListing> listings, GUIStyle style = null)
     {
-        style = style != null ? style : GUIDefaults.UI_Label;
+        GetSafeStyle(ref style);
+
+        List<Rect> listingRects = GetContentDisplayListingRects(position, listings.ToList(), style, 5f);
+
+        for(int i = 0; i < listingRects.Count; i++)
+        {
+            List<Rect> infoRects = GetContentDisplayInfoRects(position, listings[i].Infos, style, 5f);
+            for (int j = 0; j < infoRects.Count; j++)
+            {
+                Rect modifiedRect = new Rect(infoRects[j].x, listingRects[i].y, infoRects[j].width, listingRects[i].height);
+                DrawContentDisplayInfoDirect(modifiedRect, listings[i].Infos[j], style);
+            }
+        }
+    }
+
+    private static void DrawContentDisplayInfoDirect(Rect rect, IContentDisplayInfo info, GUIStyle style)
+    {
+        GetSafeStyle(ref style);
 
         Texture2D oldBackground = style.normal.background;
         Color oldColor = GUI.backgroundColor;
         Color oldTextColor = GUI.contentColor;
 
         style.normal.background = info.ContentBackground.DisplayContent;
-        GUI.contentColor = info.ContentText.DisplayColor;
+        GUI.contentColor = info.DisplayValue.DisplayColor;
         GUI.backgroundColor = info.ContentBackground.DisplayColor;
-        GUI.Box(rect, info.ContentText.GetGUIContent(), style);
+        GUI.Box(rect, info.DisplayValue.GetGUIContent(), style);
 
-        style.normal.background = oldBackground;
         GUI.backgroundColor = oldColor;
         GUI.contentColor = oldTextColor;
+
+
+        if (info.ContentBorder != null)
+        {
+            style.normal.background = info.ContentBorder.Texture;
+            GUI.Box(rect, new GUIContent(string.Empty), style);
+        }
+
+        style.normal.background = oldBackground;
     }
 
-    public static Rect GetContentDisplayInfoRect(Vector3 position, ContentDisplayInfo info, GUIStyle style)
+    public static GUIStyle GetSafeStyle(ref GUIStyle style) => style = style == null ? GUIDefaults.UI_Label : style;
+
+    public static Rect GetContentDisplayInfoRect(Vector3 position, IContentDisplayInfo info, GUIStyle style)
     {
-        return (GUIUtilities.WorldPointToSizedRect(position,info.ContentText.GetGUIContent(), style));
+        return (GUIUtilities.WorldPointToSizedRect(position,info.DisplayValue.GetGUIContent(), style));
     }
 
-    public static List<Rect> GetContentDisplayInfoRects(Vector3 position, List<ContentDisplayInfo> infos, GUIStyle style, float offset)
+    public static List<Rect> GetContentDisplayInfoRects(Vector3 position, List<IContentDisplayInfo> infos, GUIStyle style, float offset)
     {
+        GetSafeStyle(ref style);
         List<Rect> returnRects = new List<Rect>();
+        float xOffset = 0;
 
-        float yOffset = 0;
+        TextAnchor old = style.alignment;
+        style.alignment = TextAnchor.MiddleLeft;
 
-        foreach (ContentDisplayInfo info in infos)
+        foreach (IContentDisplayInfo info in infos)
         {
             Rect displayRect = GetContentDisplayInfoRect(position, info, style);
+            float offsetResults = displayRect.x + xOffset;
+            displayRect = new Rect(offsetResults, displayRect.y, displayRect.width, displayRect.height);
+            xOffset += displayRect.width + offset;
+            returnRects.Add(displayRect);
+        }
+
+        style.alignment = old;
+        return (returnRects);
+    }
+
+
+    public static List<Rect> GetContentDisplayListingRects(Vector3 position, List<ContentDisplayListing> listings, GUIStyle style, float offset)
+    {
+        GetSafeStyle(ref style);
+        List<Rect> returnRects = new List<Rect>();
+        float yOffset = 0;
+
+        foreach (ContentDisplayListing listing in listings)
+        {
+            if (listing.Infos.Count == 0) continue;
+            Rect displayRect = GetContentDisplayInfoRect(position, listing.Infos[0], style);
+            if (yOffset == 0)
+                yOffset -= displayRect.height;
             float offsetResult = (displayRect.y - displayRect.height) - yOffset;
             displayRect = new Rect(displayRect.x, offsetResult, displayRect.width, displayRect.height);
             yOffset += displayRect.height + offset;
@@ -105,7 +141,7 @@ public static class ContentDisplay
 
 
 
-    protected class ContentDisplayBehaviour : MonoBehaviour
+    protected class ContentDisplayController : MonoBehaviour
     {
         private void FixedUpdate() => OnGUI();
     }
