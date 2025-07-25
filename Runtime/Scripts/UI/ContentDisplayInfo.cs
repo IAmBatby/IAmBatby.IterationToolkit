@@ -1,4 +1,5 @@
 using IterationToolkit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,10 @@ public interface IContentDisplayInfo
 
     public ExtendedEvent OnBeforeDisplay { get; }
 
-    public GUIContent CreateContent() => new GUIContent(DisplayText.String, DisplayIcon.Texture);
+    public GUIContent CreateContent() => new GUIContent(DisplayText.String.Replace("\\n", Environment.NewLine), DisplayIcon.Texture);
+    public GUIContent CreateSizingContent();
+
+    public void OverrideTextSizing(string sizingText);
 
 }
 
@@ -27,6 +31,24 @@ public class ContentDisplayInfo : IContentDisplayInfo
     [field: SerializeField] public FillInfo FillInfo { get; set; }
 
     public ExtendedEvent OnBeforeDisplay { get; private set; } = new ExtendedEvent();
+
+    private DisplayString overrideSizeString;
+
+    public GUIContent CreateSizingContent()
+    {
+        if (overrideSizeString != null)
+            return (new GUIContent(overrideSizeString.String.Replace("\\n", Environment.NewLine), DisplayIcon.Texture));
+        else
+            return (new GUIContent(DisplayText.String.Replace("\\n", Environment.NewLine), DisplayIcon.Texture));
+    }
+
+    public void OverrideTextSizing(string sizingText)
+    {
+        if (string.IsNullOrEmpty(sizingText))
+            overrideSizeString = null;
+        else
+            overrideSizeString = new DisplayString(sizingText);
+    }
 
 
     public ContentDisplayInfo(DisplayString text = null, DisplayTexture background = null, DisplayTexture border = null, DisplayTexture icon = null, FillInfo fillInfo = null)

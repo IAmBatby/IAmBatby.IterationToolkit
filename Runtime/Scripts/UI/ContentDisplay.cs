@@ -21,6 +21,9 @@ public static class ContentDisplay
         }
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void Init() => Instance.enabled = Instance.enabled;
+
     private static void OnGUI()
     {
 
@@ -58,6 +61,7 @@ public static class ContentDisplay
             for (int j = 0; j < infoRects.Count; j++)
             {
                 Rect modifiedRect = new Rect(infoRects[j].x, listingRects[i].y, infoRects[j].width, listingRects[i].height);
+                //Rect modifiedRect = new Rect(infoRects[j].x, listingRects[i].y, infoRects[j].width, infoRects[j].height);
                 DrawContentDisplayInfoDirect(modifiedRect, listings[i].Infos[j], style);
             }
         }
@@ -87,36 +91,18 @@ public static class ContentDisplay
         GUI.contentColor = info.DisplayText.DisplayColor;
 
         GUI.backgroundColor = new Color(0, 0, 0, 0.2f);
-        GUI.Box(rect,GUIContent.none, style);
+        GUI.Box(rect,GUIContent.none, style); //Background Background
 
         GUI.backgroundColor = info.DisplayBackground.DisplayColor;
 
         Rect lerpRect = new Rect(rect.x,rect.y, Mathf.Lerp(0,rect.width,info.FillInfo.FillLerpRate),rect.height);
-        //Rect lerpRect = rect;
-        //GUI.DrawTexture(rect, info.DisplayBackground.Texture);
-        Debug.Log("Border: " + style.border);
-        RectOffset oldFlow = new RectOffset(0, 0, 0, 0);
-        //style.overflow = new RectOffset(oldFlow.left, -25, oldFlow.top, oldFlow.bottom);
-        //if (lerpRect.width > 0)
-        //GUI.Box(lerpRect, GUIContent.none, style);
-        //style.overflow = oldFlow;
-        //if (Transparent == null) CreateTransparent();
-        //Rect flipRect = new Rect(rect.x + lerpRect.width, rect.y, Mathf.Lerp(rect.width, 0, info.FillInfo.FillLerpRate), rect.height);
 
-        rect = lerpRect;
-        //GUI.DrawTexture(paddedRect, info.DisplayBackground.Texture, ScaleMode.ScaleAndCrop, alphaBlend: true);
-        Vector2 size = style.CalcSize(info.CreateContent());
-        Vector2 dif = new Vector2(lerpRect.width - size.x, lerpRect.height - size.y);
-        Rect offset = new Rect(dif.x / 2, dif.y / 2, size.x / 2, size.y / 2);
-        Rect calcRect = new Rect(lerpRect.x + offset.x, lerpRect.y + offset.y, size.x + dif.x, size.y + dif.y);
-        GUI.DrawTexture(calcRect, info.DisplayBackground.Texture);
-        GUI.DrawTexture(rect, info.DisplayBorder.Texture);
-        //GUI.Box(lerpRect, GUIContent.none, style);
-
+        if (lerpRect.width > 0)
+            GUI.Box(lerpRect, GUIContent.none, style); //Lerp Background
 
         style.normal.background = null;
 
-        //GUI.Box(rect, info.CreateContent(), style);
+        GUI.Box(rect, info.CreateContent(), style); //Text
 
         GUI.backgroundColor = oldColor;
         GUI.contentColor = oldTextColor;
@@ -125,10 +111,44 @@ public static class ContentDisplay
         if (info.DisplayBorder?.Texture != null)
         {
             style.normal.background = info.DisplayBorder.Texture;
-            //GUI.Box(rect, new GUIContent(string.Empty), style);
+            GUI.Box(rect, new GUIContent(string.Empty), style); //Border
         }
 
         style.normal.background = oldBackground;
+    }
+
+    private static void DrawDisplayInfo(DisplayInfo info)
+    {
+        Texture2D oldBackground = info.DrawStyle.normal.background;
+        Color oldColor = GUI.backgroundColor;
+        Color oldTextColor = GUI.contentColor;
+
+        info.DrawStyle.normal.background = info.Info.DisplayBackground.DisplayContent;
+        GUI.contentColor = info.Info.DisplayText.DisplayColor;
+
+        GUI.backgroundColor = new Color(0, 0, 0, 0.2f);
+        GUI.Box(info.DrawRect, GUIContent.none, info.DrawStyle); //Background Background
+
+        GUI.backgroundColor = info.Info.DisplayBackground.DisplayColor;
+
+        if (info.FillLerpRect.width > 0)
+            GUI.Box(info.FillLerpRect, GUIContent.none, info.DrawStyle); //Lerp Background
+
+        info.DrawStyle.normal.background = null;
+
+        GUI.Box(info.DrawRect, info.InfoContent, info.DrawStyle); //Text
+
+        GUI.backgroundColor = oldColor;
+        GUI.contentColor = oldTextColor;
+
+
+        if (info.Info?.DisplayBorder?.Texture != null)
+        {
+            info.DrawStyle.normal.background = info.Info.DisplayBorder.Texture;
+            GUI.Box(info.DrawRect, GUIContent.none, info.DrawStyle); //Border
+        }
+
+        info.DrawStyle.normal.background = oldBackground;
     }
 
     private static void CreateTransparent()
@@ -150,7 +170,7 @@ public static class ContentDisplay
 
     public static Rect GetContentDisplayInfoRect(Vector3 position, IContentDisplayInfo info, GUIStyle style)
     {
-        return (GUIUtilities.WorldPointToSizedRect(position,info.CreateContent(), style));
+        return (GUIUtilities.WorldPointToSizedRect(position,info.CreateSizingContent(), style));
     }
 
     public static List<Rect> GetContentDisplayInfoRects(Vector3 position, List<IContentDisplayInfo> infos, GUIStyle style, float offset)
@@ -160,7 +180,7 @@ public static class ContentDisplay
         float xOffset = 0;
 
         TextAnchor old = style.alignment;
-        style.alignment = TextAnchor.MiddleLeft;
+        style.alignment = TextAnchor.LowerLeft;
 
         foreach (IContentDisplayInfo info in infos)
         {
@@ -202,7 +222,19 @@ public static class ContentDisplay
 
     protected class ContentDisplayController : MonoBehaviour
     {
+        private bool run;
         private void Awake() => CreateTransparent();
-        private void FixedUpdate() => OnGUI();
+        private void OnGUI()
+        {
+            if (!run) return;
+            Debug.Log("OnGUI");
+            run = false;
+        }
+
+        private void LateUpdate()
+        {
+            Debug.Log("LateUpdate");
+            run = true;
+        }
     }
 }
