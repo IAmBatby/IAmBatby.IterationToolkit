@@ -131,8 +131,8 @@ public static class ContentDisplay
 
         GUI.backgroundColor = info.Info.DisplayBackground.DisplayColor;
 
-        if (info.FillLerpRect.width > 0)
-            GUI.Box(info.FillLerpRect, GUIContent.none, info.DrawStyle); //Lerp Background
+        if (info.DrawFillRect.width > 0)
+            GUI.Box(info.DrawFillRect, GUIContent.none, info.DrawStyle); //Lerp Background
 
         info.DrawStyle.normal.background = null;
 
@@ -213,15 +213,12 @@ public static class ContentDisplay
             yOffset += displayRect.height + offset;
             returnRects.Add(displayRect);
         }
-
-
         return (returnRects);
     }
 
-
-
     protected class ContentDisplayController : MonoBehaviour
     {
+        /*
         private bool run;
         private void Awake() => CreateTransparent();
         private void OnGUI()
@@ -236,5 +233,6 @@ public static class ContentDisplay
             Debug.Log("LateUpdate");
             run = true;
         }
+        */
     }
 }
