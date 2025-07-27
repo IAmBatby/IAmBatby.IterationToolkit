@@ -22,67 +22,57 @@ public static class Highlighting
     [RuntimeInitializeOnLoadMethod] //Jank just triggers the singleton creation getter
     private static void Start() => Instance.enabled = true;
 
-    private static HashSet<IHighlightable> highlighted = new HashSet<IHighlightable>();
-    private static HashSet<IHighlightable> frameHighlighted = new HashSet<IHighlightable>();
-
     private static Camera ActiveCamera => OverrideCamera ? OverrideCamera : Camera.main;
 
     public static Camera OverrideCamera { get; private set; }
 
-    public static IHighlightable LatestHighlight { get; private set; }
-    public static Transform LatestHighlightTransform { get; private set; }
+    public static IHighlightable Highlighted { get; private set; }
+    public static Transform HighlightedTransform { get; private set; }
 
-    public static ExtendedEvent OnHighlightsChanged { get; private set; } = new ExtendedEvent();
+    public static IListenOnlyEvent OnHighlightChanged => onHighlightsChanged;
+    private static ExtendedEvent onHighlightsChanged = new ExtendedEvent();
 
-    public static IHighlightable[] GetActiveHighlights() => highlighted.ToArray();
-
-    public static bool IsLastestHighlight(IHighlightable highlightable) => LatestHighlight == highlightable;
-    public static bool IsHighlighted(IHighlightable highlightable) => highlighted.Contains(highlightable);
+    public static bool IsHighlighted(IHighlightable highlightable) => Highlighted != null && Highlighted == highlightable;
 
     public static Vector3 MousePoint => ActiveCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,ActiveCamera.nearClipPlane));
 
     private static void Refresh()
     {
-        frameHighlighted.Clear();
+        (IHighlightable, Collider) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
         foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse())
             if (hit.collider.TryGetComponent(out IHighlightable highlightable))
-            {
-                frameHighlighted.Add(highlightable);
-                if (!highlighted.Contains(highlightable))
-                    ToggleHighlightState(highlightable, true, hit.transform);
-            }
+                closestHighlightable = (highlightable, hit.collider);
 
-        foreach (IHighlightable higlightable in new HashSet<IHighlightable>(highlighted))
-            if (!frameHighlighted.Contains(higlightable))
-                ToggleHighlightState(higlightable, false, null);
+        if (Highlighted != null && closestHighlightable.Item1 == null) //If we previously had a highlight and now theres nothing to highlight
+            Unhighlight();
+        else if (Highlighted != null && closestHighlightable.Item1 != Highlighted) //if we previously had a highlight and now a closer highlightable was found
+        {
+            Unhighlight();
+            Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
+        }
+        else if (Highlighted == null && closestHighlightable.Item1 != null) //If we didn't previously have a highlight and now there's something to highlight
+            Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
     }
 
-    private static void ToggleHighlightState(IHighlightable highlightable, bool isHighlighted, Transform optionalTransform)
+    private static void Unhighlight()
     {
-        if (highlightable == null || highlighted.Contains(highlightable) == isHighlighted) return;
-        if (isHighlighted)
+        IHighlightable cache = Highlighted;
+        Highlighted = null;
+        HighlightedTransform = null;
+        if (cache != null)
         {
-            if (LatestHighlight != null && LatestHighlight != highlightable) //If we are replacing the current latest highlight
-                ToggleHighlightState(LatestHighlight, false, null);
-            RefreshLatestHighlight(highlightable, optionalTransform);
-            highlighted.Add(highlightable);
+            cache.OnHighlightChanged(false);
+            onHighlightsChanged.Invoke();
         }
-        else
-        {
-            if (LatestHighlight == highlightable) //If we are turning off the latest highlight
-                RefreshLatestHighlight(null, null);
-            highlighted.Remove(highlightable);
-        }
-
-        highlightable.OnHighlightChanged(isHighlighted);
-        OnHighlightsChanged.Invoke();
     }
 
-    private static void RefreshLatestHighlight(IHighlightable highlight, Transform transform)
+    private static void Highlight(IHighlightable highlight, Transform source)
     {
-        LatestHighlight = highlight;
-        LatestHighlightTransform = transform;
+        Highlighted = highlight;
+        HighlightedTransform = source;
+        highlight.OnHighlightChanged(true);
+        onHighlightsChanged.Invoke();
     }
 
     protected class IHighlightsController : MonoBehaviour

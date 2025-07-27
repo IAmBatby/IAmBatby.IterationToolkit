@@ -101,7 +101,7 @@ namespace IterationToolkit
 
         public static bool IsHighlighted<T>(this T source) where T : class, IHighlightable
         {
-            return (Highlighting.LatestHighlight != null && Highlighting.LatestHighlight == source);
+            return (Highlighting.Highlighted != null && Highlighting.Highlighted == source);
         }
 
         public static void DisplayContent<T>(this T source, Vector3 position, GUIStyle style = null) where T : MonoBehaviour, IContentDisplaySource
