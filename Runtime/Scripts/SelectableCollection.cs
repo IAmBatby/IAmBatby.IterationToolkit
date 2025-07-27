@@ -7,202 +7,94 @@ using UnityEngine;
 namespace IterationToolkit
 {
     [System.Serializable]
-    public class SelectableCollection<T>
+    public class SelectableCollection<T> : ISelectableCollection<T>
     {
-        private bool isInitalized;
-
-        [SerializeField] private List<T> allObjects;
+        [SerializeField] private List<T> allObjects = new List<T>();
         public List<T> Collection => allObjects;
-        //public List<T> AllObjects => allObjects;
-        private List<T> unselectedObjects;
-        public T ActiveSelection
-        {
-            get
-            {
-                if (allObjects != null && allObjects.Count != 0 && selectionIndex <= allObjects.Count - 1)
-                    return (allObjects[selectionIndex]);
-                else
-                    return (default);
-            }
-        }
 
-        private int selectionIndex;
-        public int ActiveIndex => selectionIndex;
+        public int SelectedIndex { get; private set; }
+        public T Selection => allObjects.IsValidIndex(SelectedIndex) ? allObjects[SelectedIndex] : default;
 
-        public ExtendedEvent<T> onSelected = new ExtendedEvent<T>();
-        public ExtendedEvent<T> onUnselected = new ExtendedEvent<T>();
-        public ExtendedEvent onSelectionChange = new ExtendedEvent();
+        private ExtendedEvent<T> onSelected = new ExtendedEvent<T>();
+        private ExtendedEvent<T> onUnselected = new ExtendedEvent<T>();
+        private ExtendedEvent<T,T> onSelectionChange = new ExtendedEvent<T,T>();
 
-        private Dictionary<T, List<Action>> onSelectedActionsDict;
-        private List<Action> onSelectedActionsList;
-        private Dictionary<T, List<Action>> onUnselectedActionsDict;
+        public IListenOnlyEvent<T, T> OnSelectionChange => onSelectionChange;
+        public IListenOnlyEvent<T> OnSelected => onSelected;
+        public IListenOnlyEvent<T> OnUnselected => onUnselected;
 
         public SelectableCollection(List<T> objects = null)
         {
-            isInitalized = false;
-            Initalize(objects);
-        }
-
-        public void Initalize(List<T> objects = null)
-        {
-            //allObjects = new List<T>(objects);
-            //unselectedObjects = new List<T>(objects);
-            allObjects = new List<T>();
-            unselectedObjects = new List<T>();
-            onSelectedActionsDict = new Dictionary<T, List<Action>>();
-            onUnselectedActionsDict = new Dictionary<T, List<Action>>();
-            onSelectedActionsList = new List<Action>();
-            onSelected = new ExtendedEvent<T>();
-            onUnselected = new ExtendedEvent<T>();
-
             if (objects != null)
-                foreach (T newObject in objects)
-                    AddObject(newObject);
-
-            isInitalized = true;
+                foreach (T obj in objects)
+                    Add(obj);
         }
 
-        public void AddObject(T newObject, bool selectOnAdd = false)
+        public void Add(T newObject, bool selectOnAdd = false)
         {
-            if (!allObjects.Contains(newObject))
+            if (allObjects.Contains(newObject))
             {
-                allObjects.Add(newObject);
-                unselectedObjects.Add(newObject);
-                onSelectedActionsDict.Add(newObject, new List<Action>());
-                onUnselectedActionsDict.Add(newObject, new List<Action>());
-            }
-            else
                 Debug.LogError("Cannot add object to SelectableCollection as it has already been added.");
-        }
-
-        public void RemoveObject(T removalObject)
-        {
-            if (allObjects.Contains(removalObject))
-            {
-                //Debug.Log("Removing Item, Index Is At: " + selectionIndex);
-                T activeSelection = default;
-                bool selectPreviousActiveObject = false;
-                if (allObjects.IndexOf(removalObject) != selectionIndex)
-                {
-                    activeSelection = ActiveSelection;
-                    selectPreviousActiveObject = true;
-                }
-                allObjects.Remove(removalObject);
-                unselectedObjects.Remove(removalObject);
-                if (onSelectedActionsDict.ContainsKey(removalObject))
-                    onSelectedActionsDict.Remove(removalObject);
-                if (onUnselectedActionsDict.ContainsKey(removalObject))
-                    onUnselectedActionsDict.Remove(removalObject);
-                if (selectPreviousActiveObject == true)
-                    Select(activeSelection);
-                else if (allObjects.Count == 0)
-                    onSelectionChange.Invoke();
-                else
-                    SelectBackward();
+                return;
             }
+
+            allObjects.Add(newObject);
+
+            if (selectOnAdd)
+                Select(newObject);
         }
 
-        public void AssignOnSelected(Action newSelectedAction)
+        public void Remove(T removalObject)
         {
-            TryInitalize();
+            if (removalObject == null || !allObjects.Contains(removalObject)) return;
 
-            onSelectedActionsList.Add(newSelectedAction);
+            if (allObjects.IndexOf(removalObject) == SelectedIndex)
+                Select(-1);
         }
 
-        public void AssignOnSelected(IEnumerable<Action> newSelectedActions)
+        public void Select(T value)
         {
-            TryInitalize();
-
-            foreach (Action action in newSelectedActions)
-            {
-                T convertedTarget = (T)action.Target;
-                if (allObjects.Contains(convertedTarget))
-                    if (!onSelectedActionsDict[convertedTarget].Contains(action))
-                        onSelectedActionsDict[convertedTarget].Add(action);
-            }
+            if (ValidateInput(value))
+                Select(allObjects.IndexOf(value));
         }
 
-        public void AssignOnUnselected(IEnumerable<Action> newUnselectedActions)
-        {
-            foreach (Action action in newUnselectedActions)
-            {
-                T convertedTarget = (T)action.Target;
-                if (allObjects.Contains(convertedTarget))
-                    if (!onUnselectedActionsDict[convertedTarget].Contains(action))
-                        onUnselectedActionsDict[convertedTarget].Add(action);
-            }
-        }
-
-        private void InvokeSelection(T selectedObject)
-        {
-            onSelected.Invoke(selectedObject);
-            foreach (Action action in onSelectedActionsDict[selectedObject])
-                action.Invoke();
-            foreach (Action action in onSelectedActionsList)
-                action.Invoke();
-        }
-
-        private void InvokeUnselection(T unselectedObject)
-        {
-            onUnselected.Invoke(unselectedObject);
-            foreach (Action aciton in onUnselectedActionsDict[unselectedObject])
-                aciton.Invoke();
-        }
+        public void Unselect() => Select(-1);
 
         public void Select(int index)
         {
-            if (allObjects.Count != 0)
-                Select(allObjects[index]);
+            if (ValidateInput(index) == false || (index > -1 && ValidateInput(allObjects[index]) == false)) return;
+
+            T previousSelection = Selection;
+            SelectedIndex = index;
+
+            onSelectionChange.Invoke(previousSelection,Selection);
+            onUnselected.Invoke(previousSelection);
+            onSelected.Invoke(Selection);
         }
 
-        public void Select(T gameObject)
-        {
-            TryInitalize();
+        public void SelectForward() => Select(allObjects[SelectedIndex.Increase(allObjects)]);
+        public void SelectBackward() => Select(allObjects[SelectedIndex.Decrease(allObjects)]);
 
-            if (allObjects.Contains(gameObject))
+        public IEnumerator<T> GetEnumerator() => allObjects.GetEnumerator();
+
+        private bool ValidateInput(int index)
+        {
+            if (-1 > index || index >= allObjects.Count)
             {
-                //Debug.Log("Selecting Item " + gameObject + ", Index Is At: " + selectionIndex);
-                selectionIndex = allObjects.IndexOf(gameObject);
-
-                if (!unselectedObjects.Contains(ActiveSelection))
-                    unselectedObjects.Add(ActiveSelection);
-
-
-                if (unselectedObjects.Contains(ActiveSelection))
-                    unselectedObjects.Remove(ActiveSelection);
-
-                onSelectionChange.Invoke();
-
-                InvokeSelection(ActiveSelection);
-
-                foreach (T unselectedObject in unselectedObjects)
-                    InvokeUnselection(unselectedObject);
+                Debug.LogError("Cannot select index as it is invalid for the current collection.");
+                return (false);
             }
+            return (true);
         }
 
-        public void SelectForward()
+        private bool ValidateInput(T value)
         {
-            TryInitalize();
-            if (allObjects.Count != 0)
-                Select(allObjects[selectionIndex.Increase(allObjects)]);
-        }
-
-        public void SelectBackward()
-        {
-            TryInitalize();
-            if (allObjects.Count != 0)
-                Select(allObjects[selectionIndex.Decrease(allObjects)]);
-        }
-
-        public void TryInitalize()
-        {
-            if (isInitalized == false)
-                Initalize(allObjects);
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return allObjects.GetEnumerator();
+            if (!allObjects.Contains(value))
+            {
+                Debug.LogError("Cannot select " + value + " as it is not included in SelectableCollection.");
+                return (false);
+            }
+            return (true);
         }
     }
 }

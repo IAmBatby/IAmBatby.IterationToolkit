@@ -48,11 +48,11 @@ namespace IterationToolkit
             GUILayout.Space(10);
             GUILayout.BeginVertical();
             GUILayout.Space(10);
-            GUILayout.Label(cheatCategories.ActiveSelection.ToBold().Colorize(Color.white), GUIDefaults.UI_Header);
+            GUILayout.Label(cheatCategories.Selection.ToBold().Colorize(Color.white), GUIDefaults.UI_Header);
             GUILayout.Space(10);
 
             consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);
-            List<CheatEntry> activeCheats = new List<CheatEntry>(registeredCheats[cheatCategories.ActiveSelection]);
+            List<CheatEntry> activeCheats = new List<CheatEntry>(registeredCheats[cheatCategories.Selection]);
             for (int i = 0; i < activeCheats.Count; i++)
             {
                 GUILayout.BeginHorizontal();
@@ -91,7 +91,7 @@ namespace IterationToolkit
             AddCheat(cheat, category);
         }
 
-        public static void RegisterCheat<T>(ParameterEvent<T> newEvent, T newValue, string category = "General")
+        public static void RegisterCheat<T>(Action<T> newEvent, T newValue, string category = "General")
         {
             if (newEvent == null || newValue == null) return;
             CheatEntry<T> cheat = new CheatEntry<T>();
@@ -114,7 +114,7 @@ namespace IterationToolkit
                 if (cheatCategories == null)
                     cheatCategories = new SelectableCollection<string>(registeredCheats.Keys.ToList());
                 else
-                    cheatCategories.AddObject(category);
+                    cheatCategories.Add(category);
             }
         }
 
@@ -140,9 +140,9 @@ namespace IterationToolkit
     public class CheatEntry<T> : CheatEntry
     {
         public T Value { get; private set; }
-        public ParameterEvent<T> ValueCheatEvent { get; private set; }
+        public Action<T> ValueCheatEvent { get; private set; }
 
-        public void SetCheat(ParameterEvent<T> newCheatEvent, T newValue)
+        public void SetCheat(Action<T> newCheatEvent, T newValue)
         {
             Value = newValue;
             ValueCheatEvent = newCheatEvent;

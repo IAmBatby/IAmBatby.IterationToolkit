@@ -56,7 +56,7 @@ namespace IterationToolkit
             return (new string(chars));
         }
 
-
+        public static bool IsValidIndex<T>(this List<T> collection, int potentialIndex) => potentialIndex > 0 && potentialIndex < collection.Count;
 
         public static int Increase<T>(this int value, List<T> collection)
         {
@@ -74,6 +74,15 @@ namespace IterationToolkit
         public static int Decrease<T>(this int value, List<T> collection)
         {
             return (Utilities.DecreaseIndex(value, collection));
+        }
+
+        public static void TryToggleInclusion<T>(this List<T> collection, T value)
+        {
+            if (collection == null || value == null) return;
+            if (collection.Contains(value))
+                collection.Remove(value);
+            else
+                collection.Add(value);
         }
 
         public static GUIStyle Colorize(this GUIStyle input, Color color)

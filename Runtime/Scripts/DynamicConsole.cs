@@ -24,6 +24,7 @@ namespace IterationToolkit
             OnLoggerModified = new ExtendedEvent();
             loggerDict.Clear();
             loggerList.Clear();
+
             ActiveLogs = null;
         }
 
@@ -47,7 +48,7 @@ namespace IterationToolkit
             if (ActiveLogs == null)
                 ActiveLogs = new SelectableCollection<Logger>(loggerList);
             else
-                ActiveLogs.AddObject(newLogger);
+                ActiveLogs.Add(newLogger);
             return (newLogger);
         }
 
@@ -70,7 +71,7 @@ namespace IterationToolkit
 
         public static string GetActiveLog()
         {
-            return (ActiveLogs.ActiveSelection.GetLog());
+            return (ActiveLogs.Selection.GetLog());
         }
 
         public static void ToggleForward()
@@ -113,9 +114,9 @@ namespace IterationToolkit
             GUILayout.Space(10);
             GUILayout.BeginVertical();
             GUILayout.Space(10);
-            GUILayout.Label(ActiveLogs.ActiveSelection.LogName.ToBold().Colorize(Color.white), GUIDefaults.UI_Header);
+            GUILayout.Label(ActiveLogs.Selection.LogName.ToBold().Colorize(Color.white), GUIDefaults.UI_Header);
             GUILayout.Space(10);
-            List<string> logLines = ActiveLogs.ActiveSelection.GetLogLines();
+            List<string> logLines = ActiveLogs.Selection.GetLogLines();
             if (logLines.Count > previousCount)
                 consoleScrollView = new Vector2(0, 9999999999);
             consoleScrollView = GUILayout.BeginScrollView(consoleScrollView, false, alwaysShowVertical: true);

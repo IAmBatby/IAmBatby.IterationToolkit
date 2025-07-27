@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public class ExtendedEvent : IDomainReloadable
+    public class ExtendedEvent : IExtendedEvent, IListenOnlyEvent
     {
         protected event Action onEvent;
         public bool HasListeners => (Listeners != 0);
@@ -38,12 +38,12 @@ namespace IterationToolkit
         public void OnDomainRefresh() => ClearListeners();
     }
 
-    public delegate void ParameterEvent<T>(T param);
-    public class ExtendedEvent<T> : ExtendedEvent
+    public class ExtendedEvent<T> : ExtendedEvent, IListenOnlyEvent<T>
     {
         public override int Listeners => base.Listeners + paramListeners.Count;
-        private event ParameterEvent<T> onParameterEvent;
-        private List<ParameterEvent<T>> paramListeners = new List<ParameterEvent<T>>();
+        private event Action<T> onParameterEvent;
+        private List<Action<T>> paramListeners = new List<Action<T>>();
+
 
         public void Invoke(T param)
         {
@@ -51,12 +51,12 @@ namespace IterationToolkit
             Invoke();
         }
 
-        public void AddListener(ParameterEvent<T> listener)
+        public void AddListener(Action<T> listener)
         {
             onParameterEvent += listener;
             paramListeners.Add(listener);
         }
-        public void RemoveListener(ParameterEvent<T> listener)
+        public void RemoveListener(Action<T> listener)
         {
             onParameterEvent -= listener;
             paramListeners.Remove(listener);
@@ -65,7 +65,41 @@ namespace IterationToolkit
         public override void ClearListeners()
         {
             base.ClearListeners();
-            foreach (ParameterEvent<T> listener in paramListeners)
+            foreach (Action<T> listener in paramListeners)
+                onParameterEvent -= listener;
+            onParameterEvent = null;
+            paramListeners.Clear();
+        }
+    }
+
+    public class ExtendedEvent<T,U> : ExtendedEvent, IListenOnlyEvent<T,U>
+    {
+        public override int Listeners => base.Listeners + paramListeners.Count;
+        private event Action<T,U> onParameterEvent;
+        private List<Action<T,U>> paramListeners = new List<Action<T,U>>();
+
+
+        public void Invoke(T firstParam, U secondParam)
+        {
+            onParameterEvent?.Invoke(firstParam,secondParam);
+            Invoke();
+        }
+
+        public void AddListener(Action<T,U> listener)
+        {
+            onParameterEvent += listener;
+            paramListeners.Add(listener);
+        }
+        public void RemoveListener(Action<T,U> listener)
+        {
+            onParameterEvent -= listener;
+            paramListeners.Remove(listener);
+        }
+
+        public override void ClearListeners()
+        {
+            base.ClearListeners();
+            foreach (Action<T,U> listener in paramListeners)
                 onParameterEvent -= listener;
             onParameterEvent = null;
             paramListeners.Clear();
