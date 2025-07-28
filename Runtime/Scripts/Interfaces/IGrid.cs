@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public interface IGrid
+    public interface IGrid<T> where T : class, IGridInfo
     {
         public Transform Source { get; }
         public Vector3Int Range { get; }
@@ -15,9 +15,9 @@ namespace IterationToolkit
         public Vector3 ArrayCenterOffset => new Vector3((float)Range.x / 2, (float)Range.y / 2,(float)Range.z / 2);
         public Vector3 ArrayCenterPosition => (Vector3.zero - ArrayCenterOffset) + (Source.lossyScale / 2);
 
-        public List<GridUnitInfo> GetUnits()
+        public List<T> GetUnits()
         {
-            List<GridUnitInfo> returnList = new List<GridUnitInfo>();
+            List<T> returnList = new List<T>();
 
             for (int y = 0; y < Range.y; y++)
             {
@@ -25,13 +25,15 @@ namespace IterationToolkit
                 {
                     for (int x = 0; x < Range.x; x++)
                     {
-                        returnList.Add(new GridUnitInfo(new Vector3Int(x,y,z),IndexToPosition(new Vector3Int(x, y, z), Space.World)));
+                        returnList.Add(CreateInfo(new Vector3Int(x,y,z),IndexToPosition(new Vector3Int(x, y, z), Space.World)));
                     }
                 }
             }
 
             return (returnList);
         }
+
+        public T CreateInfo(Vector3Int index, Vector3 pos);
 
         public Vector3 IndexToPosition(Vector3Int index, Space spaceType)
         {
@@ -43,18 +45,18 @@ namespace IterationToolkit
 
         public void DrawAll()
         {
-            foreach (GridUnitInfo info in GetUnits())
+            foreach (T info in GetUnits())
                 if (CanDrawUnit(info))
                     DrawUnit(info);
         }
 
-        public bool CanDrawUnit(GridUnitInfo unit);
+        public bool CanDrawUnit(T unit);
 
-        public void DrawUnit(GridUnitInfo unit);
+        public void DrawUnit(T unit);
     }
 
     [System.Serializable]
-    public struct GridUnitInfo
+    public struct GridUnitInfo : IGridInfo
     {
         [field: SerializeField] public Vector3Int Index { get; private set; }
         [field: SerializeField] public Vector3 Position { get; private set; }
