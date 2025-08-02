@@ -56,7 +56,7 @@ namespace IterationToolkit
     }
 
     [System.Serializable]
-    public struct GridUnitInfo : IGridInfo
+    public struct GridUnitInfo
     {
         [field: SerializeField] public Vector3Int Index { get; private set; }
         [field: SerializeField] public Vector3 Position { get; private set; }
