@@ -56,7 +56,7 @@ namespace IterationToolkit
             return (new string(chars));
         }
 
-        public static bool IsValidIndex<T>(this List<T> collection, int potentialIndex) => potentialIndex > 0 && potentialIndex < collection.Count;
+        public static bool IsValidIndex<T>(this List<T> collection, int potentialIndex) => potentialIndex > -1 && potentialIndex < collection.Count;
 
         public static int Increase<T>(this int value, List<T> collection)
         {
