@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace IterationToolkit.Netcode
 {
+    [System.Serializable]
     public class NetworkSelectableCollection<T> : NetworkVariable<int>, ISelectableCollection<T>
     {
         [SerializeField] private List<T> allObjects = new List<T>();

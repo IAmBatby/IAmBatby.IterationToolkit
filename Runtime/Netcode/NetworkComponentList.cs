@@ -61,7 +61,7 @@ namespace IterationToolkit.Netcode
 
         public M GetComponent(NetworkObject networkObject)
         {
-            if (mainDictionary.TryGetValue(networkObject, out M monoBehaviour))
+            if (networkObject != null && mainDictionary.TryGetValue(networkObject, out M monoBehaviour))
                 return (monoBehaviour);
             else
                 return (null);
