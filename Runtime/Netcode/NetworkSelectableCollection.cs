@@ -35,7 +35,11 @@ namespace IterationToolkit.Netcode
 
         private void OnCollectionValueChanged(int prevValue, int newValue)
         {
-            Select(newValue);
+            T previousSelection = (prevValue > -1 || prevValue < allObjects.Count - 1) ? allObjects[prevValue] : default;
+
+            onSelectionChange.Invoke(previousSelection, Selection);
+            onUnselected.Invoke(previousSelection);
+            onSelected.Invoke(Selection);
         }
 
         public void Add(List<T> objects)
@@ -79,12 +83,7 @@ namespace IterationToolkit.Netcode
         {
             if (ValidateInput(index) == false || (index > -1 && ValidateInput(allObjects[index]) == false)) return;
 
-            T previousSelection = Selection;
             SelectedIndex = index;
-
-            onSelectionChange.Invoke(previousSelection, Selection);
-            onUnselected.Invoke(previousSelection);
-            onSelected.Invoke(Selection);
         }
 
         public void SelectForward() => Select(allObjects[SelectedIndex.Increase(allObjects)]);
