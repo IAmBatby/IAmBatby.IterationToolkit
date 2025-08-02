@@ -38,6 +38,7 @@ public static class Highlighting
 
     private static void Refresh()
     {
+        if (ActiveCamera == null) return;
         (IHighlightable, Collider) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
         foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse())
