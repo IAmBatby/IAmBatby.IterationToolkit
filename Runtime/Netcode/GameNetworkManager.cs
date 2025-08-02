@@ -25,7 +25,19 @@ namespace IterationToolkit.Netcode
 
         //private static GameNetworkManager _instance;
         //public static GameNetworkManager Instance => Singleton.GetInstance<GameNetworkManager>(ref _instance);
-        public static new GameNetworkManager Instance => SingletonManager.GetSingleton<GameNetworkManager>(typeof(GameNetworkManager));
+        public static new GameNetworkManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = UnityEngine.Object.FindObjectOfType<GameNetworkManager>();
+                return (_instance);
+            }
+        }
+
+        private static GameNetworkManager _instance;
+
+
 
 
 
