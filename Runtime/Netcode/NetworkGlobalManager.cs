@@ -23,11 +23,14 @@ namespace IterationToolkit.Netcode
         public ExtendedEvent<LevelData> OnLevelLoaded = new ExtendedEvent<LevelData>();
         public ExtendedEvent<ulong> OnClientLevelLoaded = new ExtendedEvent<ulong>();
 
+        protected virtual bool DontDestroyEnabled => true;
+
         public static NetworkGlobalManager Instance => SingletonManager.GetSingleton<NetworkGlobalManager>(typeof(NetworkGlobalManager));
 
         protected virtual void Awake()
         {
-            GameObject.DontDestroyOnLoad(gameObject);
+            if (DontDestroyEnabled)
+                GameObject.DontDestroyOnLoad(gameObject);
             OnInitalize.Invoke();
         }
 

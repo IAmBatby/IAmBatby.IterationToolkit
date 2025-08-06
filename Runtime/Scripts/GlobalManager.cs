@@ -21,9 +21,12 @@ namespace IterationToolkit
 
         public static new GlobalManager Instance => SingletonManager.GetSingleton<GlobalManager>(typeof(GlobalManager));
 
+        protected virtual bool DontDestroyEnabled => true;
+
         protected override void Awake()
         {
-            GameObject.DontDestroyOnLoad(gameObject);
+            if (DontDestroyEnabled)
+                GameObject.DontDestroyOnLoad(gameObject);
             base.Awake();
         }
 
