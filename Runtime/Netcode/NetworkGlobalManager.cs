@@ -23,9 +23,8 @@ namespace IterationToolkit.Netcode
         public ExtendedEvent<LevelData> OnLevelLoaded = new ExtendedEvent<LevelData>();
         public ExtendedEvent<ulong> OnClientLevelLoaded = new ExtendedEvent<ulong>();
 
-        protected virtual bool DontDestroyEnabled => true;
-
         public static NetworkGlobalManager Instance => SingletonManager.GetSingleton<NetworkGlobalManager>(typeof(NetworkGlobalManager));
+        [field: SerializeField] public bool DontDestroyEnabled { get; private set; }
 
         protected virtual void Awake()
         {

@@ -21,7 +21,7 @@ namespace IterationToolkit
 
         public static new GlobalManager Instance => SingletonManager.GetSingleton<GlobalManager>(typeof(GlobalManager));
 
-        protected virtual bool DontDestroyEnabled => true;
+        [field: SerializeField] public bool DontDestroyEnabled { get; private set; }
 
         protected override void Awake()
         {
