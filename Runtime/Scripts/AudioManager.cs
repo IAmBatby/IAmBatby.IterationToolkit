@@ -41,6 +41,7 @@ namespace IterationToolkit
 
         public static void ApplyAudioData(AudioPreset data, AudioSource source)
         {
+            if (data == null) return;
             if (data.AudioMixerGroup != null)
                 source.outputAudioMixerGroup = data.AudioMixerGroup;
             source.volume = data.audioVolume;
@@ -50,9 +51,11 @@ namespace IterationToolkit
             source.loop = data.shouldLoop;
         }
 
-        private static bool ShouldPlay(AudioPreset data, AudioSource audioSource)
+        private static bool ShouldPlay(AudioPreset data, AudioSource audioSource, AudioClip overrideClip = null)
         {
-            if (audioSource.isPlaying && data.onlyPlayOnInactiveSource)
+            if (data == null && overrideClip == null)
+                return (false);
+            if (audioSource.isPlaying && data != null && data.onlyPlayOnInactiveSource)
                 return (false);
             else
                 return (true);
