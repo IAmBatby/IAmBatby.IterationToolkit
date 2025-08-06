@@ -9,7 +9,7 @@ namespace IterationToolkit
     
     public static class Singleton
     {
-        public static T GetInstance<T>(ref T manager) where T : Manager
+        public static T GetInstance<T>(ref T manager) where T : MonoBehaviour
         {
             if (manager is T castManager)
                 return (castManager);
