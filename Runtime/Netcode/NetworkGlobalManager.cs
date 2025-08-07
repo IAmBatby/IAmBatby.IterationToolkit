@@ -70,7 +70,7 @@ namespace IterationToolkit.Netcode
             else
                 OnLevelLoaded.Invoke();
 
-            if (scene.name == LoadingLevel.SceneName || scene.name == ActiveLevel.SceneName)
+            if ((LoadingLevel != null && scene.name == LoadingLevel.SceneName) || (ActiveLevel != null && scene.name == ActiveLevel.SceneName))
                 OnClientLevelLoaded.Invoke(clientID);
         }
     }
