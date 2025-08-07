@@ -14,7 +14,7 @@ namespace IterationToolkit.Netcode
         public GameState ActiveGameState { get; private set; }
 
         public LevelData ActiveLevel { get; private set; }
-        public LevelData LoadingLevel { get; private set; }
+        public LevelData LoadingLevel { get; protected set; }
 
         public ExtendedEvent OnInitalize = new ExtendedEvent();
 
@@ -63,12 +63,12 @@ namespace IterationToolkit.Netcode
         {
             if (LoadingLevel != null && scene.name == LoadingLevel.defaultSceneName)
             {
-                ActiveLevel = LoadingLevel;
-                LoadingLevel = null;
-                OnLevelLoaded.Invoke(ActiveLevel);
+                //ActiveLevel = LoadingLevel;
+                //LoadingLevel = null;
+                //OnLevelLoaded.Invoke(ActiveLevel);
             }
-            else
-                OnLevelLoaded.Invoke();
+            //else
+                //OnLevelLoaded.Invoke();
 
             if ((LoadingLevel != null && scene.name == LoadingLevel.SceneName) || (ActiveLevel != null && scene.name == ActiveLevel.SceneName))
                 OnClientLevelLoaded.Invoke(clientID);

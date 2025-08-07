@@ -114,16 +114,19 @@ namespace IterationToolkit.Netcode
 
         public void LoadScene(LevelData levelData)
         {
+            LoadingLevel = levelData;
             LoadSceneServerRpc(levelData.SceneName, false);
         }
 
         public void LoadSceneAdditive(LevelData levelData) //For UnityEvent Purposes
         {
+            LoadingLevel = levelData;
             LoadSceneServerRpc(levelData.SceneName, true);
         }
 
         public void LoadScene(LevelData levelData, bool isAdditive)
         {
+            LoadingLevel = levelData;
             LoadSceneServerRpc(levelData.SceneName, isAdditive);
         }
 
