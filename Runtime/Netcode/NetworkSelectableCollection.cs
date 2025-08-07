@@ -83,8 +83,8 @@ namespace IterationToolkit.Netcode
         public void Select(int index)
         {
             if (ValidateInput(index) == false || (index > -1 && ValidateInput(allObjects[index]) == false)) return;
-
-            SelectedIndex = index;
+            if (IsServer)
+                SelectedIndex = index;
         }
 
         public void SelectForward() => Select(allObjects[SelectedIndex.Increase(allObjects)]);
