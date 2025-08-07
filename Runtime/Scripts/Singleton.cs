@@ -15,7 +15,8 @@ namespace IterationToolkit
                 return (castManager);
             else
             {
-                Debug.Log("Seeking Instance Of: " + typeof(T).Name);
+                if (Application.isPlaying)
+                    Debug.Log("Seeking Instance Of: " + typeof(T).Name);
                 manager = (T)Object.FindObjectOfType(typeof(T));
             }
             return (manager as T);

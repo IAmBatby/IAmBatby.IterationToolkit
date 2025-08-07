@@ -5,33 +5,31 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public class RandomManager : Manager
+    public static class RandomManager
     {
-        private static RandomManager _instance;
-        public static RandomManager Instance => Singleton.GetInstance<RandomManager>(ref _instance);
 
         public static List<char> Alphbaet { get; private set; } = new List<char>
     {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
 
-        public System.Random Random { get; private set; }
-        public bool HasInitialized { get; private set; }
+        public static System.Random Random { get; private set; }
+        public static bool HasInitialized { get; private set; }
 
-        public void Initialize(int newSeed)
+        public static void Initialize(int newSeed)
         {
             Random = new System.Random(newSeed);
             HasInitialized = true;
         }
 
-        public void Initialize(string newSeed)
+        public static void Initialize(string newSeed)
         {
             Random = new System.Random(LetterCodeToSeed(newSeed));
             HasInitialized = true;
         }
 
 
-        public T GetRandomWeightedSelection<T>(T[] values, int[] weights)
+        public static T GetRandomWeightedSelection<T>(T[] values, int[] weights)
         {
             int combinedWeight = 0;
             for (int i = 0; i < weights.Length; i++)
@@ -64,12 +62,12 @@ namespace IterationToolkit
             return (values[Random.Next(0, values.Length - 1)]);
         }
 
-        public T GetRandomSelection<T>(List<T> values)
+        public static T GetRandomSelection<T>(List<T> values)
         {
             return (GetRandomSelection<T>(values.ToArray()));
         }
 
-        public T GetRandomSelection<T>(T[] values)
+        public static T GetRandomSelection<T>(T[] values)
         {
             int[] weights = new int[values.Length];
 
@@ -79,7 +77,7 @@ namespace IterationToolkit
             return (GetRandomWeightedSelection<T>(values, weights));
         }
 
-        public T GetRandomWeightedSelection<T>(List<(T, int)> weightedValues)
+        public static T GetRandomWeightedSelection<T>(List<(T, int)> weightedValues)
         {
             List<T> values = new List<T>();
             List<int> weights = new List<int>();
@@ -93,7 +91,7 @@ namespace IterationToolkit
             return (GetRandomWeightedSelection(values.ToArray(), weights.ToArray()));
         }
 
-        public int LetterCodeToSeed(string stringCode)
+        public static int LetterCodeToSeed(string stringCode)
         {
             string newSeedCode = string.Empty;
 
