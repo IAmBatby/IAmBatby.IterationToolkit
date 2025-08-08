@@ -27,6 +27,14 @@ namespace IterationToolkit
             listeners.Remove(listener);
         }
 
+        public void ChangeListener(Action listener, bool value)
+        {
+            if (value)
+                AddListener(listener);
+            else
+                RemoveListener(listener);
+        }
+
         public virtual void ClearListeners()
         {
             foreach (Action listener in listeners)
@@ -62,6 +70,15 @@ namespace IterationToolkit
             paramListeners.Remove(listener);
         }
 
+        public void ChangeListener(Action<T> listener, bool value)
+        {
+            if (value)
+                AddListener(listener);
+            else
+                RemoveListener(listener);
+        }
+
+
         public override void ClearListeners()
         {
             base.ClearListeners();
@@ -94,6 +111,14 @@ namespace IterationToolkit
         {
             onParameterEvent -= listener;
             paramListeners.Remove(listener);
+        }
+
+        public void ChangeListener(Action<T,U> listener, bool value)
+        {
+            if (value)
+                AddListener(listener);
+            else
+                RemoveListener(listener);
         }
 
         public override void ClearListeners()
