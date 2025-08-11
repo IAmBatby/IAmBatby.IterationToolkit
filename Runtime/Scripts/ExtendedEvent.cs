@@ -29,10 +29,9 @@ namespace IterationToolkit
 
         public void ChangeListener(Action listener, bool value)
         {
+            RemoveListener(listener);
             if (value)
                 AddListener(listener);
-            else
-                RemoveListener(listener);
         }
 
         public virtual void ClearListeners()
@@ -72,10 +71,9 @@ namespace IterationToolkit
 
         public void ChangeListener(Action<T> listener, bool value)
         {
+            RemoveListener(listener);
             if (value)
                 AddListener(listener);
-            else
-                RemoveListener(listener);
         }
 
 
@@ -115,10 +113,9 @@ namespace IterationToolkit
 
         public void ChangeListener(Action<T,U> listener, bool value)
         {
+            RemoveListener(listener);
             if (value)
                 AddListener(listener);
-            else
-                RemoveListener(listener);
         }
 
         public override void ClearListeners()
