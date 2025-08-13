@@ -62,6 +62,11 @@ namespace IterationToolkit
             return (values[Random.Next(0, values.Length - 1)]);
         }
 
+        public static int GetRandomSelectionIndex<T>(List<T> values)
+        {
+            return (values.IndexOf(GetRandomSelection(values)));
+        }
+
         public static T GetRandomSelection<T>(List<T> values)
         {
             return (GetRandomSelection<T>(values.ToArray()));
