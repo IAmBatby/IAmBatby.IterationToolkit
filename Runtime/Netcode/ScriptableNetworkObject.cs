@@ -55,5 +55,6 @@ namespace IterationToolkit.Netcode
         public static T Get(Guid guid) => dict[guid];
         public static T Get(NetworkGuid guid) => dict[guid.ToGuid()];
         public static T Get(ExtendedGuid guid) => dict[guid.Guid];
+        public static T Get(ScriptableNetworkReference<T> netRef) => Get(netRef.NetworkGuid);
     }
 }
