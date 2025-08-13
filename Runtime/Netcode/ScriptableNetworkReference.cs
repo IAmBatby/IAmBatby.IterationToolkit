@@ -1,4 +1,5 @@
 using IterationToolkit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -14,6 +15,7 @@ namespace IterationToolkit.Netcode
 
 
         public NetworkGuid NetworkGuid { get => m_NetworkGuid; set => m_NetworkGuid = value; }
+        public Guid Guid => NetworkGuid.ToGuid();
 
         public ScriptableNetworkReference(T scriptableNetworkObject)
         {
