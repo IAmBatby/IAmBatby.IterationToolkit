@@ -1,0 +1,21 @@
+{
+    "name": "IAmBatby.IterationToolkit.Editor.Netcode",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.UI",
+        "IAmBatby.IterationToolkit",
+        "IAmBatby.IterationToolkit.Netcode",
+        "IAmBatby.IterationToolkit.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -10,6 +10,6 @@ namespace IterationToolkit.Editor
     public static class EditorExtensions
     {
         public static SerializedProperty Seek(this SerializedProperty property, string propertyName) => EditorUtilities.Seek(property, propertyName);
-        public static SerializedProperty Seek(this SerializedObject property, string propertyName) => EditorUtilities.Seek(property, propertyName);
+        public static SerializedProperty Seek(this SerializedObject serializedObject, string propertyName) => EditorUtilities.Seek(serializedObject, propertyName);
     }
 }
