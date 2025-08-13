@@ -6,7 +6,7 @@ using UnityEngine;
 namespace IterationToolkit.Netcode
 {
     [Serializable]
-    public abstract class ScriptableNetworkObject : ScriptableObject, IEquatable<ScriptableNetworkObject>
+    public abstract class ScriptableNetworkObject : ScriptableObject
     {
         [NonSerialized] private static Dictionary<Guid, ScriptableNetworkObject> globalDict = new Dictionary<Guid, ScriptableNetworkObject>();
         [field: SerializeField] public ExtendedGuid ExtendedGuid { get; private set; }
@@ -21,11 +21,6 @@ namespace IterationToolkit.Netcode
         {
             if (!globalDict.ContainsKey(Guid))
                 globalDict.Add(Guid, this);
-        }
-
-        public bool Equals(ScriptableNetworkObject other)
-        {
-            return (this == other);
         }
 
         public bool GuidIsUnique => !ExtendedGuid.IsInvalid && globalDict.ContainsKey(Guid) && globalDict[Guid] == this;

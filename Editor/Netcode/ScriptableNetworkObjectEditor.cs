@@ -19,12 +19,11 @@ public class ScriptableNetworkObjectEditor : Editor
         networkObject = (ScriptableNetworkObject)target;
         extendedGuid = serializedObject.Seek("ExtendedGuid");
         byteArray = extendedGuid.Seek("m_Guid");
-        
+        RefreshGuid();
     }
 
     public override void OnInspectorGUI()
     {
-        RefreshGuid();
         base.OnInspectorGUI();
     }
 
