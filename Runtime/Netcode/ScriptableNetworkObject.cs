@@ -51,5 +51,9 @@ namespace IterationToolkit.Netcode
                 result = newResult;
             return (result != null);
         }
+
+        public static T Get(Guid guid) => dict[guid];
+        public static T Get(NetworkGuid guid) => dict[guid.ToGuid()];
+        public static T Get(ExtendedGuid guid) => dict[guid.Guid];
     }
 }
