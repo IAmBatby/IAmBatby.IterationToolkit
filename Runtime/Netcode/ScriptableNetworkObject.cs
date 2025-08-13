@@ -23,7 +23,7 @@ namespace IterationToolkit.Netcode
                 globalDict.Add(Guid, this);
         }
 
-        public bool GuidIsUnique => !ExtendedGuid.IsInvalid && globalDict.ContainsKey(Guid) && globalDict[Guid] == this;
+        public bool GuidIsUnique => !globalDict.ContainsKey(Guid) || globalDict[Guid] == this;
     }
 
     [Serializable]
