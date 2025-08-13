@@ -52,9 +52,11 @@ namespace IterationToolkit.Netcode
             return (result != null);
         }
 
-        public static T Get(Guid guid) => dict[guid];
-        public static T Get(NetworkGuid guid) => dict[guid.ToGuid()];
-        public static T Get(ExtendedGuid guid) => dict[guid.Guid];
-        public static T Get(ScriptableNetworkReference<T> netRef) => Get(netRef.NetworkGuid);
+        public static T Get(Guid guid) => SafeGet(guid);
+        public static T Get(NetworkGuid guid) => SafeGet(guid.ToGuid());
+        public static T Get(ExtendedGuid guid) => SafeGet(guid.Guid);
+        public static T Get(ScriptableNetworkReference<T> netRef) => SafeGet(netRef.Guid);
+
+        private static T SafeGet(Guid guid) => guid != default && dict.ContainsKey(guid) ? dict[guid] : null;
     }
 }
