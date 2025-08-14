@@ -11,6 +11,9 @@ namespace IterationToolkit.Netcode
         private ExtendedEvent<T> onValueChangedEvent = new ExtendedEvent<T>();
         public IListenOnlyEvent<T> OnValueChanged => onValueChangedEvent;
 
+        public NetworkGuid NetworkGuid => m_InternalValue;
+        public Guid Guid => m_InternalValue.ToGuid();
+
         public T Value
         {
             get => ScriptableNetworkObject<T>.Get(m_InternalValue);
