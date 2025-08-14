@@ -6,11 +6,16 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public struct NetworkGuid : INetworkSerializeByMemcpy
+    public struct NetworkGuid : INetworkSerializeByMemcpy, IDisposable
     {
         public ulong FirstHalf;
         public ulong SecondHalf;
         public bool IsInvalid => FirstHalf == 0 && SecondHalf == 0;
+
+        public void Dispose()
+        {
+
+        }
     }
 
     public static class NetworkGuidExtensions
