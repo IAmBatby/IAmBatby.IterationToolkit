@@ -31,7 +31,7 @@ namespace IterationToolkit.Netcode
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static T Resolve(ScriptableNetworkReference<T> reference)
         {
-            if (ScriptableNetworkObject<T>.TryGetNetworkObject(reference.NetworkGuid, out T result))
+            if (ScriptableNetworkObject<T>.TryGet(reference.NetworkGuid, out T result))
                 return (result);
             return (null);
         }

@@ -39,17 +39,14 @@ namespace IterationToolkit.Netcode
                 dict.Add(ExtendedGuid.Guid, this as T);
         }
 
-
-        public static bool TryGetNetworkObject(NetworkGuid guid, out T result)
+        public static bool TryGet(NetworkGuid guid, out T result)
         {
-            TryGetNetworkObject(guid.ToGuid(), out result);
+            result = SafeGet(guid.ToGuid());
             return (result != null);
         }
-        public static bool TryGetNetworkObject(Guid guid, out T result)
+        public static bool TryGet(Guid guid, out T result)
         {
-            result = null;
-            if (dict.TryGetValue(guid, out T newResult))
-                result = newResult;
+            result = SafeGet(guid);
             return (result != null);
         }
 
