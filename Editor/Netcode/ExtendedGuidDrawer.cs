@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -40,3 +42,5 @@ namespace IterationToolkit.Editor.Netcode
         }
     }
 }
+
+#endif

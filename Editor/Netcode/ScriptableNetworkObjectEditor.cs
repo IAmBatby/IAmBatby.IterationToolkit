@@ -1,10 +1,13 @@
+#if NETCODE_PRESENT
+
+
+using IterationToolkit.Editor;
+using IterationToolkit.Netcode;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using IterationToolkit.Editor;
-using IterationToolkit.Netcode;
-using System;
 
 [CustomEditor(typeof(ScriptableNetworkObject), true)]
 [CanEditMultipleObjects]
@@ -28,7 +31,7 @@ public class ScriptableNetworkObjectEditor : Editor
     }
 
     private void RefreshGuid()
-    {       
+    {
         if (networkObject.GuidIsUnique == false)
         {
             byte[] newGuid = Guid.NewGuid().ToByteArray();
@@ -41,6 +44,7 @@ public class ScriptableNetworkObjectEditor : Editor
             serializedObject.ApplyModifiedProperties();
             serializedObject.Update();
             EditorUtility.SetDirty(target);
-        }    
+        }
     }
 }
+#endif
