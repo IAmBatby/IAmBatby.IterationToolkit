@@ -27,6 +27,8 @@ namespace IterationToolkit.Editor
 
         private Vector2 currentScrollValue;
 
+        public delegate void OnDrawPropertyEvent(SerializedProperty property);
+
         public DataFieldTable(List<string> newColumnHeaders, List<string> newRowHeaders, List<List<SerializedProperty>> newDataTable)
         {
             columnHeaders = newColumnHeaders;
@@ -102,7 +104,7 @@ namespace IterationToolkit.Editor
 
                     if (rowHeaders.Count > i)
                         EditorLabelUtilities.InsertHeader(rowHeaders[i], LayoutOption.None, TextAnchor.MiddleLeft, style, fieldTextStyle, GUILayout.MaxWidth(minWidth), GUILayout.MinWidth(minWidth));
-
+                    Debug.Log(rowHeaders[i] + ": " + dataTable.Count);
                     foreach (List<SerializedProperty> serializedProperties in dataTable)
                         if (serializedProperties.Count > i)
                             EditorLabelUtilities.InsertField(serializedProperties[i], LayoutOption.None, null, GUILayout.MinWidth(minWidth));

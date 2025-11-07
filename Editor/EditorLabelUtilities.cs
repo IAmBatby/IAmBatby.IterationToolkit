@@ -221,7 +221,7 @@ namespace IterationToolkit.Editor
                 do
                     if (!returnList.Contains(serializedProperty))
                         returnList.Add(serializedProperty.Copy());
-                while (serializedProperty.NextVisible(false));
+                while (serializedProperty.NextVisible(true));
             }
             return (returnList);
         }

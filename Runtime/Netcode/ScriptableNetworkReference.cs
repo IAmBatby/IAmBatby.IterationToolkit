@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using IterationToolkit;
 using System;
 using System.Collections;
@@ -46,3 +48,5 @@ namespace IterationToolkit.Netcode
         }
     }
 }
+
+#endif

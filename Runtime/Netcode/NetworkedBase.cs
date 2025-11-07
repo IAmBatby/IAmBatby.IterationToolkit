@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using IterationToolkit.Netcode;
 using System;
 using System.Collections;
@@ -127,3 +129,5 @@ namespace IterationToolkit.Netcode
         ~NetworkedBase() { Dispose(); }
     }
 }
+
+#endif

@@ -68,6 +68,22 @@ namespace IterationToolkit.Editor
                 return (null);
         }
 
+        public static IEnumerable<T> GetScriptableObjects<T>() where T : UnityEngine.Object
+        {
+            if (!InEditor) return (null);
+
+            List<T> returnScriptableObjects = new List<T>();
+
+            IEnumerable<ScriptableObject> allScriptableObjects = AssetDatabase.FindAssets("t:ScriptableObject")
+            .Select(x => AssetDatabase.LoadAssetAtPath<ScriptableObject>(AssetDatabase.GUIDToAssetPath(x)));
+
+            foreach (ScriptableObject item in allScriptableObjects)
+                if (item is T castedItem)
+                    returnScriptableObjects.Add(castedItem);
+
+            return (returnScriptableObjects);
+        }
+
         public static string Decorate(string name) => "<" + name + ">k__BackingField";
 
         public static SerializedProperty Seek(SerializedObject target, string targetField) => Seek(target.GetIterator(), targetField);

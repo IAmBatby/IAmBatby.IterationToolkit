@@ -32,7 +32,7 @@ namespace IterationToolkit.Editor
 
         protected virtual void PopulateData()
         {
-            allSettings = Resources.FindObjectsOfTypeAll<T>().ToList();
+            allSettings = EditorUtilities.GetScriptableObjects<T>().ToList();
             selectedScriptableSetting = allSettings.First();
         }
 
@@ -101,6 +101,8 @@ namespace IterationToolkit.Editor
         protected virtual (SerializedObject, List<SerializedProperty>) GetScriptableObjectSerializedValues(T scriptableObject, SerializedPropertyType[] whitelists, SerializedPropertyType[] blacklists)
         {
             SerializedObject serializedSetting = new SerializedObject(scriptableObject);
+            if ((whitelists == null || whitelists.Length == 0) && (blacklists == null || blacklists.Length == 0))
+                return (serializedSetting, EditorLabelUtilities.FindSerializedProperties(serializedSetting));
             List<SerializedProperty> serializedProperties = new List<SerializedProperty>();
             foreach (SerializedProperty serializedProperty in EditorLabelUtilities.FindSerializedProperties(serializedSetting))
             {

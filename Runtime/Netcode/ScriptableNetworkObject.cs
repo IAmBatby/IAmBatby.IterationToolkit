@@ -1,3 +1,5 @@
+#if NETCODE_PRESENT
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,3 +60,5 @@ namespace IterationToolkit.Netcode
         private static T SafeGet(Guid guid) => guid != default && dict.ContainsKey(guid) ? dict[guid] : null;
     }
 }
+
+#endif
