@@ -118,5 +118,14 @@ namespace IterationToolkit
         {
             return (new Rect(rect.x - padding.x, rect.y - padding.y, rect.width + padding.width, rect.height + padding.height));
         }
+
+        public static void AddOrAddAdd<K, V>(this Dictionary<K, List<V>> dict, K key, V value)
+        {
+            if (key == null || value == null) return;
+            if (dict.TryGetValue(key, out List<V> list) == false)
+                dict.Add(key, new List<V> { value });
+            else if (!list.Contains(value))
+                list.Add(value);
+        }
     }
 }
