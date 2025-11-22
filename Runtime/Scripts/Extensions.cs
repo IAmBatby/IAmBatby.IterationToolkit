@@ -58,6 +58,16 @@ namespace IterationToolkit
 
         public static bool IsValidIndex<T>(this List<T> collection, int potentialIndex) => potentialIndex > -1 && potentialIndex < collection.Count;
 
+        public static bool IsValidIndex(this Vector3Int rangeMax, Vector3Int index) => IsValidIndex(rangeMax, index, Vector3Int.zero);
+        public static bool IsValidIndex(this Vector3Int rangeMax, Vector3Int index, Vector3Int rangeMin)
+        {
+            if (index.x < rangeMin.x || index.x > rangeMax.x) return (false);
+            if (index.y < rangeMin.y || index.y > rangeMax.y) return (false);
+            if (index.z < rangeMin.z || index.z > rangeMax.z) return (false);
+            Debug.Log("Valid: " + index + ", Min: " + rangeMin + ", Max: " + rangeMax);
+            return (true);
+        }
+
         public static int Increase<T>(this int value, List<T> collection)
         {
             return (Utilities.IncreaseIndex(value, collection));
@@ -127,5 +137,21 @@ namespace IterationToolkit
             else if (!list.Contains(value))
                 list.Add(value);
         }
+
+
+        public static Vector3Int Convert(this Direction direction, int distance)
+        {
+            return (direction switch
+            {
+                Direction.Forward => new Vector3Int(0, 0, distance),
+                Direction.Backward => new Vector3Int(0, 0, -distance),
+                Direction.Left => new Vector3Int(-distance, 0, 0),
+                Direction.Right => new Vector3Int(distance, 0, 0),
+                Direction.Up => new Vector3Int(0, distance, 0),
+                Direction.Down => new Vector3Int(0, -distance, 0),
+                _ => new Vector3Int(0, 0, 0)
+            });
+        }
+
     }
 }
