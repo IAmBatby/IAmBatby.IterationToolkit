@@ -50,9 +50,9 @@ namespace IterationToolkit
                     DrawUnit(info);
         }
 
-        public bool CanDrawUnit(T unit);
+        public bool CanDrawUnit(T unit) { return (true); }
 
-        public void DrawUnit(T unit);
+        public void DrawUnit(T unit) { }
     }
 
     [System.Serializable]
