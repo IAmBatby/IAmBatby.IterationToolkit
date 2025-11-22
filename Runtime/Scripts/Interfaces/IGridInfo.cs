@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGridInfo
+namespace IterationToolkit
 {
-    public Vector3Int Index { get; }
-    public Vector3 Position { get; }
+    public interface IGridInfo
+    {
+        public Vector3Int Index { get; }
+        public Vector3 Position { get; }
+    }
 }

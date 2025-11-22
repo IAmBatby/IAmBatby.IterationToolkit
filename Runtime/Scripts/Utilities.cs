@@ -10,6 +10,8 @@ using UnityEngine.UIElements;
 
 namespace IterationToolkit
 {
+    public enum Direction { Up, Down, Left, Right, Forward, Backward }
+
     public static class Utilities
     {
         public static int IncreaseIndex(int index, int count) => index != count ? index + 1 : 0;
