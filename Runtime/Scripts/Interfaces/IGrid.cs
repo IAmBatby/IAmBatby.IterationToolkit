@@ -33,7 +33,7 @@ namespace IterationToolkit
             return (returnList);
         }
 
-        public T CreateInfo(Vector3Int index, Vector3 pos);
+        public T CreateInfo(Vector3Int index, Vector3 pos) { return (default); }
 
         public Vector3 IndexToPosition(Vector3Int index, Space spaceType)
         {
