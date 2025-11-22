@@ -153,5 +153,14 @@ namespace IterationToolkit
             });
         }
 
+        public static Vector3 IndexToPosition<T>(this IGrid<T> grid, int x, int y, int z, Space spaceType = Space.World) where T : IGridInfo, new()
+        {
+            return (grid.IndexToPosition(new Vector3Int(x,y,z), spaceType));
+        }
+        public static Vector3 IndexToPosition<T>(this IGrid<T> grid, Vector3 index, Space spaceType = Space.World) where T : IGridInfo, new()
+        {
+            return (grid.IndexToPosition(index, spaceType));
+        }
+
     }
 }

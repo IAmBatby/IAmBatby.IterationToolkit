@@ -15,7 +15,7 @@ namespace IterationToolkit
         public Vector3 ArrayCenterOffset => new Vector3((float)Range.x / 2, (float)Range.y / 2,(float)Range.z / 2);
         public Vector3 ArrayCenterPosition => (Vector3.zero - ArrayCenterOffset) + (Source.lossyScale / 2);
 
-        public List<T> GetUnits()
+        public List<T> GetUnits(Space spaceType = Space.World)
         {
             List<T> returnList = new List<T>();
 
@@ -25,7 +25,7 @@ namespace IterationToolkit
                 {
                     for (int x = 0; x < Range.x; x++)
                     {
-                        returnList.Add(CreateInfo(new Vector3Int(x,y,z),IndexToPosition(new Vector3Int(x, y, z), Space.World)));
+                        returnList.Add(CreateInfo(new Vector3Int(x,y,z),IndexToPosition(new Vector3Int(x, y, z), spaceType)));
                     }
                 }
             }
