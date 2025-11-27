@@ -36,12 +36,16 @@ public static class Highlighting
 
     public static Vector3 MousePoint => ActiveCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,ActiveCamera.nearClipPlane));
 
+    //Public for projects that use this to debug/troubleshoot what's going on
+    public static IEnumerable<RaycastHit> RecentResults { get; private set; }
+
     private static void Refresh()
     {
         if (ActiveCamera == null) return;
         (IHighlightable, Collider) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
-        foreach (RaycastHit hit in Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse())
+        RecentResults = Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse();
+        foreach (RaycastHit hit in RecentResults)
             if (hit.collider.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
                 closestHighlightable = (highlightable, hit.collider);
 
