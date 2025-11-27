@@ -22,7 +22,7 @@ public static class Highlighting
     [RuntimeInitializeOnLoadMethod] //Jank just triggers the singleton creation getter
     private static void Start() => Instance.enabled = true;
 
-    private static Camera ActiveCamera => OverrideCamera ? OverrideCamera : Camera.main;
+    public static Camera ActiveCamera => OverrideCamera ? OverrideCamera : Camera.main;
 
     public static Camera OverrideCamera { get; set; }
 
@@ -44,7 +44,7 @@ public static class Highlighting
         if (ActiveCamera == null) return;
         (IHighlightable, Collider) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
-        RecentResults = Physics.RaycastAll(ActiveCamera.ScreenPointToRay(Input.mousePosition), Mathf.Infinity).Reverse();
+        RecentResults = Physics.RaycastAll(GetRay(), Mathf.Infinity).Reverse();
         foreach (RaycastHit hit in RecentResults)
             if (hit.collider.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
                 closestHighlightable = (highlightable, hit.collider);
@@ -59,6 +59,8 @@ public static class Highlighting
         else if (Highlighted == null && closestHighlightable.Item1 != null) //If we didn't previously have a highlight and now there's something to highlight
             Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
     }
+
+    public static Ray GetRay() => ActiveCamera.ScreenPointToRay(Input.mousePosition);
 
     private static void Unhighlight()
     {
