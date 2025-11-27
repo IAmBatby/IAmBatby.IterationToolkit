@@ -58,6 +58,7 @@ public static class Highlighting
                 target = hit.collider.transform;
             else if (ActiveTargetMode == TargetMode.Rigidbody && hit.rigidbody != null)
                 target = hit.rigidbody.transform;
+            if (target == null) continue;
             if (target.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
                 closestHighlightable = (highlightable, target);
         }
