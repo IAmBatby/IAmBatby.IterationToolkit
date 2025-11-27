@@ -53,7 +53,11 @@ public static class Highlighting
         RecentResults = Physics.RaycastAll(GetRay(), Mathf.Infinity).Reverse();
         foreach (RaycastHit hit in RecentResults)
         {
-            Transform target = ActiveTargetMode == TargetMode.Collider ? hit.collider.transform : hit.rigidbody.transform;
+            Transform target = null;
+            if (ActiveTargetMode == TargetMode.Collider)
+                target = hit.collider.transform;
+            else if (ActiveTargetMode == TargetMode.Rigidbody && hit.rigidbody != null)
+                target = hit.rigidbody.transform;
             if (target.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
                 closestHighlightable = (highlightable, target);
         }
@@ -68,7 +72,7 @@ public static class Highlighting
         else if (Highlighted == null && closestHighlightable.Item1 != null) //If we didn't previously have a highlight and now there's something to highlight
             Highlight(closestHighlightable.Item1, closestHighlightable.Item2);
     }
-
+    
     public static Ray GetRay()
     {
         if (ActiveRayMode == RayMode.Direction)
