@@ -63,7 +63,12 @@ namespace IterationToolkit
 
             allObjects.RemoveAt(index);
             if (index == SelectedIndex)
-                Select(-1);
+            {
+                if (allObjects.Count == 0)
+                    Select(-1);
+                else
+                    Select(allObjects.Last());
+            }
         }
 
         public void Select(T value)
