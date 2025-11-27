@@ -48,6 +48,13 @@ namespace IterationToolkit
                 Select(newObject);
         }
 
+        public void Clear()
+        {
+            //Maybe this should invoke some of the events, im not too sure.
+            allObjects.Clear();
+            SelectedIndex = -1;
+        }
+
         public void Remove(T removalObject)
         {
             if (removalObject == null || !allObjects.Contains(removalObject)) return;
