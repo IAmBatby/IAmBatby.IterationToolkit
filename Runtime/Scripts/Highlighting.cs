@@ -26,6 +26,9 @@ public static class Highlighting
 
     public static Camera OverrideCamera { get; set; }
 
+    public static float ActiveRaycastDistance => OverrideRaycastDistance == -1f ? Mathf.Infinity : OverrideRaycastDistance;
+    public static float OverrideRaycastDistance { get; set; } = -1f;
+
     public enum RayMode { Screen, Direction }
     public static RayMode ActiveRayMode { get; set; }
 
@@ -50,7 +53,7 @@ public static class Highlighting
         if (ActiveCamera == null) return;
         (IHighlightable, Transform) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
-        RecentResults = Physics.RaycastAll(GetRay(), Mathf.Infinity).Reverse();
+        RecentResults = Physics.RaycastAll(GetRay(), ActiveRaycastDistance).Reverse();
         foreach (RaycastHit hit in RecentResults)
         {
             Transform target = null;
