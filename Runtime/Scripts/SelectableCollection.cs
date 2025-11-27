@@ -14,6 +14,8 @@ namespace IterationToolkit
 
         public int Count => allObjects.Count;
 
+        public bool Contains(T item) => Collection.Contains(item);
+
         public int SelectedIndex { get; private set; }
         public T Selection => allObjects.IsValidIndex(SelectedIndex) ? allObjects[SelectedIndex] : default;
 
