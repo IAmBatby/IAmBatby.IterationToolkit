@@ -29,6 +29,9 @@ public static class Highlighting
     public enum RayMode { Screen, Direction }
     public static RayMode ActiveRayMode { get; set; }
 
+    public enum TargetMode { Collider, Rigidbody }
+    public static TargetMode ActiveTargetMode { get; set; }
+
     public static IHighlightable Highlighted { get; private set; }
     public static Transform HighlightedTransform { get; private set; }
 
@@ -45,22 +48,25 @@ public static class Highlighting
     private static void Refresh()
     {
         if (ActiveCamera == null) return;
-        (IHighlightable, Collider) closestHighlightable = default;
+        (IHighlightable, Transform) closestHighlightable = default;
         //We Reverse because RaycastAll returns in order of first hit to last but the closest one to the camera should be the latest highlight
         RecentResults = Physics.RaycastAll(GetRay(), Mathf.Infinity).Reverse();
         foreach (RaycastHit hit in RecentResults)
-            if (hit.collider.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
-                closestHighlightable = (highlightable, hit.collider);
+        {
+            Transform target = ActiveTargetMode == TargetMode.Collider ? hit.collider.transform : hit.rigidbody.transform;
+            if (target.TryGetComponent(out IHighlightable highlightable) && highlightable.IsHighlightable())
+                closestHighlightable = (highlightable, target);
+        }
 
         if (Highlighted != null && closestHighlightable.Item1 == null) //If we previously had a highlight and now theres nothing to highlight
             Unhighlight();
         else if (Highlighted != null && closestHighlightable.Item1 != Highlighted) //if we previously had a highlight and now a closer highlightable was found
         {
             Unhighlight();
-            Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
+            Highlight(closestHighlightable.Item1, closestHighlightable.Item2);
         }
         else if (Highlighted == null && closestHighlightable.Item1 != null) //If we didn't previously have a highlight and now there's something to highlight
-            Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
+            Highlight(closestHighlightable.Item1, closestHighlightable.Item2);
     }
 
     public static Ray GetRay()
