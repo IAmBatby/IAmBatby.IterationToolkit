@@ -24,7 +24,7 @@ public static class Highlighting
 
     private static Camera ActiveCamera => OverrideCamera ? OverrideCamera : Camera.main;
 
-    public static Camera OverrideCamera { get; private set; }
+    public static Camera OverrideCamera { get; set; }
 
     public static IHighlightable Highlighted { get; private set; }
     public static Transform HighlightedTransform { get; private set; }
