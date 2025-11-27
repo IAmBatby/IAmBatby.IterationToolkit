@@ -52,7 +52,10 @@ namespace IterationToolkit
         {
             if (removalObject == null || !allObjects.Contains(removalObject)) return;
 
-            if (allObjects.IndexOf(removalObject) == SelectedIndex)
+            int index = allObjects.IndexOf(removalObject);
+
+            allObjects.RemoveAt(index);
+            if (index == SelectedIndex)
                 Select(-1);
         }
 
