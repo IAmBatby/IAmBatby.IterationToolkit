@@ -26,6 +26,9 @@ public static class Highlighting
 
     public static Camera OverrideCamera { get; set; }
 
+    public enum RayMode { Screen, Direction }
+    public static RayMode ActiveRayMode { get; set; }
+
     public static IHighlightable Highlighted { get; private set; }
     public static Transform HighlightedTransform { get; private set; }
 
@@ -60,7 +63,13 @@ public static class Highlighting
             Highlight(closestHighlightable.Item1, closestHighlightable.Item2.transform);
     }
 
-    public static Ray GetRay() => ActiveCamera.ScreenPointToRay(Input.mousePosition);
+    public static Ray GetRay()
+    {
+        if (ActiveRayMode == RayMode.Screen)
+            return (new Ray(ActiveCamera.transform.position, ActiveCamera.transform.forward));
+        else
+            return (ActiveCamera.ScreenPointToRay(Input.mousePosition));
+    }
 
     private static void Unhighlight()
     {
