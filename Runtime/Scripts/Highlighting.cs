@@ -65,7 +65,7 @@ public static class Highlighting
 
     public static Ray GetRay()
     {
-        if (ActiveRayMode == RayMode.Screen)
+        if (ActiveRayMode == RayMode.Direction)
             return (new Ray(ActiveCamera.transform.position, ActiveCamera.transform.forward));
         else
             return (ActiveCamera.ScreenPointToRay(Input.mousePosition));
