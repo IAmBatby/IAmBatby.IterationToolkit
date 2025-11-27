@@ -12,6 +12,8 @@ namespace IterationToolkit
         [SerializeField] private List<T> allObjects = new List<T>();
         public List<T> Collection => allObjects;
 
+        public int Count => allObjects.Count;
+
         public int SelectedIndex { get; private set; }
         public T Selection => allObjects.IsValidIndex(SelectedIndex) ? allObjects[SelectedIndex] : default;
 
