@@ -109,4 +109,15 @@ public static class Highlighting
     {
         private void FixedUpdate() => Refresh();
     }
+
+    public static bool TryGet<T>(out T highlightedValue) where T : IHighlightable
+    {
+        highlightedValue = default(T);
+        if (HighlightedTransform != null && Highlighted is T castValue)
+        {
+            highlightedValue = castValue;
+            return (true);
+        }
+        return (false);
+    }
 }
