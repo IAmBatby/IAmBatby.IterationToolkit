@@ -162,5 +162,40 @@ namespace IterationToolkit
             return (grid.IndexToPosition(index, spaceType));
         }
 
+        public static bool TrySet(this Material mat, string propName, Color colorValue)
+        {
+            bool result = mat.HasProperty(propName);
+            if (result) mat.SetColor(propName, colorValue);
+            return (result);
+        }
+
+        public static bool TrySet(this Material mat, string propName, float floatValue)
+        {
+            bool result = mat.HasProperty(propName);
+            if (result) mat.SetFloat(propName, floatValue);
+            return (result);
+        }
+
+        public static bool TrySet(this Material mat, string propName, Vector2 vec2Value)
+        {
+            bool result = mat.HasProperty(propName);
+            if (result) mat.SetVector(propName, new Vector4(vec2Value.x,vec2Value.y,0,0));
+            return (result);
+        }
+
+        public static bool TrySet(this Material mat, string propName, Vector3 vec3Value)
+        {
+            bool result = mat.HasProperty(propName);
+            if (result) mat.SetVector(propName, new Vector4(vec3Value.x, vec3Value.y, vec3Value.z, 0));
+            return (result);
+        }
+
+        public static bool TrySet(this Material mat, string propName, Texture2D tex)
+        {
+            bool result = mat.HasProperty(propName);
+            if (result) mat.SetTexture(propName, tex);
+            return (result);
+        }
+
     }
 }
