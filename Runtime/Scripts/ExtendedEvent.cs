@@ -16,8 +16,10 @@ namespace IterationToolkit
         public ExtendedEvent() { DomainReloadManager.RegisterDomainReloadable(this); }
         public void Invoke() { onEvent?.Invoke(); }
 
-        public void AddListener(Action listener)
-        { 
+        public void AddListener(Action listener, bool tryRemoveExistingSubscription = true)
+        {
+            if (tryRemoveExistingSubscription)
+                onEvent -= listener;
             onEvent += listener;
             listeners.Add(listener);
         }
@@ -58,8 +60,10 @@ namespace IterationToolkit
             Invoke();
         }
 
-        public void AddListener(Action<T> listener)
+        public void AddListener(Action<T> listener, bool tryRemoveExistingSubscription = true)
         {
+            if (tryRemoveExistingSubscription)
+                onParameterEvent -= listener;
             onParameterEvent += listener;
             paramListeners.Add(listener);
         }
@@ -100,8 +104,10 @@ namespace IterationToolkit
             Invoke();
         }
 
-        public void AddListener(Action<T,U> listener)
+        public void AddListener(Action<T,U> listener, bool tryRemoveExistingSubscription = true)
         {
+            if (tryRemoveExistingSubscription)
+                onParameterEvent -= listener;
             onParameterEvent += listener;
             paramListeners.Add(listener);
         }
