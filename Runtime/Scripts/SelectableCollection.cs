@@ -100,7 +100,7 @@ namespace IterationToolkit
         {
             if (-1 > index || index >= allObjects.Count)
             {
-                Debug.LogError("Cannot select index as it is invalid for the current collection.");
+                //Debug.LogError("Cannot select index as it is invalid for the current collection.");
                 return (false);
             }
             return (true);
@@ -110,7 +110,7 @@ namespace IterationToolkit
         {
             if (!allObjects.Contains(value))
             {
-                Debug.LogError("Cannot select " + value + " as it is not included in SelectableCollection.");
+                //Debug.LogError("Cannot select " + value + " as it is not included in SelectableCollection.");
                 return (false);
             }
             return (true);
