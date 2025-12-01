@@ -91,8 +91,8 @@ namespace IterationToolkit
             onSelected.Invoke(Selection);
         }
 
-        public void SelectForward() => Select(allObjects[SelectedIndex.Increase(allObjects)]);
-        public void SelectBackward() => Select(allObjects[SelectedIndex.Decrease(allObjects)]);
+        public void SelectForward() => Select(SelectedIndex.Increase(allObjects));
+        public void SelectBackward() => Select(SelectedIndex.Decrease(allObjects));
 
         public IEnumerator<T> GetEnumerator() => allObjects.GetEnumerator();
 
