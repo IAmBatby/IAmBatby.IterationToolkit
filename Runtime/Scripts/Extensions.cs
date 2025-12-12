@@ -64,7 +64,6 @@ namespace IterationToolkit
             if (index.x < rangeMin.x || index.x > rangeMax.x) return (false);
             if (index.y < rangeMin.y || index.y > rangeMax.y) return (false);
             if (index.z < rangeMin.z || index.z > rangeMax.z) return (false);
-            Debug.Log("Valid: " + index + ", Min: " + rangeMin + ", Max: " + rangeMax);
             return (true);
         }
 
