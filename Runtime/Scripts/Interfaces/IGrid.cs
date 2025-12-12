@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace IterationToolkit
 {
-    public interface IGrid<T> where T : IGridInfo, new()
+    public interface IGrid<T> where T : IGridInfo
     {
         public Transform Source { get; }
         public Vector3Int Range { get; }
