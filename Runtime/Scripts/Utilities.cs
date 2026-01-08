@@ -71,6 +71,19 @@ namespace IterationToolkit
             cache.Revert();
         }
 
+        public enum DrawMeshMode { Full, Wire, Both }
+        public static void DrawMeshes(bool asWire, params (Mesh, Transform)[] meshes)
+        {
+            foreach ((Mesh, Transform) meshPair in meshes)
+            {
+                if (asWire)
+                    Gizmos.DrawWireMesh(meshPair.Item1, meshPair.Item2.position, meshPair.Item2.rotation, meshPair.Item2.lossyScale);
+                else
+                    Gizmos.DrawMesh(meshPair.Item1, meshPair.Item2.position, meshPair.Item2.rotation, meshPair.Item2.lossyScale);
+            }
+
+        }
+
         public static void DrawSnapToGroundPreview(Transform transform, int layerMask = ~0, float yOffset = 0f)
         {
             GizmosCache cache = new GizmosCache(transform);
