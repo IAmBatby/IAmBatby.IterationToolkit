@@ -9,6 +9,7 @@ namespace IterationToolkit.Editor
 {
     public static class EditorExtensions
     {
+        public static string PropertyDecorated(this string properyName) => EditorUtilities.Decorate(properyName);
         public static SerializedProperty Seek(this SerializedProperty property, string propertyName) => EditorUtilities.Seek(property, propertyName);
         public static SerializedProperty Seek(this SerializedObject serializedObject, string propertyName) => EditorUtilities.Seek(serializedObject, propertyName);
     }
