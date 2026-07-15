@@ -29,6 +29,7 @@ namespace IterationToolkit
                 if (exitEarly)
                 {
                     isRunning = false;
+                    exitEarly = false;
                     break;
                 }
             }
