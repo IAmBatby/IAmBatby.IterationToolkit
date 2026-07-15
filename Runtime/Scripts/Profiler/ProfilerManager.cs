@@ -22,7 +22,7 @@ namespace IterationToolkit
 
         private static void Clear()
         {
-            foreach (string refName in profileEntries.Keys)
+            foreach (string refName in profileEntries.Keys.ToList())
                 RemoveEntry(refName);
         }
 
