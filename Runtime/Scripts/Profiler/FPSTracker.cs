@@ -14,11 +14,10 @@ namespace IterationToolkit
         private static bool exitEarly = false;
         private static bool isRunning = false;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        [RuntimeInitializeOnLoadMethod]
         private static async void UpdateFPS()
         {
             if (isRunning) return;
-            Debug.Log("Entering UpdateFPS");
             Application.quitting += () => exitEarly = true;
             while (true)
             {
@@ -27,11 +26,7 @@ namespace IterationToolkit
                 await Task.Delay(TimeSpan.FromSeconds(UpdateFrequency));
                 FrameRate = Mathf.RoundToInt((Time.frameCount - prev.x) / (Time.realtimeSinceStartup - prev.y));
 
-                if (exitEarly)
-                {
-                    Debug.Log("Exiting UpdateFPS");
-                    break;
-                }
+                if (exitEarly) break;
             }
         }
     }
