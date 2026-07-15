@@ -1,5 +1,8 @@
+using log4net.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace IterationToolkit
@@ -7,7 +10,11 @@ namespace IterationToolkit
     public static class FPSTracker
     {
         [RuntimeInitializeOnLoadMethod] //Jank just triggers the singleton creation getter
-        private static void Start() => Instance.enabled = true;
+        private static void Start()
+        {
+            Instance.enabled = true;
+            UpdateFPS();
+        }
 
         private static FPSTrackerController _instance;
         private static FPSTrackerController Instance
@@ -37,9 +44,19 @@ namespace IterationToolkit
             }
         }
 
+        private static async void UpdateFPS()
+        {
+            while (true)
+            {
+                Vector2 prev = new(Time.frameCount, Time.realtimeSinceStartup);
+                await Task.Delay(TimeSpan.FromSeconds(frequency));
+                FrameRate = Mathf.RoundToInt((Time.frameCount - prev.x) / (Time.realtimeSinceStartup - prev.y));
+            }
+        }
+
         protected class FPSTrackerController : MonoBehaviour
         {
-            private void Start() => StartCoroutine(FPS());
+            //private void Start() => StartCoroutine(FPS());
         }
     }
 }
