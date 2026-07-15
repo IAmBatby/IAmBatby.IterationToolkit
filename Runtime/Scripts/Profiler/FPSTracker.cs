@@ -26,7 +26,11 @@ namespace IterationToolkit
                 await Task.Delay(TimeSpan.FromSeconds(UpdateFrequency));
                 FrameRate = Mathf.RoundToInt((Time.frameCount - prev.x) / (Time.realtimeSinceStartup - prev.y));
 
-                if (exitEarly) break;
+                if (exitEarly)
+                {
+                    isRunning = false;
+                    break;
+                }
             }
         }
     }
