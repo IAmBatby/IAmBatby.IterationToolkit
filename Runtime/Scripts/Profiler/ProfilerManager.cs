@@ -31,6 +31,12 @@ namespace IterationToolkit
             AddEntry(new ProfilerRecorderEntry(category, statName, displayName));
         }
 
+        public static void RegisterRenderRecorders(params (string,string)[] renderStatNames)
+        {
+            foreach ((string,string) kvp in renderStatNames)
+                RegisterRecorder(ProfilerCategory.Render, kvp.Item1, kvp.Item2);
+        }
+
         private static void AddEntry(IProfilerEntry entry)
         {
             if (profileEntries.ContainsKey(entry.ReferenceName)) return;
