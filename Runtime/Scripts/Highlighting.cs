@@ -48,6 +48,14 @@ public static class Highlighting
     //Public for projects that use this to debug/troubleshoot what's going on
     public static IEnumerable<RaycastHit> RecentResults { get; private set; }
 
+    public static void Apply(Camera overrideCam, RayMode rayMode, TargetMode targetMode, float raycastDist)
+    {
+        OverrideCamera = overrideCam;
+        ActiveRayMode = rayMode;
+        ActiveTargetMode = targetMode;
+        OverrideRaycastDistance = raycastDist;
+    }
+
     private static void Refresh()
     {
         if (ActiveCamera == null) return;
