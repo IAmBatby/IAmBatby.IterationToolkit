@@ -1,6 +1,5 @@
 #if INPUTSYSTEM_PRESENT
 
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -11,7 +10,7 @@ namespace IterationToolkit.InputSystem
     [SerializeField] //Don't need in future tbh
     public class ExtendedInputAction
     {
-        private InputAction inputAction;
+        public InputAction InputAction { get; private set; }
         [field: SerializeField] public CallbackContext PreviousContext { get; private set; }
         [field: SerializeField] public ActionType PreviousAction { get; private set; }
         public ExtendedEvent<CallbackContext> OnContextChanged = new ExtendedEvent<CallbackContext>();
@@ -21,16 +20,16 @@ namespace IterationToolkit.InputSystem
 
         public ExtendedInputAction(string displayName, InputType inputType, string inputIdentifier)
         {
-            inputAction = InputUtilities.CreateInputAction(displayName, inputType, inputIdentifier);
-            ListenToEvents(inputAction);
+            InputAction = InputUtilities.CreateInputAction(displayName, inputType, inputIdentifier);
+            ListenToEvents(InputAction);
         }
 
         public ExtendedInputAction(InputAction newInputAction)
         {
-            inputAction = newInputAction;
-            if (inputAction.enabled == false)
-                inputAction.Enable();
-            ListenToEvents(inputAction);
+            InputAction = newInputAction;
+            if (InputAction.enabled == false)
+                InputAction.Enable();
+            ListenToEvents(InputAction);
         }
 
         private void ListenToEvents(InputAction action)
