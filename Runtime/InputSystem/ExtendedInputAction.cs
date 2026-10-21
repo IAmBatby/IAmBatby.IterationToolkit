@@ -1,5 +1,6 @@
 #if INPUTSYSTEM_PRESENT
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -7,7 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 public enum ActionType { Idle, Started, Performed, Canceled }
 namespace IterationToolkit.InputSystem
 {
-    [SerializeField] //Don't need in future tbh
+    [Serializable] //Don't need in future tbh
     public class ExtendedInputAction
     {
         public InputAction InputAction { get; private set; }
