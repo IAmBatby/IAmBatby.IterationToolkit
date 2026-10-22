@@ -14,6 +14,13 @@ namespace IterationToolkit
 
     public static class Utilities
     {
+
+        public static float Lerp(float value, float target, float decay) => Mathf.Lerp(value, target, GetQualityLerpValue(decay));
+
+        public static Vector3 Lerp(Vector3 value, Vector3 target, float decay) => Vector3.Lerp(value, target, GetQualityLerpValue(decay));
+
+        public static float GetQualityLerpValue(float decay) => 1 - Mathf.Exp(-decay * Time.deltaTime);
+
         public static int IncreaseIndex(int index, int count) => index != count ? index + 1 : 0;
 
         public static int IncreaseIndex<T>(int index, List<T> collection) => index != collection.Count - 1 ? index + 1 : 0;

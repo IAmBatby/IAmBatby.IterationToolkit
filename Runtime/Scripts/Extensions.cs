@@ -232,5 +232,26 @@ namespace IterationToolkit
             return (result);
         }
 
+        public static float Lerp<T>(this T input, float value, float target, float decay) where T : Behaviour
+=> Utilities.Lerp(value, target, decay);
+
+        public static Vector3 Lerp<T>(this T input, Vector3 value, Vector3 target, float decay) where T : Behaviour
+        => Utilities.Lerp(value, target, decay);
+
+        public static void LerpPosition(this Transform t, Vector3 target, float speed)
+        {
+            t.position = Utilities.Lerp(t.position, target, speed);
+        }
+
+        public static void LerpRotation(this Transform t, Vector3 target, float speed)
+        {
+            t.rotation = Quaternion.Lerp(t.rotation, Quaternion.Euler(target), Utilities.GetQualityLerpValue(speed));
+        }
+
+        public static void LerpScale(this Transform t, Vector3 target, float speed)
+        {
+            t.localScale = Utilities.Lerp(t.localScale, target, speed);
+        }
+
     }
 }
